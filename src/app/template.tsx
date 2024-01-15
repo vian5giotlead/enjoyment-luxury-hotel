@@ -1,4 +1,5 @@
-import type { AppProps } from 'next/app'
+'use client';
+import React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
@@ -24,17 +25,14 @@ const theme = createTheme({
       light: '#BCFBBD',
       dark: '#299F65',
     },
-  }
+  },
 });
 
-
-export default function MyApp({ Component, pageProps }: AppProps) {
+export default function RootTemplate({ children }: { children: React.ReactNode }) {
   return (
     <>
       <CssBaseline />
-      <ThemeProvider theme={theme}>
-        <Component {...pageProps} />
-      </ThemeProvider>
+      <ThemeProvider theme={theme}>{children}</ThemeProvider>
     </>
   );
 }
