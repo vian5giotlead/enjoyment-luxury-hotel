@@ -38,6 +38,7 @@ export default function StyleCard({
         flexDirection: flexDirection,
         justifyContent: justifyContent,
         alignItems: alignItems,
+        boxShadow: 'none',
       }}>
       {children}
     </Card>
