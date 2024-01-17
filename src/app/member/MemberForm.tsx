@@ -2,8 +2,8 @@ import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Stack, styled } from '@mui/material';
 import { z } from 'zod';
-import Input from '@/components/Input';
-import Select from '@/components/Select';
+import Input from '@/components/common/Input';
+import Select from '@/components/common/Select';
 
 const Form = styled('form', { shouldForwardProp: () => true })(({ theme }) => ({
   '& .MuiInputBase-root': {
@@ -35,7 +35,7 @@ const districts = {
 };
 
 const currentYear = new Date().getFullYear();
-const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
+const years = Array.from({ length: 88 }, (_, i) => currentYear - i);
 const months = Array.from({ length: 12 }, (_, i) => i + 1);
 const days = Array.from({ length: 31 }, (_, i) => i + 1);
 
@@ -99,7 +99,7 @@ const MemberForm = () => {
             />
           )}
         />
-        <Stack direction={'row'} spacing={'1rem'}>
+        <Stack direction={'row'} alignItems={'flex-end'} spacing={'1rem'}>
           <Controller
             name="birthdayYear"
             control={control}
@@ -109,7 +109,7 @@ const MemberForm = () => {
                 label="生日"
                 options={years.map((year) => ({ value: year, label: String(year) }))}
                 error={Boolean(errors.birthdayYear)}
-                placeholder="請選擇您的出生年"
+                placeholder="您的出生年"
               />
             )}
           />
@@ -122,7 +122,7 @@ const MemberForm = () => {
                 label=""
                 options={months.map((month) => ({ value: month, label: String(month) }))}
                 error={Boolean(errors.birthdayYear)}
-                placeholder="請選擇您的出生月"
+                placeholder="您的出生月"
               />
             )}
           />
@@ -135,12 +135,12 @@ const MemberForm = () => {
                 label=""
                 options={days.map((day) => ({ value: day, label: String(day) }))}
                 error={Boolean(errors.birthdayYear)}
-                placeholder="請選擇您的出生日"
+                placeholder="您的出生日"
               />
             )}
           />
         </Stack>
-        <Stack direction={'row'} spacing={'0.5rem'}>
+        <Stack direction={'row'} alignItems={'flex-end'} spacing={'0.5rem'}>
           <Controller
             name="address.city"
             control={control}
@@ -150,7 +150,7 @@ const MemberForm = () => {
                 label="地址"
                 options={cities.map((city) => ({ value: city, label: city }))}
                 error={Boolean(errors.address?.city)}
-                placeholder="請選擇您的城市"
+                placeholder="您所在的城市"
               />
             )}
           />
@@ -171,7 +171,7 @@ const MemberForm = () => {
                 }
                 error={Boolean(errors.address?.county)}
                 disabled={!city}
-                placeholder="請選擇您的區域"
+                placeholder="您所在的區域"
               />
             )}
           />

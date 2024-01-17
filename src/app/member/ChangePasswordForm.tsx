@@ -2,7 +2,7 @@ import { Button, Stack } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import Input from '@/components/Input';
+import Input from '@/components/common/Input';
 
 export const changePasswordDataSchema = z
   .object({

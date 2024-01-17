@@ -1,10 +1,7 @@
-import { FormControl, FormHelperText, InputBase, InputLabel, styled, Typography } from '@mui/material';
+import { FormControl, FormHelperText, InputBase, styled } from '@mui/material';
 import { forwardRef } from 'react';
 
 const StyleInput = styled(InputBase)(({ theme }) => ({
-  'label + &': {
-    marginTop: theme.spacing(3),
-  },
   '& .MuiInputBase-input': {
     borderRadius: 4,
     position: 'relative',
@@ -34,6 +31,18 @@ type InputProps = {
   error?: boolean;
 };
 
+const Label = styled('label')(
+  ({ theme }) => `
+  font-family: ${theme.typography.fontFamily};
+  font-weight: 700;
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  letter-spacing: 0.0175rem;
+  `,
+);
+
 /**
  * @param {string} label - The label of the input.
  * @param {string} type - The type of the input.
@@ -51,9 +60,7 @@ const Input = forwardRef<HTMLElement, InputProps>(function Input(
 ) {
   return (
     <FormControl fullWidth={fullWidth} variant="standard">
-      <InputLabel shrink htmlFor={name}>
-        <Typography variant={'title'}>{label}</Typography>
-      </InputLabel>
+      <Label htmlFor={name}>{label}</Label>
       <StyleInput
         type={type}
         fullWidth={fullWidth}
