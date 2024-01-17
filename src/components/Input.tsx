@@ -1,4 +1,4 @@
-import { FormControl, FormHelperText, InputBase, InputLabel, styled } from '@mui/material';
+import { FormControl, FormHelperText, InputBase, InputLabel, styled, Typography } from '@mui/material';
 import { forwardRef } from 'react';
 
 const StyleInput = styled(InputBase)(({ theme }) => ({
@@ -8,9 +8,9 @@ const StyleInput = styled(InputBase)(({ theme }) => ({
   '& .MuiInputBase-input': {
     borderRadius: 4,
     position: 'relative',
-    backgroundColor: theme.palette.mode === 'light' ? '#fff' : '#1A2027',
+    backgroundColor: '#fff',
     border: '1px solid',
-    borderColor: theme.palette.mode === 'light' ? '#ececec' : '#2D3843',
+    borderColor: '#ececec',
     fontSize: 16,
     padding: '10px 12px',
     transition: theme.transitions.create(['border-color', 'background-color', 'box-shadow']),
@@ -52,7 +52,7 @@ const Input = forwardRef<HTMLElement, InputProps>(function Input(
   return (
     <FormControl fullWidth={fullWidth} variant="standard">
       <InputLabel shrink htmlFor={name}>
-        {label}
+        <Typography variant={'title'}>{label}</Typography>
       </InputLabel>
       <StyleInput
         type={type}

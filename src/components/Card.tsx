@@ -1,5 +1,7 @@
+'use client';
+
 import { Card } from '@mui/material';
-import useDeviceSizes from '@/utils/useMediaQuery';
+import { useWidth } from '@/hooks';
 
 type StyleCardProps = {
   padding?: 'sm' | 'md' | 'lg';
@@ -20,7 +22,8 @@ export default function StyleCard({
   justifyContent,
   alignItems,
 }: StyleCardProps) {
-  const { isSmallDevice } = useDeviceSizes();
+  const widthSize = useWidth();
+  const isSmallDevice = widthSize === 'xs' || widthSize === 'sm';
   return (
     <Card
       sx={{

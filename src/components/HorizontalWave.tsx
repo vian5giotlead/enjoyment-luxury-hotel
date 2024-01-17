@@ -1,7 +1,7 @@
 export default function HorizontalWave({ size }: { size: 'sm' | 'md' }) {
   return size === 'sm' ? (
     <svg width="1060" height="187" viewBox="0 0 1060 187" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0_295_8472)">
+      <g clipPath="url(#clip0_295_8472)">
         <path
           d="M1218.15 182.834C1174.15 188.495 1056.35 193.23 937.097 166.879C788.031 133.94 659.928 94.8258 447.975 112.324C236.022 129.823 157.607 151.439 0.000366211 131.882"
           stroke="#BF9D7D"
@@ -51,7 +51,7 @@ export default function HorizontalWave({ size }: { size: 'sm' | 'md' }) {
     </svg>
   ) : (
     <svg width="1920" height="188" viewBox="0 0 1920 188" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0_295_8497)">
+      <g clipPath="url(#clip0_295_8497)">
         <path
           d="M1920 182.834C1850.65 188.495 1664.98 193.23 1477.02 166.879C1242.06 133.94 1040.15 94.8258 706.079 112.324C372.006 129.823 248.411 151.439 -0.0019368 131.882"
           stroke="#BF9D7D"
