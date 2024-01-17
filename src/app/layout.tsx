@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Noto_Serif_TC } from 'next/font/google';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 
-import './globals.css';
+import '@/assets/scss/index.scss';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -19,7 +19,7 @@ const notoSerifTC = Noto_Serif_TC({
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="zh-Hant-TW">
       <body className={notoSerifTC.variable}>
         <AppRouterCacheProvider>{children}</AppRouterCacheProvider>
       </body>

@@ -2,14 +2,12 @@ import Box from '@mui/system/Box';
 import { Typography } from '@mui/material';
 
 interface SquareCardProps {
-  title: string,
-  children: React.ReactNode,
+  title: string;
+  children: React.ReactNode;
 }
 
-
 function SquareCard(props: SquareCardProps) {
-
-  const { title, children } = props
+  const { title, children } = props;
 
   return (
     <>
@@ -23,14 +21,13 @@ function SquareCard(props: SquareCardProps) {
           p: 2,
           borderRadius: '8px',
           border: '1px solid ',
-          borderColor: 'primary.light'
-        }}
-      >
+          borderColor: 'primary.light',
+        }}>
         {children}
         <Typography sx={{ fontWeight: 700 }}>{title}</Typography>
       </Box>
     </>
-  )
+  );
 }
 
-export default SquareCard
+export default SquareCard;
