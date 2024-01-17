@@ -7,6 +7,7 @@ export default function Home() {
       <div>首頁</div>
       <Link href="/login"> login </Link>
       <Link href="/aggregate"> aggregate </Link>
+      <Link href="/roomBooking"> roomBooking </Link>
     </main>
   );
 }
