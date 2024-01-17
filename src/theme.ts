@@ -1,6 +1,13 @@
 'use client';
-
+import { Noto_Serif_TC } from 'next/font/google';
 import { Theme, TypographyVariants, createTheme } from '@mui/material/styles';
+
+const noto_Serif_TC = Noto_Serif_TC({
+  weight: ['400', '500', '600', '700'],
+  style: ['normal'],
+  subsets: ['latin'],
+  preload: false,
+});
 
 declare module '@mui/material/styles' {
   interface TypographyVariants {
@@ -52,8 +59,9 @@ const theme: Theme = createTheme({
     },
   },
   typography: {
+    fontFamily: noto_Serif_TC.style.fontFamily,
     allVariants: {
-      fontFamily: 'Noto Serif TC',
+      fontFamily: noto_Serif_TC.style.fontFamily,
     },
     body1: {
       fontSize: '1rem',

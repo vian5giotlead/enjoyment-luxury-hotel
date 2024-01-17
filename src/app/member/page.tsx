@@ -12,7 +12,7 @@ import memberBannerBG from '@/assets/images/memberBannerBG.jpg';
 
 import MemberForm from './MemberForm';
 import ChangePasswordForm from './ChangePasswordForm';
-import Tabs, { Tab } from '@/components/Tabs';
+import Tabs, { Tab } from '@/app/member/Tabs';
 import { useState } from 'react';
 
 const tabList = [
@@ -144,7 +144,7 @@ const Page: NextPage = () => {
                 </Box>
                 <Box>
                   <Typography variant={'body1'}>{'地址'}</Typography>
-                  <Typography variant={'title'}>
+                  <Typography variant={'title'} component={'p'}>
                     {`${memberData.address.zipcode} ${memberData.address.county}${memberData.address.city}${memberData.address.detail}`}
                   </Typography>
                 </Box>
