@@ -23,7 +23,7 @@ export default function StyleCard({
   alignItems,
 }: StyleCardProps) {
   const widthSize = useWidth();
-  const isSmallDevice = widthSize === 'xs' || widthSize === 'sm';
+  const isSmallDevice = widthSize === 'sm';
   return (
     <Card
       sx={{

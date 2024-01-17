@@ -1,11 +1,10 @@
 'use client';
 
 import type { NextPage } from 'next';
-import { Avatar, Box, Button, Container, Link, Stack, Typography } from '@mui/material';
-import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
+import { Avatar, Box, Button, Container, Grid, Link, Stack, Typography } from '@mui/material';
 
-import Card from '@/components/Card';
-import HorizontalWave from '@/components/HorizontalWave';
+import Card from '@/components/common/Card';
+import HorizontalWave from '@/components/common/HorizontalWave';
 
 import { useWidth } from '@/hooks';
 import memberBannerBG from '@/assets/images/memberBannerBG.jpg';
@@ -14,15 +13,16 @@ import MemberForm from './MemberForm';
 import ChangePasswordForm from './ChangePasswordForm';
 import Tabs, { Tab } from '@/app/member/Tabs';
 import { useState } from 'react';
+import theme from '@/theme';
 
 const tabList = [
   {
     title: '個人資料',
-    value: 'memberData',
+    value: 0,
   },
   {
     title: '我的訂單',
-    value: 'memberOrders',
+    value: 1,
   },
 ];
 
@@ -43,10 +43,10 @@ const memberData = {
 
 const Page: NextPage = () => {
   const widthSize = useWidth();
-  const isSmallDevice = widthSize === 'xs' || widthSize === 'sm';
-  const [selectTab, setSelectTab] = useState('memberData');
+  const isSmallDevice = widthSize === 'sm';
+  const [selectTab, setSelectTab] = useState(0);
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setSelectTab(newValue);
   };
 
@@ -76,13 +76,13 @@ const Page: NextPage = () => {
             return <Tab label={tab.title} key={tab.title} />;
           })}
         </Tabs>
-        <Grid2
+        <Grid
           container
           direction={{ sm: 'column', md: 'row' }}
           justifyContent={'space-between'}
-          gap={{ sm: 3, md: 5 }}
+          gap={{ sm: '1.5rem', md: '2.5rem' }}
           wrap={'nowrap'}>
-          <Grid2 md={5}>
+          <Grid item md={5}>
             <Card
               padding={isSmallDevice ? 'md' : 'lg'}
               display="flex"
@@ -93,23 +93,35 @@ const Page: NextPage = () => {
               </Typography>
               <Stack direction={'column'} spacing={{ sm: 2, md: 3 }}>
                 <Box>
-                  <Typography variant={'body1'}>{'電子信箱'}</Typography>
-                  <Typography variant={'title'}>{'ooo@ooo.com'}</Typography>
+                  <Typography variant={'body1'} component={'h3'}>
+                    {'電子信箱'}
+                  </Typography>
+                  <Typography variant={'title'} component={'p'} fontFamily={theme.typography.fontFamily}>
+                    {'ooo@ooo.com'}
+                  </Typography>
                 </Box>
                 <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
                   <Box>
-                    <Typography variant={'body1'}>{'密碼'}</Typography>
-                    <Typography variant={'title'}>{'********'}</Typography>
+                    <Typography variant={'body1'} component={'h3'}>
+                      {'密碼'}
+                    </Typography>
+                    <Typography variant={'title'} component={'p'} sx={{ '-webkit-text-security': 'disc' }}>
+                      {'********'}
+                    </Typography>
                   </Box>
-                  <Link component={'button'} underline={'always'}>
+                  <Link
+                    component={'button'}
+                    underline={'always'}
+                    fontFamily={theme.typography.fontFamily}
+                    fontWeight={700}>
                     {'重設'}
                   </Link>
                 </Stack>
               </Stack>
               <ChangePasswordForm />
             </Card>
-          </Grid2>
-          <Grid2 md={7}>
+          </Grid>
+          <Grid item md={7}>
             <Card
               padding={isSmallDevice ? 'md' : 'lg'}
               display="flex"
@@ -122,15 +134,19 @@ const Page: NextPage = () => {
               <Stack direction={'column'} spacing={{ sm: 2, md: 3 }}>
                 <Box>
                   <Typography variant={'body1'}>{'姓名'}</Typography>
-                  <Typography variant={'title'}>{memberData.name}</Typography>
+                  <Typography variant={'title'} fontFamily={theme.typography.fontFamily}>
+                    {memberData.name}
+                  </Typography>
                 </Box>
                 <Box>
                   <Typography variant={'body1'}>{'手機'}</Typography>
-                  <Typography variant={'title'}>{memberData.phone}</Typography>
+                  <Typography variant={'title'} fontFamily={theme.typography.fontFamily}>
+                    {memberData.phone}
+                  </Typography>
                 </Box>
                 <Box>
                   <Typography variant={'body1'}>{'生日'}</Typography>
-                  <Typography variant={'title'}>
+                  <Typography variant={'title'} fontFamily={theme.typography.fontFamily}>
                     {memberData.birthday.split('/').map((date, index) => {
                       if (index === 0) {
                         return `${date}年`;
@@ -144,7 +160,7 @@ const Page: NextPage = () => {
                 </Box>
                 <Box>
                   <Typography variant={'body1'}>{'地址'}</Typography>
-                  <Typography variant={'title'} component={'p'}>
+                  <Typography variant={'title'} component={'p'} fontFamily={theme.typography.fontFamily}>
                     {`${memberData.address.zipcode} ${memberData.address.county}${memberData.address.city}${memberData.address.detail}`}
                   </Typography>
                 </Box>
@@ -159,8 +175,8 @@ const Page: NextPage = () => {
                 </Button>
               </Stack>
             </Card>
-          </Grid2>
-        </Grid2>
+          </Grid>
+        </Grid>
       </Container>
       <HorizontalWave size={isSmallDevice ? 'sm' : 'md'} />
     </>

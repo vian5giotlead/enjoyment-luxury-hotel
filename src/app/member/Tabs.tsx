@@ -27,6 +27,7 @@ const Tabs = styled((props: StyledTabsProps) => (
     width: '100%',
     maxWidth: '2rem',
     backgroundColor: theme.palette.primary.main,
+    borderRadius: '0.625rem',
   },
 });
 
