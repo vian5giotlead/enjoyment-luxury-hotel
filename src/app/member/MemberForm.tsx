@@ -56,7 +56,11 @@ const memberDataTemplate = {
 
 type MemberData = z.infer<typeof memberDataSchema>;
 
-const MemberForm = () => {
+type MemberFormProps = {
+  handleOpenForm: (string: 'ChangePassword' | 'Member') => void;
+};
+
+const MemberForm = ({ handleOpenForm }: MemberFormProps) => {
   const {
     control,
     handleSubmit,
@@ -221,7 +225,8 @@ const MemberForm = () => {
             type="button"
             variant={'outlined'}
             size={'large'}
-            disableRipple>
+            disableRipple
+            onClick={handleOpenForm('Member')}>
             {'取消'}
           </Button>
         </Stack>

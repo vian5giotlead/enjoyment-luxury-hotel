@@ -84,6 +84,7 @@ const theme: Theme = createTheme({
     subtitle1: {
       fontSize: '0.875rem',
       fontWeight: 700,
+      lineHeight: 1.5,
     },
     h6: {
       fontSize: '1.25rem',
@@ -214,6 +215,14 @@ const theme: Theme = createTheme({
           },
         },
       ],
+    },
+    MuiBackdrop: {
+      styleOverrides: {
+        root: {
+          backgroundColor: 'rgba(0, 0, 0, 0.4)',
+          backdropFilter: 'blur(0.625rem)',
+        },
+      },
     },
   },
 });

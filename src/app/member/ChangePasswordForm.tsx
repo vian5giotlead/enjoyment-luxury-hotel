@@ -17,7 +17,11 @@ export const changePasswordDataSchema = z
 
 type ChangePasswordDataSchema = z.infer<typeof changePasswordDataSchema>;
 
-const ChangePasswordForm = () => {
+type ChangePasswordFormProps = {
+  handleOpenForm: (string: 'ChangePassword' | 'Member') => void;
+};
+
+const ChangePasswordForm = ({ handleOpenForm }: ChangePasswordFormProps) => {
   const {
     register,
     handleSubmit,
@@ -84,7 +88,8 @@ const ChangePasswordForm = () => {
           type="button"
           variant={'outlined'}
           size={'large'}
-          disableRipple>
+          disableRipple
+          onClick={handleOpenForm('ChangePassword')}>
           {'取消'}
         </Button>
       </Stack>

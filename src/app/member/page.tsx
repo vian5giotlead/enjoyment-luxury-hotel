@@ -3,24 +3,22 @@
 import { Fragment, useState } from 'react';
 import type { NextPage } from 'next';
 import Image from 'next/image';
-import { Avatar, Box, Button, Container, Divider, Grid, Link, Stack, Typography } from '@mui/material';
+import { Backdrop, Box, Button, Container, Divider, Fade, Grid, Link, Modal, Stack, Typography } from '@mui/material';
 import { SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 
 import Card from '@/components/common/Card';
-import HorizontalWave from '@/components/common/HorizontalWave';
 
 import { useWidth } from '@/hooks';
-
-import memberBannerBG from '@/assets/images/memberBannerBG.jpg';
 
 import ChangePasswordForm from './ChangePasswordForm';
 import MemberForm from './MemberForm';
 import { SwiperTabs, StyledSwiper } from './SwiperTabs';
 
 import 'swiper/css';
-import { KeyboardArrowDown } from '@mui/icons-material';
+import { Close, KeyboardArrowDown } from '@mui/icons-material';
 import CheckIcon from '@mui/icons-material/Check';
+import Drawer from './Drawer';
 
 export const tabList = [
   {
@@ -151,9 +149,32 @@ const orderData = [
 
 const Page: NextPage = () => {
   const [selectTab, setSelectTab] = useState(1);
+  const [openModal, setOpenModal] = useState(false);
+  const [openForm, setOpenForm] = useState({
+    ChangePassword: false,
+    Member: false,
+  });
+
   const widthSize = useWidth();
 
   const isSmallDevice = widthSize === 'sm';
+
+  function handleCloseModal() {
+    setOpenModal(false);
+  }
+
+  function handleOpenModal() {
+    setOpenModal(true);
+  }
+
+  function handleOpenForm(formName: 'ChangePassword' | 'Member') {
+    return () => {
+      setOpenForm((prevState) => ({
+        ...prevState,
+        [formName]: !prevState[formName],
+      }));
+    };
+  }
 
   function calculateStayDays(checkInDate: string, checkOutDate: string) {
     const checkIn = new Date(checkInDate).getTime();
@@ -164,28 +185,18 @@ const Page: NextPage = () => {
   function formatDate(dateStr: string, timeStr?: string) {
     const days = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
     const date = new Date(dateStr);
-    return `${date.getMonth() + 1} 月 ${date.getDate()} 日 ${days[date.getDay()]}${timeStr && `，${timeStr}`}`;
+    return `${date.getMonth() + 1} 月 ${date.getDate()} 日 ${days[date.getDay()]}${timeStr ? `，${timeStr}` : ''}`;
+  }
+
+  function formatNTD(num: number): string {
+    return num.toLocaleString('zh-TW', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    });
   }
 
   return (
     <>
-      <Box
-        sx={{
-          background: `linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${memberBannerBG.src})`,
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          height: isSmallDevice ? '12.875rem' : '24rem',
-        }}>
-        <Container sx={{ height: '100%' }}>
-          <Stack direction={'column'} justifyContent={'center'} height="100%">
-            <Stack direction={{ sm: 'column', md: 'row' }} alignItems={'center'} spacing={{ sm: 2, md: 3 }}>
-              <Avatar sx={{ height: isSmallDevice ? '9rem' : '4.5rem', width: isSmallDevice ? '9rem' : '4.5rem' }} />
-              <Typography variant={'h4'} color="white" component="h2">{`Hello，member name`}</Typography>
-            </Stack>
-          </Stack>
-        </Container>
-      </Box>
       <Container
         sx={{ paddingTop: isSmallDevice ? '2.5rem' : '5rem', paddingBottom: isSmallDevice ? '2.5rem' : '7.5rem' }}>
         <StyledSwiper
@@ -203,7 +214,7 @@ const Page: NextPage = () => {
           <Box sx={{ order: 0 }}>
             <SwiperTabs selectTab={selectTab} setSelectTab={setSelectTab} />
           </Box>
-          <SwiperSlide>
+          <SwiperSlide style={{ height: '100%' }}>
             <Grid
               container
               direction={{ sm: 'column', md: 'row' }}
@@ -239,12 +250,16 @@ const Page: NextPage = () => {
                           {'********'}
                         </Typography>
                       </Box>
-                      <Link component={'button'} underline={'always'} fontWeight={700}>
+                      <Link
+                        component={'button'}
+                        underline={'always'}
+                        fontWeight={700}
+                        onClick={handleOpenForm('ChangePassword')}>
                         {'重設'}
                       </Link>
                     </Stack>
                   </Stack>
-                  <ChangePasswordForm />
+                  {openForm.ChangePassword && <ChangePasswordForm handleOpenForm={handleOpenForm} />}
                 </Card>
               </Grid>
               <Grid item md={7}>
@@ -289,12 +304,15 @@ const Page: NextPage = () => {
                       </Typography>
                     </Box>
                   </Stack>
-                  <MemberForm />
+                  {openForm.Member && <MemberForm handleOpenForm={handleOpenForm} />}
                   <Stack
                     direction={'column'}
                     spacing={{ sm: '1.5rem', md: '2.5rem' }}
-                    alignItems={{ sm: 'stretch', md: 'flex-start' }}>
-                    <Button variant={'outlined'} size={'large'}>
+                    alignItems={{ sm: 'stretch', md: 'flex-start' }}
+                    sx={{
+                      display: !openForm.Member ? 'flex' : 'none',
+                    }}>
+                    <Button variant={'outlined'} size={'large'} onClick={handleOpenForm('Member')}>
                       {'編輯'}
                     </Button>
                   </Stack>
@@ -302,7 +320,7 @@ const Page: NextPage = () => {
               </Grid>
             </Grid>
           </SwiperSlide>
-          <SwiperSlide>
+          <SwiperSlide style={{ height: '100%' }}>
             <Grid
               container
               direction={{ sm: 'column', md: 'row' }}
@@ -318,22 +336,31 @@ const Page: NextPage = () => {
                     gap: isSmallDevice ? '1.5rem' : '2.5rem',
                     alignItems: 'stretch',
                   }}>
-                  <Typography variant={'body1'} component="h3">
-                    {`預訂參考編號： ${orderData[0]._id}`}
-                  </Typography>
-                  <Typography variant={'h5'}>{'即將來的行程'}</Typography>
-                  <Image
-                    style={{
-                      objectFit: 'cover',
+                  <Box>
+                    <Typography variant={'body1'} component="h3" mb={'0.5rem'}>
+                      {`預訂參考編號： ${orderData[0]._id}`}
+                    </Typography>
+                    <Typography variant={'h5'}>{'即將來的行程'}</Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      position: 'relative',
+                      width: '100%',
+                      height: '100vh',
+                      maxHeight: isSmallDevice ? '9.375rem' : '15rem',
                       borderRadius: '0.5rem',
-                    }}
-                    src={orderData[0].roomId.imageUrl}
-                    alt={orderData[0].roomId.name}
-                    height={434}
-                    width={650}
-                  />
+                      overflow: 'hidden',
+                    }}>
+                    <Image
+                      src={orderData[0].roomId.imageUrl}
+                      alt={orderData[0].roomId.name}
+                      // layout="fill"
+                      objectFit="cover"
+                      fill={true}
+                    />
+                  </Box>
                   <Stack direction={'column'} spacing={'1.5rem'}>
-                    <Stack flexDirection={'row'}>
+                    <Stack direction={'row'} spacing={'1rem'}>
                       <Typography variant={'h6'}>
                         {`${orderData[0].roomId.name}，${calculateStayDays(
                           orderData[0].checkInDate,
@@ -343,52 +370,179 @@ const Page: NextPage = () => {
                       <Divider orientation="vertical" variant="middle" flexItem />
                       <Typography variant={'h6'}>{`住宿人數：${orderData[0].peopleNum} 位`}</Typography>
                     </Stack>
-                    <Box>
-                      <Typography variant={'title'}>{`入住：${formatDate(
-                        orderData[0].checkInDate,
-                        '15:00 可入住',
-                      )}`}</Typography>
-                    </Box>
-                    <Box>
-                      <Typography variant={'title'}>
-                        {`退房：${formatDate(orderData[0].checkOutDate, '12:00 前退房')}`}
-                      </Typography>
-                    </Box>
-                    <Typography variant={'subtitle1'}>{`NT$ ${orderData[0].roomId.price}`}</Typography>
+                    <Stack direction={'column'} spacing={'0.5rem'}>
+                      <Box>
+                        <Typography variant={'title'}>{`入住：${formatDate(
+                          orderData[0].checkInDate,
+                          '15:00 可入住',
+                        )}`}</Typography>
+                      </Box>
+                      <Box>
+                        <Typography variant={'title'}>
+                          {`退房：${formatDate(orderData[0].checkOutDate, '12:00 前退房')}`}
+                        </Typography>
+                      </Box>
+                    </Stack>
+                    <Typography variant={'subtitle1'}>{`NT$ ${formatNTD(orderData[0].roomId.price)}`}</Typography>
                   </Stack>
                   <Divider />
                   <Stack flexDirection={'column'} gap={'1.5rem'}>
                     <Box>
                       <Typography variant={'subtitle1'}>{'房內設備'}</Typography>
-                      <Card
-                        isBorder={true}
-                        sx={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          flexWrap: 'wrap',
-                          gap: '1.5rem',
-                        }}>
-                        {orderData[0].roomId.facilityInfo.map((facility, index) => (
-                          <Stack flexDirection={'row'} gap={'0.5rem'} key={index}>
-                            <CheckIcon color="primary" />
-                            <Typography variant={'body1'}>{facility.title}</Typography>
-                          </Stack>
-                        ))}
-                      </Card>
                     </Box>
+                    <Card
+                      isBorder={true}
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        flexWrap: 'wrap',
+                        gap: '1.5rem',
+                      }}>
+                      {orderData[0].roomId.facilityInfo.map((facility, index) => (
+                        <Stack flexDirection={'row'} gap={'0.5rem'} key={index}>
+                          <CheckIcon color="primary" />
+                          <Typography variant={'title'}>{facility.title}</Typography>
+                        </Stack>
+                      ))}
+                    </Card>
                   </Stack>
-                  <Box>
-                    <Typography variant={'body1'}>{'訂單狀態'}</Typography>
-                    <Typography variant={'title'}>{'已完成'}</Typography>
-                  </Box>
+                  <Stack flexDirection={'column'} gap={'1.5rem'}>
+                    <Box>
+                      <Typography variant={'subtitle1'}>{'備品提供'}</Typography>
+                    </Box>
+                    <Card
+                      isBorder={true}
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        flexWrap: 'wrap',
+                        gap: '1.5rem',
+                      }}>
+                      {orderData[0].roomId.amenityInfo.map((facility, index) => (
+                        <Stack flexDirection={'row'} gap={'0.5rem'} key={index}>
+                          <CheckIcon color="primary" />
+                          <Typography variant={'title'}>{facility.title}</Typography>
+                        </Stack>
+                      ))}
+                    </Card>
+                  </Stack>
                   <Stack direction={'row'} spacing={'1rem'} justifyContent={'space-between'}>
-                    <Button variant={'outlined'} size={'large'} fullWidth>
+                    <Button variant={'outlined'} size={'large'} fullWidth onClick={handleOpenModal}>
                       {'取消訂單'}
                     </Button>
                     <Button variant={'contained'} size={'large'} fullWidth>
                       {'查看詳情'}
                     </Button>
                   </Stack>
+                  {isSmallDevice ? (
+                    <Drawer open={openModal} setOpen={handleCloseModal}>
+                      <Stack
+                        justifyContent={'space-between'}
+                        alignItems={'center'}
+                        direction={'column'}
+                        sx={{
+                          bgcolor: 'background.paper',
+                          padding: 0,
+                        }}>
+                        <Stack
+                          direction={'row'}
+                          justifyContent={'space-between'}
+                          alignItems={'center'}
+                          padding={'1rem'}
+                          width={'100%'}>
+                          <Typography variant={'h6'}>{'取消預訂'}</Typography>
+                          <Close
+                            sx={{
+                              maxWidth: '2.5rem',
+                              maxHeight: '2.5rem',
+                              width: '100%',
+                              height: '100%',
+                              cursor: 'pointer',
+                              padding: '0.5rem',
+                            }}
+                            onClick={handleCloseModal}
+                          />
+                        </Stack>
+                        <Box
+                          display={'grid'}
+                          width={'100%'}
+                          minHeight={'6rem'}
+                          pt={'2.5rem'}
+                          pb={'2.5rem'}
+                          sx={{ placeContent: 'center' }}>
+                          <Typography variant={'h6'}>{'確定要取消此房型的預訂嗎？'}</Typography>
+                        </Box>
+                        <Stack direction={'row'} spacing={'1rem'} width={'100%'} padding={'0.75rem'}>
+                          <Button variant={'outlined'} size={'large'} fullWidth onClick={handleCloseModal}>
+                            {'關閉視窗'}
+                          </Button>
+                          <Button variant={'contained'} size={'large'} fullWidth>
+                            {'確定取消'}
+                          </Button>
+                        </Stack>
+                      </Stack>
+                    </Drawer>
+                  ) : (
+                    <Modal
+                      open={openModal}
+                      onClose={handleCloseModal}
+                      closeAfterTransition
+                      slots={{ backdrop: Backdrop }}
+                      slotProps={{
+                        backdrop: {
+                          timeout: 500,
+                        },
+                      }}>
+                      <Fade in={openModal}>
+                        <Stack
+                          borderRadius={'0.5rem'}
+                          justifyContent={'space-between'}
+                          alignItems={'center'}
+                          direction={'column'}
+                          sx={{
+                            position: 'absolute' as 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: '37.5rem',
+                            minHeight: '19rem',
+                            bgcolor: 'background.paper',
+                            padding: 0,
+                          }}>
+                          <Box
+                            display={'grid'}
+                            width={'100%'}
+                            minHeight={'14rem'}
+                            sx={{ placeContent: 'center' }}
+                            position={'relative'}>
+                            <Close
+                              sx={{
+                                position: 'absolute',
+                                top: 0,
+                                right: 0,
+                                maxWidth: '2.5rem',
+                                maxHeight: '2.5rem',
+                                width: '100%',
+                                height: '100%',
+                                cursor: 'pointer',
+                                padding: '0.5rem',
+                              }}
+                              onClick={handleCloseModal}
+                            />
+                            <Typography variant={'h6'}>{'確定要取消此房型的預訂嗎？'}</Typography>
+                          </Box>
+                          <Stack direction={'row'} spacing={'1rem'} width={'100%'} padding={'0.75rem'}>
+                            <Button variant={'outlined'} size={'large'} fullWidth onClick={handleCloseModal}>
+                              {'關閉視窗'}
+                            </Button>
+                            <Button variant={'contained'} size={'large'} fullWidth>
+                              {'確定取消'}
+                            </Button>
+                          </Stack>
+                        </Stack>
+                      </Fade>
+                    </Modal>
+                  )}
                 </Card>
               </Grid>
               <Grid item md={5}>
@@ -413,6 +567,7 @@ const Page: NextPage = () => {
                           }}
                           src={order.roomId.imageUrl}
                           alt={order.roomId.name}
+                          objectFit="cover"
                           width={120}
                           height={80}
                         />
@@ -433,7 +588,7 @@ const Page: NextPage = () => {
                             <Typography variant={'body1'}>{`入住：${formatDate(order.checkInDate)}`}</Typography>
                             <Typography variant={'body1'}>{`退房：${formatDate(order.checkOutDate)}`}</Typography>
                           </Box>
-                          <Typography variant={'title'}>{`NT$ ${order.roomId.price}`}</Typography>
+                          <Typography variant={'title'}>{`NT$ ${formatNTD(order.roomId.price)}`}</Typography>
                         </Stack>
                       </Stack>
                       {index !== orderData.length - 1 && <Divider />}
@@ -448,7 +603,6 @@ const Page: NextPage = () => {
           </SwiperSlide>
         </StyledSwiper>
       </Container>
-      <HorizontalWave size={isSmallDevice ? 'sm' : 'md'} />
     </>
   );
 };
