@@ -75,9 +75,6 @@ const theme: Theme = createTheme({
   },
   typography: {
     fontFamily: noto_Serif_TC.style.fontFamily,
-    allVariants: {
-      fontFamily: noto_Serif_TC.style.fontFamily,
-    },
     body1: {
       fontSize: '1rem',
     },
@@ -115,6 +112,10 @@ const theme: Theme = createTheme({
   },
   components: {
     MuiButton: {
+      defaultProps: {
+        disableElevation: true,
+        disableRipple: true,
+      },
       styleOverrides: {
         root: {
           textTransform: 'none',
@@ -142,6 +143,11 @@ const theme: Theme = createTheme({
               backgroundColor: '#fff',
               color: '#909090',
             },
+            '&:active': {
+              borderColor: '#895B3E',
+              backgroundColor: '#F7F2EE',
+              color: '#895B3E',
+            },
           },
         },
         {
@@ -157,6 +163,10 @@ const theme: Theme = createTheme({
               backgroundColor: '#ececec',
               color: '#909090',
             },
+            '&:active': {
+              backgroundColor: '#895B3E',
+              color: '#fff',
+            },
           },
         },
         {
@@ -169,11 +179,17 @@ const theme: Theme = createTheme({
             '&:disabled': {
               color: '#909090',
             },
+            '&:active': {
+              color: '#895B3E',
+            },
           },
         },
       ],
     },
     MuiTypography: {
+      defaultProps: {
+        fontFamily: noto_Serif_TC.style.fontFamily,
+      },
       variants: [
         {
           props: { variant: 'display' },
