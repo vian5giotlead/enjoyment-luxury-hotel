@@ -50,5 +50,6 @@ const Tab = styled((props: StyledTabProps) => <BaseTab disableRipple {...props} 
   },
 }));
 
+
 export default Tabs;
 export { Tab };

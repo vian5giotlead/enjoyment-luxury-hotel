@@ -1,49 +1,50 @@
-'use client';
-
-import { Card } from '@mui/material';
+import { CSSProperties } from 'react';
+import { Card as BaseCard, styled } from '@mui/material';
 import { useWidth } from '@/hooks';
 
 type StyleCardProps = {
-  padding?: 'sm' | 'md' | 'lg';
   children?: React.ReactNode;
-  gap?: string;
-  display?: 'flex' | 'block' | 'inline-flex' | 'inline-block' | 'hidden';
-  flexDirection?: 'row' | 'row-reverse' | 'column' | 'column-reverse';
-  justifyContent?: 'flex-start' | 'center' | 'flex-end' | 'space-between' | 'space-around' | 'space-evenly';
-  alignItems?: 'flex-start' | 'center' | 'flex-end' | 'stretch' | 'baseline';
+  isBorder?: boolean;
+  padding?: 'sm' | 'md' | 'lg';
+  sx?: CSSProperties;
 };
 
-export default function StyleCard({
-  children,
-  padding,
-  gap,
-  display,
-  flexDirection,
-  justifyContent,
-  alignItems,
-}: StyleCardProps) {
+const StyleCard = styled(BaseCard)<StyleCardProps>(() => ({
+  boxShadow: 'none',
+}));
+
+/**
+ *
+ * @param {string} padding - padding size
+ * @param {React.ReactNode} children - children
+ * @param {boolean} isBoeder - is border
+ * @param {CSSProperties} sx - style
+ * @returns {React.ReactNode} - Card
+ * @description - Card
+ */
+export default function Card({ children, padding = 'sm', isBorder = false, sx, ...restProps }: StyleCardProps) {
   const widthSize = useWidth();
   const isSmallDevice = widthSize === 'sm';
+
+  const dynamicPadding =
+    isSmallDevice && padding === 'md'
+      ? '1.5rem'
+      : isSmallDevice && padding === 'sm'
+        ? '1rem'
+        : !isSmallDevice && padding === 'lg'
+          ? '2.5rem'
+          : '1.5rem';
+
   return (
-    <Card
+    <StyleCard
       sx={{
-        borderRadius: '1.25rem',
-        padding:
-          isSmallDevice && padding === 'md'
-            ? '1.5rem'
-            : isSmallDevice && padding === 'sm'
-              ? '1rem'
-              : !isSmallDevice && padding === 'lg'
-                ? '2.5rem'
-                : '1.5rem',
-        gap: gap,
-        display: display,
-        flexDirection: flexDirection,
-        justifyContent: justifyContent,
-        alignItems: alignItems,
-        boxShadow: 'none',
-      }}>
+        ...sx,
+        padding: dynamicPadding,
+        border: isBorder ? '1px solid #E5E5E5' : '',
+        borderRadius: isBorder ? '0.5rem' : '1.25rem',
+      }}
+      {...restProps}>
       {children}
-    </Card>
+    </StyleCard>
   );
 }
