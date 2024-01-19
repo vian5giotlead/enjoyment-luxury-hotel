@@ -8,7 +8,8 @@ const StyleInput = styled(InputBase)(({ theme }) => ({
     backgroundColor: '#fff',
     border: '1px solid',
     borderColor: '#ececec',
-    fontSize: 16,
+    [theme.breakpoints.down('md')]: { fontSize: '0.875rem' },
+    [theme.breakpoints.up('md')]: { fontSize: '1rem' },
     padding: '10px 12px',
     transition: theme.transitions.create(['border-color', 'background-color', 'box-shadow']),
     '&:focus': {

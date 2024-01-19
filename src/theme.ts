@@ -6,7 +6,7 @@ const noto_Serif_TC = Noto_Serif_TC({
   weight: ['400', '500', '600', '700'],
   style: ['normal'],
   subsets: ['latin'],
-  preload: false,
+  preload: true,
 });
 
 declare module '@mui/material/styles' {

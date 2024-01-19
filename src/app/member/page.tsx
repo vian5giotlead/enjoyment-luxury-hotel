@@ -2,10 +2,10 @@
 
 import { Fragment, useState } from 'react';
 import type { NextPage } from 'next';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import { Backdrop, Box, Button, Container, Divider, Fade, Grid, Link, Modal, Stack, Typography } from '@mui/material';
 import { SwiperSlide } from 'swiper/react';
-import { Navigation } from 'swiper/modules';
+import { Navigation, Pagination } from 'swiper/modules';
 
 import Card from '@/components/common/Card';
 
@@ -13,21 +13,24 @@ import { useWidth } from '@/hooks';
 
 import ChangePasswordForm from './ChangePasswordForm';
 import MemberForm from './MemberForm';
-import { SwiperTabs, StyledSwiper } from './SwiperTabs';
+import { SwiperTabs, StyledSwiper } from './Tabs';
 
 import 'swiper/css';
 import { Close, KeyboardArrowDown } from '@mui/icons-material';
 import CheckIcon from '@mui/icons-material/Check';
 import Drawer from './Drawer';
+import { TitleText } from './style';
 
 export const tabList = [
   {
     title: '個人資料',
     value: 0,
+    href: '/member',
   },
   {
     title: '我的訂單',
     value: 1,
+    href: '/member/order',
   },
 ];
 
@@ -202,7 +205,9 @@ const Page: NextPage = () => {
         <StyledSwiper
           slidesPerView={1}
           spaceBetween={30}
-          modules={[Navigation]}
+          navigation
+          observer={true}
+          modules={[Navigation, Pagination]}
           onSlideChange={(swiper) => {
             setSelectTab(swiper.activeIndex);
           }}
@@ -275,18 +280,13 @@ const Page: NextPage = () => {
                     {'基本資料'}
                   </Typography>
                   <Stack direction={'column'} spacing={{ sm: 2, md: 3 }}>
-                    <Box>
-                      <Typography variant={'body1'}>{'姓名'}</Typography>
-                      <Typography variant={'title'}>{memberData.name}</Typography>
-                    </Box>
-                    <Box>
-                      <Typography variant={'body1'}>{'手機'}</Typography>
-                      <Typography variant={'title'}>{memberData.phone}</Typography>
-                    </Box>
-                    <Box>
-                      <Typography variant={'body1'}>{'生日'}</Typography>
-                      <Typography variant={'title'}>
-                        {memberData.birthday.split('/').map((date, index) => {
+                    <TitleText title={'姓名'} content={memberData.name} />
+                    <TitleText title={'手機號碼'} content={memberData.phone} />
+                    <TitleText
+                      title={'生日'}
+                      content={memberData.birthday
+                        .split('/')
+                        .map((date, index) => {
                           if (index === 0) {
                             return `${date}年`;
                           } else if (index === 1) {
@@ -294,15 +294,13 @@ const Page: NextPage = () => {
                           } else {
                             return `${date}日`;
                           }
-                        })}
-                      </Typography>
-                    </Box>
-                    <Box>
-                      <Typography variant={'body1'}>{'地址'}</Typography>
-                      <Typography variant={'title'} component={'p'}>
-                        {`${memberData.address.zipcode} ${memberData.address.county}${memberData.address.city}${memberData.address.detail}`}
-                      </Typography>
-                    </Box>
+                        })
+                        .join('')}
+                    />
+                    <TitleText
+                      title={'地址'}
+                      content={`${memberData.address.zipcode} ${memberData.address.county}${memberData.address.city}${memberData.address.detail}`}
+                    />
                   </Stack>
                   {openForm.Member && <MemberForm handleOpenForm={handleOpenForm} />}
                   <Stack
@@ -337,10 +335,10 @@ const Page: NextPage = () => {
                     alignItems: 'stretch',
                   }}>
                   <Box>
-                    <Typography variant={'body1'} component="h3" mb={'0.5rem'}>
+                    <Typography variant={isSmallDevice ? 'body2' : 'body1'} component="h3" mb={'0.5rem'}>
                       {`預訂參考編號： ${orderData[0]._id}`}
                     </Typography>
-                    <Typography variant={'h5'}>{'即將來的行程'}</Typography>
+                    <Typography variant={isSmallDevice ? 'title' : 'h5'}>{'即將來的行程'}</Typography>
                   </Box>
                   <Box
                     sx={{
@@ -354,30 +352,34 @@ const Page: NextPage = () => {
                     <Image
                       src={orderData[0].roomId.imageUrl}
                       alt={orderData[0].roomId.name}
-                      // layout="fill"
+                      layout="fill"
                       objectFit="cover"
-                      fill={true}
                     />
                   </Box>
                   <Stack direction={'column'} spacing={'1.5rem'}>
                     <Stack direction={'row'} spacing={'1rem'}>
-                      <Typography variant={'h6'}>
+                      <Typography variant={isSmallDevice ? 'subtitle1' : 'h6'}>
                         {`${orderData[0].roomId.name}，${calculateStayDays(
                           orderData[0].checkInDate,
                           orderData[0].checkOutDate,
                         )} 晚`}
                       </Typography>
                       <Divider orientation="vertical" variant="middle" flexItem />
-                      <Typography variant={'h6'}>{`住宿人數：${orderData[0].peopleNum} 位`}</Typography>
+                      <Typography
+                        variant={
+                          isSmallDevice ? 'subtitle1' : 'h6'
+                        }>{`住宿人數：${orderData[0].peopleNum} 位`}</Typography>
                     </Stack>
                     <Stack direction={'column'} spacing={'0.5rem'}>
                       <Box>
+                        {/* //TODO: 帶樣式的標題 */}
                         <Typography variant={'title'}>{`入住：${formatDate(
                           orderData[0].checkInDate,
                           '15:00 可入住',
                         )}`}</Typography>
                       </Box>
                       <Box>
+                        {/* //TODO: 帶樣式的標題 */}
                         <Typography variant={'title'}>
                           {`退房：${formatDate(orderData[0].checkOutDate, '12:00 前退房')}`}
                         </Typography>
@@ -388,6 +390,7 @@ const Page: NextPage = () => {
                   <Divider />
                   <Stack flexDirection={'column'} gap={'1.5rem'}>
                     <Box>
+                      {/* //TODO: 帶樣式的標題 */}
                       <Typography variant={'subtitle1'}>{'房內設備'}</Typography>
                     </Box>
                     <Card
@@ -401,13 +404,15 @@ const Page: NextPage = () => {
                       {orderData[0].roomId.facilityInfo.map((facility, index) => (
                         <Stack flexDirection={'row'} gap={'0.5rem'} key={index}>
                           <CheckIcon color="primary" />
-                          <Typography variant={'title'}>{facility.title}</Typography>
+                          <Typography variant={isSmallDevice ? 'subtitle1' : 'title'}>{facility.title}</Typography>
                         </Stack>
                       ))}
                     </Card>
                   </Stack>
                   <Stack flexDirection={'column'} gap={'1.5rem'}>
                     <Box>
+                      {/* //TODO: 帶樣式的標題 */}
+
                       <Typography variant={'subtitle1'}>{'備品提供'}</Typography>
                     </Box>
                     <Card
@@ -421,7 +426,7 @@ const Page: NextPage = () => {
                       {orderData[0].roomId.amenityInfo.map((facility, index) => (
                         <Stack flexDirection={'row'} gap={'0.5rem'} key={index}>
                           <CheckIcon color="primary" />
-                          <Typography variant={'title'}>{facility.title}</Typography>
+                          <Typography variant={isSmallDevice ? 'subtitle1' : 'title'}>{facility.title}</Typography>
                         </Stack>
                       ))}
                     </Card>
@@ -554,12 +559,12 @@ const Page: NextPage = () => {
                     gap: isSmallDevice ? '1.5rem' : '2.5rem',
                     alignItems: 'stretch',
                   }}>
-                  <Typography variant={'h5'} component="h3">
+                  <Typography variant={isSmallDevice ? 'title' : 'h5'} component="h3">
                     {'歷史訂單'}
                   </Typography>
                   {orderData.map((order, index) => (
                     <Fragment key={order._id}>
-                      <Stack gap={'1.5rem'} flexDirection={isSmallDevice ? 'column' : 'row'}>
+                      <Stack gap={'1.5rem'} flexDirection={isSmallDevice ? 'column' : 'row'} alignItems={'flex-start'}>
                         <Image
                           style={{
                             objectFit: 'cover',
@@ -572,23 +577,33 @@ const Page: NextPage = () => {
                           height={80}
                         />
                         <Stack direction={'column'} gap={'1rem'}>
-                          <Typography variant={'body1'}>{'訂單編號'}</Typography>
-                          <Typography variant={'title'}>{`預訂參考編號： ${order._id}`}</Typography>
-                          <Typography variant={'h6'} component="h4">
+                          <Typography
+                            variant={isSmallDevice ? 'body2' : 'title'}>{`預訂參考編號： ${order._id}`}</Typography>
+                          <Typography variant={isSmallDevice ? 'subtitle1' : 'h6'} component="h4">
                             {order.roomId.name}
                           </Typography>
                           <Box>
-                            <Typography variant={'body1'}>{`住宿天數：${calculateStayDays(
+                            <Typography variant={isSmallDevice ? 'body2' : 'body1'}>{`住宿天數：${calculateStayDays(
                               order.checkInDate,
                               order.checkOutDate,
                             )} 晚`}</Typography>
-                            <Typography variant={'body1'}>{`住宿人數：${order.peopleNum} 位`}</Typography>
+                            <Typography
+                              variant={
+                                isSmallDevice ? 'body2' : 'body1'
+                              }>{`住宿人數：${order.peopleNum} 位`}</Typography>
                           </Box>
                           <Box>
+                            {/* //TODO: 帶樣式的標題 */}
+
                             <Typography variant={'body1'}>{`入住：${formatDate(order.checkInDate)}`}</Typography>
+                          </Box>
+                          <Box>
+                            {/* //TODO: 帶樣式的標題 */}
                             <Typography variant={'body1'}>{`退房：${formatDate(order.checkOutDate)}`}</Typography>
                           </Box>
-                          <Typography variant={'title'}>{`NT$ ${formatNTD(order.roomId.price)}`}</Typography>
+                          <Typography variant={isSmallDevice ? 'subtitle1' : 'title'}>{`NT$ ${formatNTD(
+                            order.roomId.price,
+                          )}`}</Typography>
                         </Stack>
                       </Stack>
                       {index !== orderData.length - 1 && <Divider />}

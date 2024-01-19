@@ -13,9 +13,15 @@ export const UserBanner = ({ isSmallDevice, url }: { isSmallDevice: boolean; url
       }}>
       <Container sx={{ height: '100%' }}>
         <Stack direction={'column'} justifyContent={'center'} height="100%">
-          <Stack direction={{ sm: 'column', md: 'row' }} alignItems={'center'} spacing={{ sm: 2, md: 3 }}>
-            <Avatar sx={{ height: isSmallDevice ? '9rem' : '4.5rem', width: isSmallDevice ? '9rem' : '4.5rem' }} />
-            <Typography variant={'h4'} color="white" component="h2">{`Hello，member name`}</Typography>
+          <Stack
+            direction={{ sm: 'column', md: 'row' }}
+            alignItems={{ sm: 'flex-start', md: 'center' }}
+            spacing={{ sm: 2, md: 3 }}>
+            <Avatar sx={{ height: isSmallDevice ? '4.5rem' : '9rem', width: isSmallDevice ? '4.5rem' : '9rem' }} />
+            <Typography
+              variant={isSmallDevice ? 'h4' : 'h3'}
+              color="white"
+              component="h2">{`Hello，member name`}</Typography>
           </Stack>
         </Stack>
       </Container>

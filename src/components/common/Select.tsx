@@ -37,6 +37,7 @@ const CustomButton = forwardRef(function CustomButton<TValue extends {}, Multipl
 
 const StyledButton = styled('button', { shouldForwardProp: () => true })(
   ({ theme }) => `
+  font-family: ${theme.typography.fontFamily};
   position: relative;
   font-size: 0.875rem;
   box-sizing: border-box;
