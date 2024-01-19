@@ -11,7 +11,6 @@ import IconButton from '@mui/material/IconButton';
 import DehazeIcon from '@mui/icons-material/Dehaze';
 import CloseIcon from '@mui/icons-material/Close';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
-
 //images
 import LogoWhite from '@/assets/images/logoWhite.png';
 // componets
