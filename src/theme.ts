@@ -199,6 +199,22 @@ const theme: Theme = createTheme({
         },
       ],
     },
+
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#140F0A',
+        },
+      },
+      variants: [
+        {
+          props: { color: 'transparent' },
+          style: {
+            backgroundColor: 'transparent',
+          },
+        },
+      ],
+    },
   },
 });
 

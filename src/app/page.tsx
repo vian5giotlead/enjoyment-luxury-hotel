@@ -1,12 +1,17 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import Box from '@mui/material/Box';
+import Footer from '@/components/common/Footer';
+
 export default function Home() {
   return (
-    <main>
-      <div>首頁</div>
-      <Link href="/login"> login </Link>
-      <Link href="/aggregate"> aggregate </Link>
-    </main>
+    <>
+      <Box sx={{ height: '150px' }}></Box>
+      <main>
+        <div>首頁</div>
+      </main>
+      <Footer />
+    </>
   );
 }
