@@ -1,5 +1,5 @@
 import { ForwardedRef, forwardRef, RefAttributes, useRef } from 'react';
-import { FormControl, InputLabel, styled, FormHelperText } from '@mui/material';
+import { FormControl, styled, FormHelperText } from '@mui/material';
 
 import { Select as BaseSelect, selectClasses, SelectProps, SelectRootSlotProps } from '@mui/base/Select';
 import { Option as BaseOption, optionClasses } from '@mui/base/Option';
@@ -99,6 +99,20 @@ const Listbox = styled('ul')(
   border: 1px solid ${theme.palette.primary.light};
   color: ${theme.palette.primary.main};
   box-shadow: 0px 2px 4px ${'rgba(0,0,0, 0.05)'};
+   /* 捲軸樣式 */
+  &::-webkit-scrollbar {
+    width: 0.5rem; // 捲軸寬度
+  }
+  &::-webkit-scrollbar-track {
+    background: #F7F2EE; // 捲軸軌道顏色
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #BF9D7D; // 捲軸滑塊顏色
+    border-radius: 0.25rem; // 捲軸滑塊圓角
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #7B6651; // 捲軸滑塊懸停顏色
+  }
   `,
 );
 
@@ -159,13 +173,23 @@ type Props = {
   disabled?: boolean;
 };
 
+const Label = styled('label')(
+  ({ theme }) => `
+  font-family: ${theme.typography.fontFamily};
+  font-weight: 700;
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  letter-spacing: 0.0175rem;
+  `,
+);
+
 const StyleSelect = forwardRef<HTMLSelectElement, Props>(
   ({ label, name, options, placeholder, fullWidth = true, helperText, error = false, disabled = false }, ref) => {
     return (
       <FormControl fullWidth={fullWidth} variant="standard" error={error}>
-        <InputLabel shrink htmlFor={name}>
-          {label}
-        </InputLabel>
+        <Label htmlFor={name}>{label}</Label>
         <Select id={name} name={name} defaultValue="" disabled={disabled}>
           <Option disabled value="">
             <em>{placeholder}</em>

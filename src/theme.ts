@@ -10,6 +10,13 @@ const noto_Serif_TC = Noto_Serif_TC({
 });
 
 declare module '@mui/material/styles' {
+  interface BreakpointOverrides {
+    xs: false;
+    sm: true;
+    md: true;
+    lg: true;
+    xl: true;
+  }
   interface TypographyVariants {
     h1: true;
     h2: true;
@@ -36,6 +43,14 @@ declare module '@mui/material/Typography' {
 }
 
 const theme: Theme = createTheme({
+  breakpoints: {
+    values: {
+      sm: 0,
+      md: 768,
+      lg: 1024,
+      xl: 1280,
+    },
+  },
   palette: {
     primary: {
       main: '#BF9D7D',
@@ -60,9 +75,6 @@ const theme: Theme = createTheme({
   },
   typography: {
     fontFamily: noto_Serif_TC.style.fontFamily,
-    allVariants: {
-      fontFamily: noto_Serif_TC.style.fontFamily,
-    },
     body1: {
       fontSize: '1rem',
     },
@@ -99,7 +111,85 @@ const theme: Theme = createTheme({
     },
   },
   components: {
+    MuiButton: {
+      defaultProps: {
+        disableElevation: true,
+        disableRipple: true,
+      },
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
+          fontWeight: 700,
+          fontSize: '1rem',
+          lineHeight: 1.5,
+          letterSpacing: '0.02rem',
+        },
+      },
+      variants: [
+        {
+          props: { variant: 'outlined' },
+          style: {
+            border: '1px solid',
+            borderColor: '#BF9D7D',
+            color: '#BF9D7D',
+            backgroundColor: '#fff',
+            '&:hover': {
+              borderColor: '#7b6651',
+              backgroundColor: '#F7F2EE',
+              color: '#7B6651',
+            },
+            '&:disabled': {
+              borderColor: '#909090',
+              backgroundColor: '#fff',
+              color: '#909090',
+            },
+            '&:active': {
+              borderColor: '#895B3E',
+              backgroundColor: '#F7F2EE',
+              color: '#895B3E',
+            },
+          },
+        },
+        {
+          props: { variant: 'contained' },
+          style: {
+            backgroundColor: '#BF9D7D',
+            color: '#fff',
+            '&:hover': {
+              backgroundColor: '#7b6651',
+              color: '#fff',
+            },
+            '&:disabled': {
+              backgroundColor: '#ececec',
+              color: '#909090',
+            },
+            '&:active': {
+              backgroundColor: '#895B3E',
+              color: '#fff',
+            },
+          },
+        },
+        {
+          props: { variant: 'text' },
+          style: {
+            color: '#BF9D7D',
+            '&:hover': {
+              color: '#7B6651',
+            },
+            '&:disabled': {
+              color: '#909090',
+            },
+            '&:active': {
+              color: '#895B3E',
+            },
+          },
+        },
+      ],
+    },
     MuiTypography: {
+      defaultProps: {
+        fontFamily: noto_Serif_TC.style.fontFamily,
+      },
       variants: [
         {
           props: { variant: 'display' },
