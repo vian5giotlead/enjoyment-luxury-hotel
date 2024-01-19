@@ -1,9 +1,11 @@
 import { Box, IconButton, Typography } from '@mui/material';
 
 interface SquareCardProps {
-  title: string;
+  title?: string | number;
   children: React.ReactNode;
 }
+
+export type { SquareCardProps };
 
 function SquareCard(props: SquareCardProps) {
   const { title, children } = props;
@@ -13,6 +15,9 @@ function SquareCard(props: SquareCardProps) {
       <Box
         width={97}
         height={97}
+        display="flex"
+        flexDirection="column"
+        alignItems="flex-start"
         sx={{
           p: '20.5px 16px',
           borderRadius: '8px',
