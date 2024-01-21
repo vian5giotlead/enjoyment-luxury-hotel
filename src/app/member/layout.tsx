@@ -4,8 +4,8 @@ import { useWidth } from '@/hooks';
 import { UserBanner } from './UserBanner';
 import memberBannerBG from '@/assets/images/memberBannerBG.jpg';
 import { Box } from '@mui/material';
-import desktopHorizontalWave from '@/assets/images/desktop-horizontalWave.svg';
-import mobileHorizontalWave from '@/assets/images/mobile-horizontalWave.svg';
+import DesktopHorizontalWave from '@/assets/images/desktop-horizontalWave.svg';
+import MobileHorizontalWave from '@/assets/images/mobile-horizontalWave.svg';
 import Image from 'next/image';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -16,13 +16,21 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div style={{ background: '#140F0A' }}>
       <UserBanner isSmallDevice={isSmallDevice} url={memberBannerBG.src} />
       {children}
-      <Box
-        sx={{
-          maxHeight: isSmallDevice ? '5.25rem' : '11.75rem',
-          position: 'relative',
-          background: `url(${isSmallDevice ? mobileHorizontalWave.src : desktopHorizontalWave.src})`,
-        }}
-      />
+      {isSmallDevice ? (
+        <MobileHorizontalWave
+          style={{
+            width: '100%',
+            maxHeight: '5.25rem',
+          }}
+        />
+      ) : (
+        <DesktopHorizontalWave
+          style={{
+            width: '100%',
+            maxHeight: '11.75rem',
+          }}
+        />
+      )}
     </div>
   );
 }

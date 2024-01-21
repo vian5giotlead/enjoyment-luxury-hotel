@@ -226,7 +226,7 @@ const MemberForm = ({ handleOpenForm }: MemberFormProps) => {
             variant={'outlined'}
             size={'large'}
             disableRipple
-            onClick={handleOpenForm('Member')}>
+            onClick={() => handleOpenForm('Member')}>
             {'取消'}
           </Button>
         </Stack>

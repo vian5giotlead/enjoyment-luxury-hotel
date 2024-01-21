@@ -89,7 +89,7 @@ const ChangePasswordForm = ({ handleOpenForm }: ChangePasswordFormProps) => {
           variant={'outlined'}
           size={'large'}
           disableRipple
-          onClick={handleOpenForm('ChangePassword')}>
+          onClick={() => handleOpenForm('ChangePassword')}>
           {'取消'}
         </Button>
       </Stack>
