@@ -20,8 +20,8 @@ function SquareCard(props: SquareCardProps) {
         sx={{
           p: 2,
           borderRadius: '8px',
-          border: '1px solid ',
           borderColor: 'primary.light',
+          bgcolor: '#ffffff'
         }}>
         {children}
         <Typography sx={{ fontWeight: 700 }}>{title}</Typography>
