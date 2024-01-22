@@ -6,13 +6,14 @@ import { useTheme } from '@mui/material/styles';
 import { useMediaQuery } from '@mui/material';
 import BedIcon from '@mui/icons-material/Bed';
 import PersonIcon from '@mui/icons-material/Person';
+import CheckIcon from '@mui/icons-material/Check';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import SquareCard from '@/components/aggregate/SquareCard';
 import  Headline from '@/app/roomBooking/Headline';
 import type { NextPage } from 'next';
 import Card from '@/components/common/Card';
 import { useWidth } from '@/hooks';
-import { BorderBottom } from '@mui/icons-material';
+import BookerForm from "./BookerForm"
 
 
 const RoomBooking: NextPage = () => {
@@ -25,7 +26,7 @@ const RoomBooking: NextPage = () => {
     <>
       <Box
         className="container"
-        max-width="1920px"
+        width="100%"
         height="100%"
         margin="0 auto"
         bgcolor="
@@ -51,7 +52,9 @@ const RoomBooking: NextPage = () => {
                     <Headline title="選擇房型" fontSizeStyle="normal" />
                     <Typography>尊爵雙人房</Typography>
                   </Box>
-                  <Typography>編輯</Typography>
+                  <Link component={'button'} underline={'always'} fontWeight={700} color={'#000000'}>
+                        {'編輯'}
+                  </Link>
                 </Stack>
                 <Stack flexDirection={'row'} justifyContent={'space-between'} alignItems={'center'} sx={{ mb: '24px' }}>
                   <Box>
@@ -59,27 +62,33 @@ const RoomBooking: NextPage = () => {
                     <Typography>入住：12 月 4 日星期二</Typography>
                     <Typography>退房：12 月 6 日星期三</Typography>
                   </Box>
-                  <Typography>編輯</Typography>
+                  <Link component={'button'} underline={'always'} fontWeight={700} color={'#000000'}>
+                        {'編輯'}
+                  </Link>
                 </Stack>
                 <Stack flexDirection={'row'} justifyContent={'space-between'} alignItems={'center'} sx={{ mb: '24px' }}>
                   <Box>
                     <Headline title="房客人數" fontSizeStyle="normal" />
                     <Typography>2 人</Typography>
                   </Box>
-                  <Typography>編輯</Typography>
+                  <Link component={'button'} underline={'always'} fontWeight={700} color={'#000000'}>
+                        {'編輯'}
+                  </Link>
                 </Stack>
               </Box>
-              <hr />
+              <hr style={{ marginBottom: '24px' }} />
               <Box component="section">
                 <Stack direction={'row'} justifyContent={'space-between'} sx={{ marginBottom: '40px' }}>
                   <Typography variant={'h4'} component="h3">
                     訂房人資訊
                   </Typography>
-                  <Typography color={'primary'}>套用會員資料</Typography>
+                  <Link component={'button'} underline={'always'} fontWeight={700}>
+                        {'套用會員資料'}
+                  </Link>
                 </Stack>
-                <div>Form: 姓名、手機、郵件、信箱</div>
+                <BookerForm />
               </Box>
-              <hr />
+              <hr style={{ marginBottom: '24px' }} />
               <Box component="section">
                 <Typography variant={'h4'} component="h3" sx={{ marginBottom: '40px' }}>
                   房間資訊
@@ -106,12 +115,42 @@ const RoomBooking: NextPage = () => {
                 </Box>
                 <Box sx={{ mb: 3 }}>
                   <Headline title="房間格局" />
+                  <Stack bgcolor={'#ffffff'} direction={'row'} p={3}>
+                    <Box sx={{ display: 'flex' }} mr={'40px'}>
+                      <CheckIcon color="primary" sx={{ fontSize: 24 }} />
+                      <Typography>市景</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex' }} mr={'40px'}>
+                      <CheckIcon color="primary" sx={{ fontSize: 24 }} />
+                      <Typography>獨立衛浴</Typography>
+                    </Box>
+                  </Stack>
                 </Box>
                 <Box sx={{ mb: 3 }}>
                   <Headline title="房內設備" />
+                  <Stack bgcolor={'#ffffff'} direction={'row'} p={3}>
+                    <Box sx={{ display: 'flex' }} mr={'40px'}>
+                      <CheckIcon color="primary" sx={{ fontSize: 24 }} />
+                      <Typography>平面電視</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex' }} mr={'40px'}>
+                      <CheckIcon color="primary" sx={{ fontSize: 24 }} />
+                      <Typography>吹風機</Typography>
+                    </Box>
+                  </Stack>
                 </Box>
                 <Box sx={{ mb: 3 }}>
                   <Headline title="備品提供" />
+                  <Stack bgcolor={'#ffffff'} direction={'row'} p={3}>
+                    <Box sx={{ display: 'flex' }} mr={'40px'}>
+                      <CheckIcon color="primary" sx={{ fontSize: 24 }} />
+                      <Typography>衛生紙</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex' }} mr={'40px'}>
+                      <CheckIcon color="primary" sx={{ fontSize: 24 }} />
+                      <Typography>拖鞋</Typography>
+                    </Box>
+                  </Stack>
                 </Box>
               </Box>
             </Grid>
@@ -144,9 +183,7 @@ const RoomBooking: NextPage = () => {
                   <Typography fontWeight={700}>總價</Typography>
                   <Typography fontWeight={700}>NT$ 19,000</Typography>
                 </Stack>
-                <Link component={'button'} underline={'always'} fontWeight={700}>
-                        {'重設'}
-                </Link>
+                <Button variant="contained">確認訂房</Button>
               </Card>
             </Grid>
           </Grid>
