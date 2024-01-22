@@ -1,23 +1,28 @@
-import { Box, Card, CardContent, CardMedia, Divider, Grid, IconButton, Stack, Typography } from '@mui/material';
+import { useRouter } from 'next/navigation';
+import { Box, Card, CardContent, Divider, Grid, IconButton, Stack, Typography } from '@mui/material';
 import ArrowForward from '@mui/icons-material/ArrowForward';
 import AspectRatio from '@mui/icons-material/AspectRatio';
 import Bed from '@mui/icons-material/Bed';
 import Person from '@mui/icons-material/Person';
 import SquareCard from './SquareCard';
 
-export default function RoomTypeCard() {
-  const templateData = [
+import { RoomTypeCardProps, SquareCardProps } from '@/app/(room)/room-type/_aggregation';
+
+export default function RoomTypeCard(props: RoomTypeCardProps) {
+  const router = useRouter();
+
+  const graphicalData: SquareCardProps[] = [
     {
-      title: '24坪',
-      icon: <AspectRatio />,
+      title: props.areaInfo,
+      children: <AspectRatio />,
     },
     {
-      title: '1張大床',
-      icon: <Bed />,
+      title: props.bedInfo,
+      children: <Bed />,
     },
     {
-      title: '2-4人',
-      icon: <Person />,
+      title: `${props.maxPeople}人`,
+      children: <Person />,
     },
   ];
 
@@ -30,34 +35,28 @@ export default function RoomTypeCard() {
       elevation={0}
       sx={{
         width: '100%',
-        height: '457px',
         borderRadius: '20px',
       }}>
       <Grid container width="100%">
-        <Grid item sm={12} md={7}>
-          { /** TO DO 輪播 */}
+        <Grid item md={12} lg={7}>
+          {/** TO DO 輪播 */}
         </Grid>
-        <Grid item sm={12} md={5}>
+        <Grid item md={12} lg={5}>
           <CardContent sx={{ p: { sm: 2, md: 5 } }}>
             <Stack spacing={{ sm: 3, md: 5 }}>
               <Box>
-                <Typography
-                  component="div"
-                  sx={{
-                    fontSize: '40px',
-                    fontWeight: 700,
-                  }}>
-                  景觀雙人房
+                <Typography component="div" variant="h2">
+                  {props.name}
                 </Typography>
-                <Typography component="div" color="#4b4b4b">
-                  景觀雙人房擁有絕美的高雄市景觀，讓您在舒適的環境中欣賞城市之美。
+                <Typography component="div" color="#4b4b4b" mt={1}>
+                  {props.description}
                 </Typography>
               </Box>
               <Box>
                 <Grid container spacing={2}>
-                  {templateData.map((item) => (
+                  {graphicalData.map((item) => (
                     <Grid item key={item.title}>
-                      <SquareCard title={item.title}>{item.icon}</SquareCard>
+                      <SquareCard title={item.title}>{item.children}</SquareCard>
                     </Grid>
                   ))}
                 </Grid>
@@ -69,7 +68,7 @@ export default function RoomTypeCard() {
                     backgroundImage: 'linear-gradient(90deg, #BE9C7C, transparent)',
                   }}></Divider>
               </Box>
-              <Box display="flex" justifyContent="space-between" alignItems="center">
+              <Box display="flex" justifyContent="space-between" alignItems="center" py={2}>
                 <Typography
                   component="div"
                   color="primary.main"
@@ -77,9 +76,9 @@ export default function RoomTypeCard() {
                     fontSize: { sm: '16px', md: '24px' },
                     fontWeight: 700,
                   }}>
-                  NT$ 10,000
+                  {`NT$ ${props.price.toLocaleString()}`}
                 </Typography>
-                <IconButton color="primary" size="large">
+                <IconButton color="primary" size="large" onClick={() => router.push(`/room-type/${props._id}`)}>
                   <ArrowForward />
                 </IconButton>
               </Box>
