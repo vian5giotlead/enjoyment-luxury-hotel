@@ -1,11 +1,17 @@
 'use client';
+
 import { Avatar, Box, Container, Stack, Typography } from '@mui/material';
 
-export const UserBanner = ({ isSmallDevice, url }: { isSmallDevice: boolean; url: string }) => {
+import memberBannerBG from '@/assets/images/memberBannerBG.jpg';
+import { useWidth } from '@/hooks';
+
+export const UserBanner = () => {
+  const widthSize = useWidth();
+  const isSmallDevice = widthSize === 'sm';
   return (
     <Box
       sx={{
-        background: `linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${url})`,
+        background: `linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${memberBannerBG.src})`,
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
         backgroundPosition: 'center',

@@ -224,6 +224,13 @@ const theme: Theme = createTheme({
         },
       },
     },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          boxShadow: 'none',
+        },
+      },
+    },
   },
 });
 
