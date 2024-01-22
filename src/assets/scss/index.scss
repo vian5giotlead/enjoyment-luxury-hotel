@@ -1,2 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&display=swap');
-@import './reset.scss'
+@import './reset.scss';
+
+.nav-link {
+
+  display: flex;
+  padding: 16px;
+  white-space: nowrap;
+  text-decoration: none;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  &.active {
+    padding: 16px 32px;
+    border-radius: 8px;
+    background-color: #bf9d7d;
+  }
+}
