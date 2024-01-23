@@ -35,7 +35,7 @@ export default async function Page() {
           <ChangePasswordPanel />
         </Grid>
         <Grid item md={7}>
-          <MemberDataPanel data={memberData} />
+          <MemberDataPanel data={memberData as unknown as Data} />
         </Grid>
       </Grid>
     </Container>

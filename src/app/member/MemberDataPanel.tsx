@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Stack, Typography } from '@mui/material';
 
 import { Controller, useForm } from 'react-hook-form';
@@ -11,29 +11,25 @@ import Select from '@/components/common/Select';
 import { Form, TitleText } from './style';
 import Card from '@/components/common/Card';
 import { useWidth } from '@/hooks';
+import { citys, zipcodes } from '@/assets/cityData'
+import countryPhoneCodes from '@/assets/countryPhoneCodes.json';
+import countryFlagEmoji from '@/assets/countryFlagEmoji.json';
 
 export const memberDataSchema = z.object({
-  name: z.string().min(1),
-  email: z.string().email().min(1),
-  phone: z.string().min(1),
+  name: z.string().min(1, "名字不能為空"),
+  email: z.string().email("請輸入有效的電子郵件地址"),
+  password: z.string().min(6, "密碼至少需要6個字符").regex(/[a-zA-Z0-9]+/, "密碼要包含英數字，且不能使用特殊符號"),
+  city: z.string().min(1, "城市不能為空"),
+  phone: z.string().min(1, "電話號碼不能為空"),
   address: z.object({
-    zipcode: z.number().nonnegative(),
-    detail: z.string().min(1),
-    county: z.string().min(1),
-    city: z.string().min(1),
+    zipcode: z.number().min(100, "郵政編碼應為有效數值").max(999, "郵政編碼應為有效數值"),
+    detail: z.string().min(1, "地址詳情不能為空"),
   }),
+  countryCode: z.string(),
   birthdayYear: z.number().nonnegative(),
   birthdayMonth: z.number().min(1).max(12),
   birthdayDay: z.number().min(1).max(31),
 });
-
-const cities = ['台北市', '新北市', '桃園市']; // 示例城市數據
-const districts = {
-  台北市: ['中正區', '大同區', '中山區'],
-  新北市: ['板橋區', '三重區', '中和區'],
-  桃園市: ['桃園區', '中壢區', '大溪區'],
-  // 其他城市的區域數據...
-};
 
 const currentYear = new Date().getFullYear();
 const years = Array.from({ length: 88 }, (_, i) => currentYear - i);
@@ -57,18 +53,21 @@ const memberDataTemplate = {
   birthdayDay: 1,
 };
 
-type Data = {
-  status: boolean;
-  result: MemberData;
-};
 
 const Page = ({ data }: { data: Data }) => {
-  const [openForm, setOpenForm] = useState(false);
+  const [ openForm, setOpenForm ] = useState(false);
+  const [ counties, setCounties ] = useState<{
+    detail: string;
+    zipcode: number;
+    city: string;
+    county: string;
+}[] | []>([]);
+
   console.log(data);
   const memberData = data.result;
 
   const birthday = new Date(memberData.birthday);
-  memberData.birthday = `${birthday.getFullYear()}年 ${birthday.getMonth() + 1}月 ${birthday.getDate()}日`;
+  const formatBirthday = `${birthday.getFullYear()}年 ${birthday.getMonth() + 1}月 ${birthday.getDate()}日`;
 
   const widthSize = useWidth();
   const isSmallDevice = widthSize === 'sm';
@@ -81,7 +80,9 @@ const Page = ({ data }: { data: Data }) => {
     watch,
   } = useForm<MemberDataType>({
     resolver: zodResolver(memberDataSchema),
-    defaultValues: memberDataTemplate,
+    defaultValues: {
+      ...memberData
+    },
   });
 
   const onSubmit = (data: MemberDataType) => {
@@ -90,7 +91,26 @@ const Page = ({ data }: { data: Data }) => {
     console.log(finalData);
   };
 
-  const city = watch('address.city');
+  const city = watch('city');
+  useEffect(() => {
+    if (city) {
+      const findCity = zipcodes.find((item) => item.city === city);
+      console.log(findCity);
+      const resultCounties = findCity?.zone as {
+        detail: string;
+        zipcode: number;
+        city: string;
+        county: string;
+      }[];
+      setCounties(resultCounties);
+    }
+  }, [city]);
+
+
+  const handleMemberInfoEdit = function ()
+  {
+    setOpenForm(true);
+  }
 
   return (
     <Card
@@ -104,13 +124,7 @@ const Page = ({ data }: { data: Data }) => {
       <Typography variant={'h5'} component="h4">
         {'基本資料'}
       </Typography>
-      <Stack direction={'column'} spacing={{ sm: 2, md: 3 }}>
-        <TitleText title={'姓名'} content={memberData.name} />
-        <TitleText title={'手機號碼'} content={memberData.phone} />
-        <TitleText title={'生日'} content={memberData.birthday} />
-        <TitleText title={'地址'} content={`${memberData.address.zipcode} ${memberData.address.detail}`} />
-      </Stack>
-      {openForm && (
+      {openForm ? (
         <Form onSubmit={handleSubmit(onSubmit)}>
           <Stack direction={'column'} spacing={'1.5rem'}>
             <Controller
@@ -176,53 +190,43 @@ const Page = ({ data }: { data: Data }) => {
             </Stack>
             <Stack direction={'row'} alignItems={'flex-end'} spacing={'0.5rem'}>
               <Controller
-                name="address.city"
+                name="city"
                 control={control}
                 render={({ field }) => (
                   <Select
                     {...field}
                     label="地址"
-                    options={cities.map((city) => ({ value: city, label: city }))}
-                    error={Boolean(errors.address?.city)}
+                    options={citys.map((city) => ({ value: city, label: city }))}
+                    error={Boolean(errors.city)}
                     placeholder="您所在的城市"
                   />
                 )}
               />
+              {
+                counties.length > 1 && counties.map((county) => (
+                  <div key={county.zipcode}>
+                    <Typography variant={'h6'} component="h6">
+                      {county.county}: {county.city} {county.zipcode}
+                    </Typography>
+                  </div>))
+              }
               <Controller
-                name="address.county"
+                name="address.zipcode"
                 control={control}
                 render={({ field }) => (
                   <Select
                     {...field}
                     label=""
                     options={
-                      city
-                        ? (districts[city as keyof typeof districts] || []).map((district: string) => ({
-                            value: district,
-                            label: district,
-                          }))
-                        : []
+                      counties.map((county) => ({value: county.zipcode, label: county.county}))
                     }
-                    error={Boolean(errors.address?.county)}
-                    disabled={!city}
+                    error={Boolean(errors.address?.message)}
+                    disabled={counties.length <= 1}
                     placeholder="您所在的區域"
                   />
                 )}
               />
             </Stack>
-            <Controller
-              name="address.zipcode"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  type="text"
-                  label="郵遞區號"
-                  error={Boolean(errors.address?.zipcode)}
-                  placeholder="請輸入郵遞區號"
-                />
-              )}
-            />
             <Controller
               name="address.detail"
               control={control}
@@ -262,6 +266,13 @@ const Page = ({ data }: { data: Data }) => {
             </Stack>
           </Stack>
         </Form>
+      ) : (
+        <Stack direction={'column'} spacing={{ sm: 2, md: 3 }}>
+          <TitleText title={'姓名'} content={memberData.name} />
+          <TitleText title={'手機號碼'} content={memberData.phone} />
+          <TitleText title={'生日'} content={formatBirthday} />
+          <TitleText title={'地址'} content={`${memberData.address.zipcode} ${memberData.address.detail}`} />
+        </Stack>
       )}
       <Stack
         direction={'column'}
@@ -270,7 +281,7 @@ const Page = ({ data }: { data: Data }) => {
         sx={{
           display: !openForm ? 'flex' : 'none',
         }}>
-        <Button variant={'outlined'} size={'large'} onClick={() => setOpenForm(false)}>
+        <Button variant={'outlined'} size={'large'} onClick={() => handleMemberInfoEdit()}>
           {'編輯'}
         </Button>
       </Stack>

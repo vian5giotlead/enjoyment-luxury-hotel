@@ -15,3 +15,9 @@ type MemberData = {
   createdAt: string;
   updatedAt: string;
 };
+
+
+type Data = {
+  status: boolean;
+  result: MemberData;
+};

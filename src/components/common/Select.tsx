@@ -9,7 +9,9 @@ import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDown
 const Select = forwardRef(function Select<TValue extends {}, Multiple extends boolean>(
   props: SelectProps<TValue, Multiple>,
   ref: ForwardedRef<HTMLButtonElement>,
-) {
+)
+{
+
   const slots: SelectProps<TValue, Multiple>['slots'] = {
     root: CustomButton,
     listbox: Listbox,
@@ -185,6 +187,8 @@ const Label = styled('label')(
   letter-spacing: 0.0175rem;
   `,
 );
+
+
 
 const StyleSelect = forwardRef<HTMLSelectElement, Props>(
   ({ label, name, options, placeholder, fullWidth = true, helperText, error = false, disabled = false }, ref) => {
