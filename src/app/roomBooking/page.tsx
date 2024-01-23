@@ -3,22 +3,34 @@
 import * as React from 'react';
 import { Box, Button, Container, Grid, Stack, Typography, Link } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { useMediaQuery } from '@mui/material';
+//import { useMediaQuery } from '@mui/material';
 import BedIcon from '@mui/icons-material/Bed';
 import PersonIcon from '@mui/icons-material/Person';
 import CheckIcon from '@mui/icons-material/Check';
+import Check from '@mui/icons-material/Check';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import SquareCard from '@/components/aggregate/SquareCard';
-import  Headline from '@/app/roomBooking/Headline';
+import SquareCard from '@/components/room/SquareCard';
+import Headline from '@/app/roomBooking/Headline';
 import type { NextPage } from 'next';
 import Card from '@/components/common/Card';
 import { useWidth } from '@/hooks';
-import BookerForm from "./BookerForm"
+import BookerForm from './BookerForm';
+import RoomFacilityBlock from '@/components/room/RoomFacilityBlock';
 
+const facilityInfo = [
+  {
+    title: '平面電視',
+    isProvide: true,
+  },
+  {
+    title: '吹風機',
+    isProvide: true,
+  },
+];
 
 const RoomBooking: NextPage = () => {
   const theme = useTheme();
-  const matches = useMediaQuery(() => theme.breakpoints.down('md'));
+  //const matches = useMediaQuery(() => theme.breakpoints.down('md'));
   const widthSize = useWidth();
   const isSmallDevice = widthSize;
 
@@ -31,9 +43,8 @@ const RoomBooking: NextPage = () => {
         margin="0 auto"
         bgcolor="
 #F7F2EE">
-        <div>RoomBooking header</div>
         <Container>
-          <Box sx={{ marginBottom: '42px', display: 'flex' }}>
+          <Box sx={{ p: '120px 0 40px', display: 'flex' }}>
             <Stack direction={'row'} justifyContent={'center'} alignItems={'center'}>
               <ArrowBackIosNewIcon sx={{ fontSize: 24, marginRight: '8px' }} />
             </Stack>
@@ -53,7 +64,7 @@ const RoomBooking: NextPage = () => {
                     <Typography>尊爵雙人房</Typography>
                   </Box>
                   <Link component={'button'} underline={'always'} fontWeight={700} color={'#000000'}>
-                        {'編輯'}
+                    {'編輯'}
                   </Link>
                 </Stack>
                 <Stack flexDirection={'row'} justifyContent={'space-between'} alignItems={'center'} sx={{ mb: '24px' }}>
@@ -63,7 +74,7 @@ const RoomBooking: NextPage = () => {
                     <Typography>退房：12 月 6 日星期三</Typography>
                   </Box>
                   <Link component={'button'} underline={'always'} fontWeight={700} color={'#000000'}>
-                        {'編輯'}
+                    {'編輯'}
                   </Link>
                 </Stack>
                 <Stack flexDirection={'row'} justifyContent={'space-between'} alignItems={'center'} sx={{ mb: '24px' }}>
@@ -72,7 +83,7 @@ const RoomBooking: NextPage = () => {
                     <Typography>2 人</Typography>
                   </Box>
                   <Link component={'button'} underline={'always'} fontWeight={700} color={'#000000'}>
-                        {'編輯'}
+                    {'編輯'}
                   </Link>
                 </Stack>
               </Box>
@@ -83,7 +94,7 @@ const RoomBooking: NextPage = () => {
                     訂房人資訊
                   </Typography>
                   <Link component={'button'} underline={'always'} fontWeight={700}>
-                        {'套用會員資料'}
+                    {'套用會員資料'}
                   </Link>
                 </Stack>
                 <BookerForm />
@@ -113,18 +124,29 @@ const RoomBooking: NextPage = () => {
                     </Grid>
                   </Grid>
                 </Box>
-                <Box sx={{ mb: 3 }}>
+                <Box sx={{ mb: 3, width: '100%' }}>
                   <Headline title="房間格局" />
-                  <Stack bgcolor={'#ffffff'} direction={'row'} p={3}>
-                    <Box sx={{ display: 'flex' }} mr={'40px'}>
-                      <CheckIcon color="primary" sx={{ fontSize: 24 }} />
-                      <Typography>市景</Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex' }} mr={'40px'}>
-                      <CheckIcon color="primary" sx={{ fontSize: 24 }} />
-                      <Typography>獨立衛浴</Typography>
-                    </Box>
-                  </Stack>
+                  <Box sx={{ width: '100%' }}>
+                    <RoomFacilityBlock facilities={facilityInfo} />
+                  </Box>
+                  {/* <Grid container spacing={1} columnSpacing={5} width="100%">
+            <Grid item sm={6} lg={2.4}>
+              <Stack direction="row">
+                <Check color="primary" sx={{ fontSize: 24 }} />
+                <Typography variant="title" ml={1}>
+                  hello
+                </Typography>
+              </Stack>
+            </Grid>
+            <Grid item sm={6} lg={2.4}>
+              <Stack direction="row">
+                <Check color="primary" sx={{ fontSize: 24 }} />
+                <Typography variant="title" ml={1}>
+                  hello
+                </Typography>
+              </Stack>
+            </Grid>
+    </Grid> */}
                 </Box>
                 <Box sx={{ mb: 3 }}>
                   <Headline title="房內設備" />
@@ -139,7 +161,7 @@ const RoomBooking: NextPage = () => {
                     </Box>
                   </Stack>
                 </Box>
-                <Box sx={{ mb: 3 }}>
+                <Box sx={{ mb: 15 }}>
                   <Headline title="備品提供" />
                   <Stack bgcolor={'#ffffff'} direction={'row'} p={3}>
                     <Box sx={{ display: 'flex' }} mr={'40px'}>
@@ -165,7 +187,7 @@ const RoomBooking: NextPage = () => {
                 <img
                   src="https://raw.githubusercontent.com/hexschool/2022-web-layout-training/main/typescript-hotel/%E6%A1%8C%E6%A9%9F%E7%89%88/room3-1.png"
                   alt="room image"
-                  style={{ borderRadius: '8px', marginBottom: '28px'}}
+                  style={{ borderRadius: '8px', marginBottom: '28px' }}
                 />
                 <Typography variant={'h4'} component="h3" mb={'12px'}>
                   價格詳情
@@ -188,7 +210,6 @@ const RoomBooking: NextPage = () => {
             </Grid>
           </Grid>
         </Container>
-        <div>RoomBooking footer</div>
       </Box>
     </>
   );
