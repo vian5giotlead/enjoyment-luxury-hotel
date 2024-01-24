@@ -17,7 +17,7 @@ export default function Headline(props: HeadlineProps) {
           borderRadius: '10px',
         }}
       />
-      <Typography variant="h5">{title}</Typography>
+      <Typography fontSize={{ sm: '16px', md: '24px'}} fontWeight={700}>{title}</Typography>
     </Box>
   );
 }
