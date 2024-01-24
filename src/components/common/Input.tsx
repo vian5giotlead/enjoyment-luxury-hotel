@@ -1,13 +1,20 @@
-import { FormControl, FormHelperText, InputBase, styled } from '@mui/material';
-import { forwardRef } from 'react';
+import { ForwardedRef, forwardRef } from 'react';
+import { FormControl, FormHelperText, styled } from '@mui/material';
+import { Input as BaseInput } from '@mui/base/Input';
+import { UseFormRegister } from 'react-hook-form';
 
-const StyleInput = styled(InputBase)(({ theme }) => ({
-  '& .MuiInputBase-input': {
+const InputEl = forwardRef(function CustomInput(props: InputProps, ref: ForwardedRef<HTMLDivElement>) {
+  return <BaseInput slots={{ input: InputElement }} {...props} ref={ref} />;
+});
+
+const InputElement = styled('input')(({ theme }) => ({
+  '&.MuiInput-input': {
     borderRadius: 4,
     position: 'relative',
     backgroundColor: '#fff',
     border: '1px solid',
     borderColor: '#ececec',
+    width: '100%',
     [theme.breakpoints.down('md')]: { fontSize: '0.875rem' },
     [theme.breakpoints.up('md')]: { fontSize: '1rem' },
     padding: '10px 12px',
@@ -16,20 +23,30 @@ const StyleInput = styled(InputBase)(({ theme }) => ({
       boxShadow: `0 0 0 0.25rem rgba(190, 156, 124, 0.1)`,
       borderColor: theme.palette.primary.main,
     },
-    '&:invalid': {
+    '&:focus-visible': {
+      outline: 0,
+    },
+    '&.MuiInput-input::-webkit-input-placeholder': {
+      color: '#909090',
+    },
+    '.Mui-error > &': {
       borderColor: theme.palette.error.main,
     },
   },
 }));
 
 type InputProps = {
-  label: string;
+  id?: string;
+  label?: string;
   type: string;
   name: string;
   placeholder?: string;
   fullWidth?: boolean;
   helperText?: string;
   error?: boolean;
+  isDirty?: boolean;
+  'aria-describedby'?: string;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 const Label = styled('label')(
@@ -52,28 +69,27 @@ const Label = styled('label')(
  * @param {boolean} fullWidth - The fullWidth of the input.
  * @param {string} helperText - The helperText of the input.
  * @param {boolean} error - The error of the input.
+ * @param {boolean} isDirty - The isDirty of the input.
  * @returns {JSX.Element} - The Input component.
  * @description - The Input component.
  */
 const Input = forwardRef<HTMLElement, InputProps>(function Input(
-  { label, type, name, placeholder, fullWidth = true, helperText, error = false },
+  { label, type, name, placeholder, fullWidth = true, helperText, error = false, isDirty, onChange },
   ref,
 ) {
   return (
     <FormControl fullWidth={fullWidth} variant="standard">
       <Label htmlFor={name}>{label}</Label>
-      <StyleInput
+      <InputEl
         type={type}
-        fullWidth={fullWidth}
         id={name}
         name={name}
         error={error}
         placeholder={placeholder}
-        inputProps={{ 'aria-label': name }}
         aria-describedby={`${name}-helper-text`}
-        ref={ref}
+        onChange={onChange}
       />
-      <FormHelperText id={`${name}-helper-text`} error={error}>
+      <FormHelperText id={`${name}-helper-text`} error={error || isDirty} sx={{ paddingTop: '0.5rem' }}>
         {helperText}
       </FormHelperText>
     </FormControl>

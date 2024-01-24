@@ -1,27 +1,33 @@
-import { ForwardedRef, forwardRef, RefAttributes, useRef } from 'react';
+import { FC, ForwardedRef, RefAttributes, forwardRef } from 'react';
 import { FormControl, styled, FormHelperText } from '@mui/material';
-
-import { Select as BaseSelect, selectClasses, SelectProps, SelectRootSlotProps } from '@mui/base/Select';
 import { Option as BaseOption, optionClasses } from '@mui/base/Option';
 import { Popper as BasePopper } from '@mui/base/Popper';
+import {
+  Select as BaseSelect,
+  selectClasses,
+  SelectProps as BaseSelectProps,
+  SelectRootSlotProps,
+} from '@mui/base/Select';
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 
 const Select = forwardRef(function Select<TValue extends {}, Multiple extends boolean>(
-  props: SelectProps<TValue, Multiple>,
+  props: BaseSelectProps<TValue, Multiple>,
   ref: ForwardedRef<HTMLButtonElement>,
-)
-{
-
-  const slots: SelectProps<TValue, Multiple>['slots'] = {
+) {
+  const slots: BaseSelectProps<TValue, Multiple>['slots'] = {
     root: CustomButton,
-    listbox: Listbox,
+    listbox: DropdownList,
     popper: Popper,
     ...props.slots,
   };
   return <BaseSelect {...props} ref={ref} slots={slots} />;
 }) as <TValue extends {}, Multiple extends boolean>(
-  props: SelectProps<TValue, Multiple> & RefAttributes<HTMLButtonElement>,
+  props: BaseSelectProps<TValue, Multiple> & RefAttributes<HTMLButtonElement>,
 ) => JSX.Element;
+
+const Popper = styled(BasePopper)`
+  z-index: 1;
+`;
 
 const CustomButton = forwardRef(function CustomButton<TValue extends {}, Multiple extends boolean>(
   props: SelectRootSlotProps<TValue, Multiple>,
@@ -30,14 +36,14 @@ const CustomButton = forwardRef(function CustomButton<TValue extends {}, Multipl
   const { ownerState, ...other } = props;
 
   return (
-    <StyledButton type="button" {...other} ref={ref}>
+    <DropdownButton type="button" {...other} ref={ref}>
       {other.children}
       <KeyboardArrowDownOutlinedIcon />
-    </StyledButton>
+    </DropdownButton>
   );
 });
 
-const StyledButton = styled('button', { shouldForwardProp: () => true })(
+const DropdownButton = styled('button')(
   ({ theme }) => `
   font-family: ${theme.typography.fontFamily};
   position: relative;
@@ -87,7 +93,7 @@ const StyledButton = styled('button', { shouldForwardProp: () => true })(
   `,
 );
 
-const Listbox = styled('ul')(
+const DropdownList = styled('ul')(
   ({ theme }) => `
   font-size: 0.875rem;
   box-sizing: border-box;
@@ -119,7 +125,7 @@ const Listbox = styled('ul')(
   `,
 );
 
-const Option = styled(BaseOption)(
+const DropdownListItem = styled(BaseOption)(
   ({ theme }) => `
   list-style: none;
   padding: 8px;
@@ -161,21 +167,6 @@ const Option = styled(BaseOption)(
   `,
 );
 
-const Popper = styled(BasePopper)`
-  z-index: 1;
-`;
-
-type Props = {
-  label: string;
-  name: string;
-  options: { value: string | number; label: string }[];
-  placeholder?: string;
-  fullWidth?: boolean;
-  helperText?: string;
-  error?: boolean;
-  disabled?: boolean;
-};
-
 const Label = styled('label')(
   ({ theme }) => `
   font-family: ${theme.typography.fontFamily};
@@ -188,29 +179,43 @@ const Label = styled('label')(
   `,
 );
 
+interface SelectProps {
+  label: string;
+  options: {
+    value: string | number;
+    label: string;
+  }[];
+  error?: boolean;
+  placeholder?: string;
+  helperText?: string;
+  onChange: (value: string | number) => void;
+  name: string;
+  disabled?: boolean;
+}
 
-
-const StyleSelect = forwardRef<HTMLSelectElement, Props>(
-  ({ label, name, options, placeholder, fullWidth = true, helperText, error = false, disabled = false }, ref) => {
+const StyledSelect = forwardRef<HTMLSelectElement, SelectProps>(
+  ({ label, options, error, placeholder, helperText, onChange, name, disabled = false }, ref) => {
     return (
-      <FormControl fullWidth={fullWidth} variant="standard" error={error}>
+      <FormControl variant="standard" error={error} sx={{ width: '100%' }}>
         <Label htmlFor={name}>{label}</Label>
         <Select id={name} name={name} defaultValue="" disabled={disabled}>
-          <Option disabled value="">
+          <DropdownListItem disabled value="">
             <em>{placeholder}</em>
-          </Option>
+          </DropdownListItem>
           {options.map((option) => (
-            <Option key={option.value} value={option.value}>
+            <DropdownListItem key={option.value} value={option.value} onClick={() => onChange(option.value)}>
               {option.label}
-            </Option>
+            </DropdownListItem>
           ))}
         </Select>
-        <FormHelperText>{helperText}</FormHelperText>
+        <FormHelperText id={`${name}-helper-text`} error={error} sx={{ paddingTop: '0.5rem' }}>
+          {helperText}
+        </FormHelperText>
       </FormControl>
     );
   },
 );
 
-StyleSelect.displayName = 'Select';
+StyledSelect.displayName = 'Select';
 
-export default StyleSelect;
+export default StyledSelect;
