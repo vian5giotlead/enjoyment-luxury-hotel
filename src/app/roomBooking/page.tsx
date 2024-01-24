@@ -38,9 +38,6 @@ const RoomBooking: NextPage = () => {
     <>
       <Box
         className="container"
-        width="100%"
-        height="100%"
-        margin="0 auto"
         bgcolor="
 #F7F2EE">
         <Container>
@@ -52,8 +49,8 @@ const RoomBooking: NextPage = () => {
               確認訂房資訊
             </Typography>
           </Box>
-          <Grid container direction={{ sm: 'column', md: 'row' }} justifyContent={{ md: 'space-between' }}>
-            <Grid md={7}>
+          <Stack direction={{ md: 'column', lg: 'row' }} justifyContent={{ md: 'center', lg: 'space-between' }}>
+            <Box width={{ md: '100%', lg: '55%' }} sx={{ maxWidth: '746px' }}>
               <Box component="section">
                 <Typography variant={'h4'} component="h3" sx={{ marginBottom: '40px' }}>
                   訂房資訊
@@ -161,7 +158,7 @@ const RoomBooking: NextPage = () => {
                     </Box>
                   </Stack>
                 </Box>
-                <Box sx={{ mb: 15 }}>
+                <Box mb={{ sm: 5, md: 15 }}>
                   <Headline title="備品提供" />
                   <Stack bgcolor={'#ffffff'} direction={'row'} p={3}>
                     <Box sx={{ display: 'flex' }} mr={'40px'}>
@@ -175,8 +172,13 @@ const RoomBooking: NextPage = () => {
                   </Stack>
                 </Box>
               </Box>
-            </Grid>
-            <Grid md={4}>
+            </Box>
+            <Box
+              width={{ md: '100%', lg: '37%' }}
+              mb={5}
+              sx={{
+                maxWidth: '478px',
+              }}>
               <Card
                 padding={isSmallDevice ? 'md' : 'lg'}
                 sx={{
@@ -207,8 +209,8 @@ const RoomBooking: NextPage = () => {
                 </Stack>
                 <Button variant="contained">確認訂房</Button>
               </Card>
-            </Grid>
-          </Grid>
+            </Box>
+          </Stack>
         </Container>
       </Box>
     </>
