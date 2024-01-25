@@ -5,7 +5,8 @@ import { Avatar, Box, Container, Stack, Typography } from '@mui/material';
 import memberBannerBG from '@/assets/images/memberBannerBG.jpg';
 import { useWidth } from '@/hooks';
 
-export const UserBanner = () => {
+export const UserBanner = ({data}: {data: MemberResponseData}) => {
+  const memberData = data.result;
   const widthSize = useWidth();
   const isSmallDevice = widthSize === 'sm';
   return (
@@ -27,7 +28,7 @@ export const UserBanner = () => {
             <Typography
               variant={isSmallDevice ? 'h4' : 'h3'}
               color="white"
-              component="h2">{`Hello，member name`}</Typography>
+              component="h2">{`Hello，${memberData.name}`}</Typography>
           </Stack>
         </Stack>
       </Container>

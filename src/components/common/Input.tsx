@@ -11,7 +11,7 @@ const Input = forwardRef(function CustomInput(
 
 const InputElement = styled('input')(({ theme }) => ({
   '&': {
-    borderRadius: 4,
+    borderRadius: '0.5rem',
     position: 'relative',
     backgroundColor: '#fff',
     border: '1px solid',
@@ -19,7 +19,8 @@ const InputElement = styled('input')(({ theme }) => ({
     width: '100%',
     [theme.breakpoints.down('md')]: { fontSize: '0.875rem' },
     [theme.breakpoints.up('md')]: { fontSize: '1rem' },
-    padding: '10px 12px',
+    padding: '1rem',
+    lineHeight: 1.5,
     transition: theme.transitions.create(['border-color', 'background-color', 'box-shadow']),
     '&:focus': {
       boxShadow: `0 0 0 0.25rem rgba(190, 156, 124, 0.1)`,

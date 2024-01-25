@@ -10,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Card from '@/components/common/Card';
 import Input from '@/components/common/Input';
 import { useWidth } from '@/hooks';
+import { updateUserData } from '@/assets/api';
 
 export const changePasswordDataSchema = z
   .object({
@@ -24,12 +25,15 @@ export const changePasswordDataSchema = z
 
 type ChangePasswordDataSchema = z.infer<typeof changePasswordDataSchema>;
 
-const Page = () => {
+const Page = ({ data }: { data: MemberResponseData }) => {
+  const [ openForm, setOpenForm ] = useState(false);
+  
+  const memberData = data.result;
+
   const widthSize = useWidth();
   const isSmallDevice = widthSize === 'sm';
 
-  const [openForm, setOpenForm] = useState(false);
-
+  
   const {
     register,
     handleSubmit,
@@ -38,8 +42,17 @@ const Page = () => {
     resolver: zodResolver(changePasswordDataSchema),
   });
 
-  const onSubmit = (data: ChangePasswordDataSchema) => {
+  const onSubmit = async (data: ChangePasswordDataSchema) =>
+  {
+    console.log(memberData);
     console.log(data);
+
+    const result = await updateUserData({
+      ...memberData,
+      newPassword: data.newPassword,
+      oldPassword: data.oldPassword,
+    });
+    console.log(result);
   };
 
   return (
@@ -59,7 +72,7 @@ const Page = () => {
             {'電子信箱'}
           </Typography>
           <Typography variant={'title'} component={'p'}>
-            {'ooo@ooo.com'}
+            {memberData.email}
           </Typography>
         </Box>
         <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'}>

@@ -74,7 +74,11 @@ const theme: Theme = createTheme({
     },
   },
   typography: {
-    fontFamily: noto_Serif_TC.style.fontFamily,
+    fontFamily: [
+      noto_Serif_TC.style.fontFamily,
+      'Noto Serif TC',
+      'serif',
+    ].join(','),
     body1: {
       fontSize: '1rem',
     },

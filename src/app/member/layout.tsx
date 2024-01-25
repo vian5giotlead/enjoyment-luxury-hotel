@@ -1,14 +1,18 @@
 import { UserBanner } from './UserBanner';
 import { SwiperTabs } from './Tabs';
 import HorizontalWave from './HorizontalWave';
+import { getUserData } from '@/assets/api';
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default async function Layout({ children }: { children: React.ReactNode })
+{
+  const data: MemberResponseData = await getUserData();
   return (
-    <div>
-      <UserBanner />
+    <>
+    <UserBanner data={data} />
       <SwiperTabs />
       {children}
       <HorizontalWave />
-    </div>
+    </>
   );
 }
+

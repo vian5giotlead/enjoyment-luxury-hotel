@@ -49,7 +49,7 @@ function formatPhoneNumber(phoneNumber: string | number) {
   return formatted;
 }
 
-const Page = ({ data }: { data: Data }) => {
+const Page = ({ data }: { data: MemberResponseData }) => {
   const [openForm, setOpenForm] = useState(false);
   const [counties, setCounties] = useState<
     | {
@@ -93,7 +93,7 @@ const Page = ({ data }: { data: Data }) => {
     resolver: zodResolver(memberDataSchema),
   });
 
-  const onSubmit: SubmitHandler<MemberDataType> = (data) => {
+  const onSubmit: SubmitHandler<MemberDataType> = async (data) => {
     const birthday = ` ${data.birthdayYear}-${data.birthdayMonth}-${data.birthdayDay}`;
     const resultPhone = data.phone[0] === '0' ? data.phone.slice(1) : data.phone;
     const phone = `(${data.countryPhoneCode}) ${formatPhoneNumber(resultPhone)}`;
@@ -107,13 +107,14 @@ const Page = ({ data }: { data: Data }) => {
       },
       birthday: birthday,
     };
-    updateUserData(newMemberData);
+    console.log(newMemberData);
+    const result = await updateUserData(newMemberData);
+    console.log(result);
   };
   const city = watch('city');
   useEffect(() => {
     if (city) {
       const findCity = zipcodes.find((item) => item.city === city);
-      console.log(findCity);
       const resultCounties = findCity?.zone as {
         detail: string;
         zipcode: number;
@@ -158,20 +159,19 @@ const Page = ({ data }: { data: Data }) => {
                 />
               )}
             />
-            <Stack direction={'row'} alignItems={'flex-end'} spacing={'1rem'}>
+            <Stack direction={'row'} spacing={'1rem'}>
               <Controller
                 name="countryPhoneCode"
                 control={control}
                 render={({ field }) => (
                   <Select
                     {...field}
-                    label=""
+                    label="區域號碼"
                     options={countryPhoneCodes.map((item) => ({
                       key: item.iso,
                       value: item.code,
-                      label: '',
                       content: (
-                        <Stack direction={'row'} alignItems={'center'} spacing={'0.5rem'}>
+                        <Stack direction={'row'} alignItems={'center'} spacing={2}>
                           {countryFlagEmoji.find((flag) => flag.code === item.iso)?.image && (
                             <Image
                               src={countryFlagEmoji.find((flag) => flag.code === item.iso)?.image as unknown as string}
@@ -180,14 +180,15 @@ const Page = ({ data }: { data: Data }) => {
                               alt={item.iso}
                             />
                           )}
-                          <Typography variant={'body2'} sx={{ ml: '0.5rem' }}>
+                          <Typography variant={'body2'} component={'span'}>
                             (+{item.code})
                           </Typography>
                         </Stack>
                       ),
                     }))}
                     error={Boolean(errors.countryPhoneCode)}
-                    placeholder="請選擇您的區碼"
+                    placeholder="區碼"
+                    sx={{ width: '100%' }}
                   />
                 )}
               />
@@ -248,7 +249,7 @@ const Page = ({ data }: { data: Data }) => {
                 )}
               />
             </Stack>
-            <Stack direction={'row'} alignItems={'flex-start'} spacing={'0.5rem'}>
+            <Stack direction={'row'} alignItems={'flex-end'} spacing={'0.5rem'}>
               <Controller
                 name="city"
                 control={control}

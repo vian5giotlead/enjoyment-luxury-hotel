@@ -1,5 +1,5 @@
-import React, { FC, ForwardedRef, RefAttributes, forwardRef } from 'react';
-import { FormControl, styled, FormHelperText } from '@mui/material';
+import  { ForwardedRef, RefAttributes, forwardRef } from 'react';
+import { FormControl, styled, FormHelperText, SxProps, Theme } from '@mui/material';
 import { Option as BaseOption, optionClasses } from '@mui/base/Option';
 import { Popper as BasePopper } from '@mui/base/Popper';
 import {
@@ -47,15 +47,14 @@ const DropdownButton = styled('button')(
   ({ theme }) => `
   font-family: ${theme.typography.fontFamily};
   position: relative;
-  font-size: 0.875rem;
+  font-size: 1rem;
   box-sizing: border-box;
-  padding: 8px 12px;
-  border-radius: 8px;
+  padding: 1rem;
+  border-radius: 0.5rem;
   text-align: left;
   line-height: 1.5;
   background: #fff;
   border: 1px solid #ececec;
-
   transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 120ms;
@@ -172,7 +171,7 @@ const Label = styled('label')(
   font-family: ${theme.typography.fontFamily};
   font-weight: 700;
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: 0.5rem;
   font-size: 0.875rem;
   line-height: 1.5;
   letter-spacing: 0.0175rem;
@@ -183,7 +182,7 @@ interface SelectProps {
   label: string;
   options: {
     value: string | number;
-    label: string;
+    label?: string;
     key?: string;
     content?: React.ReactNode;
   }[];
@@ -193,12 +192,13 @@ interface SelectProps {
   onChange: (value: string | number) => void;
   name: string;
   disabled?: boolean;
+  sx?: SxProps<Theme>;
 }
 
 const StyledSelect = forwardRef<HTMLSelectElement, SelectProps>(
-  ({ label, options, error, placeholder, helperText, onChange, name, disabled = false }, ref) => {
+  ({ label, options, error, placeholder, helperText, onChange, name, disabled = false, sx }, ref) => {
     return (
-      <FormControl variant="standard" error={error} sx={{ width: '100%' }}>
+      <FormControl variant="standard" error={error} sx={{ ...sx, flex: 'auto' }}>
         <Label htmlFor={name}>{label}</Label>
         <Select id={name} name={name} defaultValue="" disabled={disabled}>
           <DropdownListItem disabled value="">
