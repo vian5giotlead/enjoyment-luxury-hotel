@@ -1,15 +1,15 @@
-import Image from 'next/image';
-import Link from 'next/link';
-
-import Box from '@mui/material/Box';
+import HeroSecition from '@/app/c.heroSection';
+import News from '@/app/c.news';
+import About from '@/app/c.about';
 import Footer from '@/components/common/Footer';
 
 export default function Home() {
   return (
     <>
-      <Box sx={{ height: '150px' }}></Box>
+      <HeroSecition />
       <main>
-        <div>首頁</div>
+        <News />
+        <About />
       </main>
       <Footer />
     </>
