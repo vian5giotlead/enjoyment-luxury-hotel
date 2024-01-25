@@ -1,4 +1,4 @@
-import { FC, ForwardedRef, RefAttributes, forwardRef } from 'react';
+import React, { FC, ForwardedRef, RefAttributes, forwardRef } from 'react';
 import { FormControl, styled, FormHelperText } from '@mui/material';
 import { Option as BaseOption, optionClasses } from '@mui/base/Option';
 import { Popper as BasePopper } from '@mui/base/Popper';
@@ -184,6 +184,8 @@ interface SelectProps {
   options: {
     value: string | number;
     label: string;
+    key?: string;
+    content?: React.ReactNode;
   }[];
   error?: boolean;
   placeholder?: string;
@@ -203,8 +205,11 @@ const StyledSelect = forwardRef<HTMLSelectElement, SelectProps>(
             <em>{placeholder}</em>
           </DropdownListItem>
           {options.map((option) => (
-            <DropdownListItem key={option.value} value={option.value} onClick={() => onChange(option.value)}>
-              {option.label}
+            <DropdownListItem
+              key={option.key || option.value}
+              value={option.value}
+              onClick={() => onChange(option.value)}>
+              {option.content || option.label}
             </DropdownListItem>
           ))}
         </Select>

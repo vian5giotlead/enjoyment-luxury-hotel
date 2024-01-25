@@ -2,9 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { Button, Stack, Typography } from '@mui/material';
-
-import { Controller, Resolver, SubmitHandler, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import Image from 'next/image';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import Input from '@/components/common/Input';
 import Select from '@/components/common/Select';
@@ -14,6 +13,8 @@ import { useWidth } from '@/hooks';
 import { citys, zipcodes } from '@/assets/cityData';
 import countryPhoneCodes from '@/assets/countryPhoneCodes.json';
 import countryFlagEmoji from '@/assets/countryFlagEmoji.json';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { updateUserData } from '@/assets/api';
 
 export const memberDataSchema = z.object({
   name: z.string().min(1, '名字不能為空'),
@@ -24,7 +25,7 @@ export const memberDataSchema = z.object({
     zipcode: z.number().min(100, '郵政編碼應為有效數值').max(999, '郵政編碼應為有效數值'),
     detail: z.string().min(1, '地址詳情不能為空'),
   }),
-  countryCode: z.string(),
+  countryPhoneCode: z.string(),
   birthdayYear: z.number().nonnegative(),
   birthdayMonth: z.number().min(1).max(12),
   birthdayDay: z.number().min(1).max(31),
@@ -37,16 +38,16 @@ const days = Array.from({ length: 31 }, (_, i) => i + 1);
 
 type MemberDataType = z.infer<typeof memberDataSchema>;
 
-type MemberResponseData = {
-  name: string;
-  email: string;
-  phone: string;
-  address: {
-    zipcode: number;
-    detail: string;
-  };
-  birthday: string;
-};
+function formatPhoneNumber(phoneNumber: string | number) {
+  // 移除所有非數字字符
+  const cleaned = ('' + phoneNumber).replace(/\D/g, '');
+
+  // 分割數字並加入連字符
+  const match = cleaned.match(/(\d{1,3})(\d{1,3})?(\d{1,4})?/);
+  const formatted = match && match.slice(1).filter(Boolean).join('-');
+
+  return formatted;
+}
 
 const Page = ({ data }: { data: Data }) => {
   const [openForm, setOpenForm] = useState(false);
@@ -66,45 +67,62 @@ const Page = ({ data }: { data: Data }) => {
 
   const widthSize = useWidth();
   const isSmallDevice = widthSize === 'sm';
-
-  // const {
-  //   control,
-  //   formState: { errors, isDirty, isValid },
-  //   watch,
-  //   register,
-  //   handleSubmit,
-  // } = useForm<MemberDataType>({
-  //   resolver: zodResolver(memberDataSchema),
-  //   defaultValues: {
-  //     ...memberData,
-  //   },
-  // });
+  const defaultValueCity = zipcodes.find((city) =>
+    city.zone.find((counties) => counties.zipcode === memberData.address.zipcode),
+  )?.city;
 
   const {
-    register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<MemberDataType>({ resolver: zodResolver(memberDataSchema) });
+    watch,
+    control,
+    formState: { errors, isDirty, isValid },
+  } = useForm<MemberDataType>({
+    defaultValues: {
+      name: memberData.name,
+      email: memberData.email,
+      phone: memberData.phone,
+      city: defaultValueCity,
+      address: {
+        zipcode: memberData.address.zipcode,
+        detail: memberData.address.detail,
+      },
+      birthdayYear: birthday.getFullYear(),
+      birthdayMonth: birthday.getMonth() + 1,
+      birthdayDay: birthday.getDate(),
+    },
+    resolver: zodResolver(memberDataSchema),
+  });
 
   const onSubmit: SubmitHandler<MemberDataType> = (data) => {
-    console.log(data);
     const birthday = ` ${data.birthdayYear}-${data.birthdayMonth}-${data.birthdayDay}`;
-    return console.log(data);
+    const resultPhone = data.phone[0] === '0' ? data.phone.slice(1) : data.phone;
+    const phone = `(${data.countryPhoneCode}) ${formatPhoneNumber(resultPhone)}`;
+    const newMemberData: MemberUpdateData = {
+      name: data.name,
+      email: data.email,
+      phone,
+      address: {
+        zipcode: data.address.zipcode,
+        detail: data.address.detail,
+      },
+      birthday: birthday,
+    };
+    updateUserData(newMemberData);
   };
-  // const city = watch('city');
-  // useEffect(() => {
-  //   if (city) {
-  //     const findCity = zipcodes.find((item) => item.city === city);
-  //     console.log(findCity);
-  //     const resultCounties = findCity?.zone as {
-  //       detail: string;
-  //       zipcode: number;
-  //       city: string;
-  //       county: string;
-  //     }[];
-  //     setCounties(resultCounties);
-  //   }
-  // }, [city]);
+  const city = watch('city');
+  useEffect(() => {
+    if (city) {
+      const findCity = zipcodes.find((item) => item.city === city);
+      console.log(findCity);
+      const resultCounties = findCity?.zone as {
+        detail: string;
+        zipcode: number;
+        city: string;
+        county: string;
+      }[];
+      setCounties(resultCounties);
+    }
+  }, [city]);
 
   const handleMemberInfoEdit = function () {
     setOpenForm(true);
@@ -122,16 +140,7 @@ const Page = ({ data }: { data: Data }) => {
       <Typography variant={'h5'} component="h4">
         {'基本資料'}
       </Typography>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input {...register('name')} placeholder="請輸入您的姓名" />
-        {errors?.name && <p>{errors.name.message}</p>}
-
-        <input {...register('phone')} placeholder="請輸入您的手機號碼" />
-
-        <input type="submit" />
-      </form>
-
-      {/* {openForm ? (
+      {openForm ? (
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack direction={'column'} spacing={'1.5rem'}>
             <Controller
@@ -149,20 +158,55 @@ const Page = ({ data }: { data: Data }) => {
                 />
               )}
             />
-            <Controller
-              name="phone"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  type="text"
-                  {...field}
-                  helperText={errors.phone?.message}
-                  label="手機號碼"
-                  error={Boolean(errors.phone)}
-                  placeholder="請輸入您的手機號碼"
-                />
-              )}
-            />
+            <Stack direction={'row'} alignItems={'flex-end'} spacing={'1rem'}>
+              <Controller
+                name="countryPhoneCode"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    label=""
+                    options={countryPhoneCodes.map((item) => ({
+                      key: item.iso,
+                      value: item.code,
+                      label: '',
+                      content: (
+                        <Stack direction={'row'} alignItems={'center'} spacing={'0.5rem'}>
+                          {countryFlagEmoji.find((flag) => flag.code === item.iso)?.image && (
+                            <Image
+                              src={countryFlagEmoji.find((flag) => flag.code === item.iso)?.image as unknown as string}
+                              width={24}
+                              height={24}
+                              alt={item.iso}
+                            />
+                          )}
+                          <Typography variant={'body2'} sx={{ ml: '0.5rem' }}>
+                            (+{item.code})
+                          </Typography>
+                        </Stack>
+                      ),
+                    }))}
+                    error={Boolean(errors.countryPhoneCode)}
+                    placeholder="請選擇您的區碼"
+                  />
+                )}
+              />
+              <Controller
+                name="phone"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    type="text"
+                    {...field}
+                    helperText={errors.phone?.message}
+                    label="手機號碼"
+                    error={Boolean(errors.phone)}
+                    placeholder="請輸入您的手機號碼"
+                    maxLength={10}
+                  />
+                )}
+              />
+            </Stack>
             <Stack direction={'row'} alignItems={'flex-end'} spacing={'1rem'}>
               <Controller
                 name="birthdayYear"
@@ -204,7 +248,7 @@ const Page = ({ data }: { data: Data }) => {
                 )}
               />
             </Stack>
-            <Stack direction={'row'} alignItems={'flex-end'} spacing={'0.5rem'}>
+            <Stack direction={'row'} alignItems={'flex-start'} spacing={'0.5rem'}>
               <Controller
                 name="city"
                 control={control}
@@ -225,7 +269,11 @@ const Page = ({ data }: { data: Data }) => {
                   <Select
                     {...field}
                     label=""
-                    options={counties.map((county) => ({ value: county.zipcode, label: county.county }))}
+                    options={counties.map((county) => ({
+                      key: county.county,
+                      value: county.zipcode,
+                      label: county.county,
+                    }))}
                     error={Boolean(errors.address?.message)}
                     disabled={counties.length <= 1}
                     placeholder="您所在的區域"
@@ -255,6 +303,7 @@ const Page = ({ data }: { data: Data }) => {
                 type="submit"
                 variant={'contained'}
                 size={'large'}
+                // disabled={!isValid}
                 disableRipple>
                 {'儲存設定'}
               </Button>
@@ -279,7 +328,7 @@ const Page = ({ data }: { data: Data }) => {
           <TitleText title={'生日'} content={formatBirthday} />
           <TitleText title={'地址'} content={`${memberData.address.zipcode} ${memberData.address.detail}`} />
         </Stack>
-      )} */}
+      )}
       <Stack
         direction={'column'}
         spacing={{ sm: '1.5rem', md: '2.5rem' }}

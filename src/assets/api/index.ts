@@ -11,11 +11,24 @@ export async function getUserData() {
       Authorization: token,
     },
   });
-  // The return value is *not* serialized
-  // You can return Date, Map, Set, etc.
 
   if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
+    throw new Error('Failed to fetch data');
+  }
+
+  return res.json();
+}
+
+export async function updateUserData(data: MemberResponseData) {
+  const res = await fetch(`${baseUrl}/api/v1/user`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token,
+    },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
     throw new Error('Failed to fetch data');
   }
 

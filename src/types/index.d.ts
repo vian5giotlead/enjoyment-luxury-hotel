@@ -21,3 +21,14 @@ type Data = {
   status: boolean;
   result: MemberData;
 };
+
+type MemberUpdateData = {
+  name: string;
+  email: string;
+  phone: string;
+  address: {
+    zipcode: number;
+    detail: string;
+  };
+  birthday: string;
+};
