@@ -1,15 +1,18 @@
-'use client';
+import { UserBanner } from './UserBanner';
+import { SwiperTabs } from './Tabs';
+import HorizontalWave from './HorizontalWave';
+import { getUserData } from '@/assets/api';
 
-import {styled} from '@mui/material';
-
-const Box = styled('div')(() => `
-background: #140F0A
-`);
-
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default async function Layout({ children }: { children: React.ReactNode })
+{
+  const data: MemberResponseData = await getUserData();
   return (
-    <Box>
-    {children}
-    </Box>
-  )
+    <>
+    <UserBanner data={data} />
+      <SwiperTabs />
+      {children}
+      <HorizontalWave />
+    </>
+  );
 }
+

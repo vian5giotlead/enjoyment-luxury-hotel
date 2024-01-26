@@ -6,7 +6,7 @@ const noto_Serif_TC = Noto_Serif_TC({
   weight: ['400', '500', '600', '700'],
   style: ['normal'],
   subsets: ['latin'],
-  preload: false,
+  preload: true,
 });
 
 declare module '@mui/material/styles' {
@@ -74,7 +74,7 @@ const theme: Theme = createTheme({
     },
   },
   typography: {
-    fontFamily: noto_Serif_TC.style.fontFamily,
+    fontFamily: ['Noto Serif TC', noto_Serif_TC.style.fontFamily, 'serif'].join(','),
     body1: {
       fontSize: '1rem',
     },
@@ -84,6 +84,7 @@ const theme: Theme = createTheme({
     subtitle1: {
       fontSize: '0.875rem',
       fontWeight: 700,
+      lineHeight: 1.5,
     },
     h6: {
       fontSize: '1.25rem',
@@ -188,7 +189,7 @@ const theme: Theme = createTheme({
     },
     MuiTypography: {
       defaultProps: {
-        fontFamily: noto_Serif_TC.style.fontFamily,
+        fontFamily: ['Noto Serif TC', noto_Serif_TC.style.fontFamily, 'serif'].join(','),
       },
       variants: [
         {
@@ -220,6 +221,7 @@ const theme: Theme = createTheme({
       styleOverrides: {
         root: {
           backgroundColor: '#140F0A',
+          backdropFilter: 'blur(0.625rem)',
         },
       },
       variants: [
@@ -230,6 +232,13 @@ const theme: Theme = createTheme({
           },
         },
       ],
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          boxShadow: 'none',
+        },
+      },
     },
   },
 });
