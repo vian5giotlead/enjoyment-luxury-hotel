@@ -216,13 +216,22 @@ const theme: Theme = createTheme({
         },
       ],
     },
-    MuiBackdrop: {
+
+    MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: 'rgba(0, 0, 0, 0.4)',
+          backgroundColor: '#140F0A',
           backdropFilter: 'blur(0.625rem)',
         },
       },
+      variants: [
+        {
+          props: { color: 'transparent' },
+          style: {
+            backgroundColor: 'transparent',
+          },
+        },
+      ],
     },
     MuiCard: {
       styleOverrides: {
