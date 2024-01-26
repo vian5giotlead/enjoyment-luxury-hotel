@@ -74,11 +74,7 @@ const theme: Theme = createTheme({
     },
   },
   typography: {
-    fontFamily: [
-      noto_Serif_TC.style.fontFamily,
-      'Noto Serif TC',
-      'serif',
-    ].join(','),
+    fontFamily: ['Noto Serif TC', noto_Serif_TC.style.fontFamily, 'serif'].join(','),
     body1: {
       fontSize: '1rem',
     },
@@ -193,7 +189,7 @@ const theme: Theme = createTheme({
     },
     MuiTypography: {
       defaultProps: {
-        fontFamily: noto_Serif_TC.style.fontFamily,
+        fontFamily: ['Noto Serif TC', noto_Serif_TC.style.fontFamily, 'serif'].join(','),
       },
       variants: [
         {

@@ -52,3 +52,18 @@ export async function getOrderData()
 
   return res.json();
 }
+
+export async function deleteOrderData(id: string) {
+  const res = await fetch(`${baseUrl}/api/v1/orders/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token,
+    },
+  });
+  if (!res.ok) {
+    throw new Error('Failed to fetch data');
+  }
+
+  return res.json();
+}

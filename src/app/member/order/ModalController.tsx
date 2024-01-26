@@ -6,7 +6,7 @@ import { Close } from '@mui/icons-material';
 
 import Drawer from './Drawer';
 
-export default function Layout({ isSmallDevice }: { isSmallDevice: boolean }) {
+export default function Layout({ isSmallDevice, id }: { isSmallDevice: boolean; id: string }) {
   const [openModal, setOpenModal] = useState(false);
 
   function handleCloseModal() {
@@ -15,6 +15,13 @@ export default function Layout({ isSmallDevice }: { isSmallDevice: boolean }) {
 
   function handleOpenModal() {
     setOpenModal(true);
+  }
+
+  function handleDeleteOrder(id: string) {
+    return () => {
+      console.log(id);
+      setOpenModal(false);
+    };
   }
 
   return (
@@ -69,7 +76,7 @@ export default function Layout({ isSmallDevice }: { isSmallDevice: boolean }) {
               <Button variant={'outlined'} size={'large'} fullWidth onClick={handleCloseModal}>
                 {'關閉視窗'}
               </Button>
-              <Button variant={'contained'} size={'large'} fullWidth>
+              <Button variant={'contained'} size={'large'} fullWidth onClick={handleDeleteOrder(id)}>
                 {'確定取消'}
               </Button>
             </Stack>
@@ -128,7 +135,7 @@ export default function Layout({ isSmallDevice }: { isSmallDevice: boolean }) {
                 <Button variant={'outlined'} size={'large'} fullWidth onClick={handleCloseModal}>
                   {'關閉視窗'}
                 </Button>
-                <Button variant={'contained'} size={'large'} fullWidth>
+                <Button variant={'contained'} size={'large'} fullWidth onClick={handleDeleteOrder(id)}>
                   {'確定取消'}
                 </Button>
               </Stack>

@@ -79,3 +79,8 @@ type Order = {
 };
 
 type Orders = Order[];
+
+type OrderResponseData = {
+  status: boolean;
+  result: Orders;
+};
