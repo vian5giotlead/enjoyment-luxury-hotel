@@ -1,6 +1,6 @@
 import { UserBanner } from './UserBanner';
 import { SwiperTabs } from './Tabs';
-import HorizontalWave from './HorizontalWave';
+import HorizontalWave from '@/components/common/HorizontalWave';
 import { getUserData } from '@/assets/api';
 
 export default async function Layout({ children }: { children: React.ReactNode })

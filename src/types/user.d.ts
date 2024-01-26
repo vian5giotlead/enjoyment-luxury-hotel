@@ -36,3 +36,8 @@ type MemberUpdateData = UserInfo &
     address: Address;
     birthday: string;
   };
+
+type UserLoginData = {
+  email: string | null;
+  password: string;
+};

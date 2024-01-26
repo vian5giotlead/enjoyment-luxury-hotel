@@ -67,3 +67,17 @@ export async function deleteOrderData(id: string) {
 
   return res.json();
 }
+
+export async function userLogin(data: UserLoginData) {
+  const res = await fetch(`${baseUrl}/api/v1/user/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    throw new Error('Failed to fetch data');
+  }
+  return res.json();
+}
