@@ -1,5 +1,5 @@
 import { CSSProperties } from 'react';
-import { Card as BaseCard, styled } from '@mui/material';
+import { Card as BaseCard } from '@mui/material';
 import { useWidth } from '@/hooks';
 
 type StyleCardProps = {
@@ -8,10 +8,6 @@ type StyleCardProps = {
   padding?: 'sm' | 'md' | 'lg';
   sx?: CSSProperties;
 };
-
-const StyleCard = styled(BaseCard)<StyleCardProps>(() => ({
-  boxShadow: 'none',
-}));
 
 /**
  *
@@ -36,7 +32,7 @@ export default function Card({ children, padding = 'sm', isBorder = false, sx, .
           : '1.5rem';
 
   return (
-    <StyleCard
+    <BaseCard
       sx={{
         ...sx,
         padding: dynamicPadding,
@@ -45,6 +41,6 @@ export default function Card({ children, padding = 'sm', isBorder = false, sx, .
       }}
       {...restProps}>
       {children}
-    </StyleCard>
+    </BaseCard>
   );
 }
