@@ -16,6 +16,7 @@ import Card from '@/components/common/Card';
 import { useWidth } from '@/hooks';
 import BookerForm from './BookerForm';
 import RoomFacilityBlock from '@/components/room/RoomFacilityBlock';
+import LoginForm from './LoginForm';
 
 const facilityInfo = [
   {
@@ -33,6 +34,13 @@ const RoomBooking: NextPage = () => {
   //const matches = useMediaQuery(() => theme.breakpoints.down('md'));
   const widthSize = useWidth();
   const isSmallDevice = widthSize;
+
+  const propData ={
+    roomId: "65251f6095429cd58654bf12",
+    checkInDate: "2023/06/18",
+    checkOutDate: "2023/06/19",
+    peopleNum: 2
+  };
 
   return (
     <>
@@ -94,7 +102,7 @@ const RoomBooking: NextPage = () => {
                     {'套用會員資料'}
                   </Link>
                 </Stack>
-                <BookerForm />
+                <LoginForm props={propData} />
               </Box>
               <hr style={{ marginBottom: '24px' }} />
               <Box component="section">
@@ -200,14 +208,14 @@ const RoomBooking: NextPage = () => {
                 </Stack>
                 <Stack flexDirection={'row'} justifyContent={'space-between'} alignItems={'center'} mb={'12px'}>
                   <Typography>住宿折扣</Typography>
-                  <Typography color={'primary'}>-NT$ 1,000</Typography>
+                  <Typography color={'primary'}>-NT$ 0</Typography>
                 </Stack>
                 <Box borderBottom={'1px solid #ececec'} mb={'12px'}></Box>
                 <Stack flexDirection={'row'} justifyContent={'space-between'} alignItems={'center'} mb={'28px'}>
                   <Typography fontWeight={700}>總價</Typography>
-                  <Typography fontWeight={700}>NT$ 19,000</Typography>
+                  <Typography fontWeight={700}>NT$ 20,000</Typography>
                 </Stack>
-                <Button variant="contained">確認訂房</Button>
+                <Button variant="contained" type="submit" form="my-form">確認訂房</Button>
               </Card>
             </Box>
           </Stack>

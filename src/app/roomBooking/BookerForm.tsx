@@ -11,19 +11,15 @@ const Form = styled('form', { shouldForwardProp: () => true })(({ theme }) => ({
   },
 }));
 
-export const memberDataSchema = z.object({
+export const bookerDataSchema = z.object({
   name: z.string().min(1),
   email: z.string().email().min(1),
   phone: z.string().min(1),
   address: z.object({
-    zipcode: z.number().nonnegative(),
     detail: z.string().min(1),
     county: z.string().min(1),
     city: z.string().min(1),
   }),
-//   birthdayYear: z.number().nonnegative(),
-//   birthdayMonth: z.number().min(1).max(12),
-//   birthdayDay: z.number().min(1).max(31),
 });
 
 const cities = ['台北市', '新北市', '桃園市']; // 示例城市數據
@@ -34,27 +30,21 @@ const districts = {
   // 其他城市的區域數據...
 };
 
-const currentYear = new Date().getFullYear();
-const years = Array.from({ length: 88 }, (_, i) => currentYear - i);
-const months = Array.from({ length: 12 }, (_, i) => i + 1);
-const days = Array.from({ length: 31 }, (_, i) => i + 1);
-
-const memberDataTemplate = {
+const bookerDataTemplate = {
   name: '',
   email: '',
   phone: '',
   address: {
-    zipcode: 0,
-    detail: '',
-    county: '',
     city: '',
+    county: '',
+    detail: '',
   },
-//   birthdayYear: years[0],
-//   birthdayMonth: 1,
-//   birthdayDay: 1,
+  //   birthdayYear: years[0],
+  //   birthdayMonth: 1,
+  //   birthdayDay: 1,
 };
 
-type MemberData = z.infer<typeof memberDataSchema>;
+type bookerData = z.infer<typeof bookerDataSchema>;
 
 const BookerForm = () => {
   const {
@@ -63,15 +53,23 @@ const BookerForm = () => {
     formState: { errors, isDirty, isValid },
     setValue,
     watch,
-  } = useForm<MemberData>({
-    resolver: zodResolver(memberDataSchema),
-    defaultValues: memberDataTemplate,
+  } = useForm<bookerData>({
+    resolver: zodResolver(bookerDataSchema),
+    defaultValues: bookerDataTemplate,
   });
 
-  const onSubmit = (data: MemberData) => {
-    // const birthday = ` ${data.birthdayYear}-${data.birthdayMonth}-${data.birthdayDay}`;
-    const finalData = { ...data };
-    console.log(finalData);
+  const onSubmit = (data: bookerData) => {
+    try {
+      console.log(1);
+      const finalData = { ...data };
+      console.log(finalData);
+    } catch {
+      throw new Error('Something is wrong');
+    }
+  };
+
+  const onChange = () => {
+    console.log(1);
   };
 
   const city = watch('address.city');
@@ -93,19 +91,6 @@ const BookerForm = () => {
             <Input type="text" {...field} label="手機號碼" error={Boolean(errors.phone)} placeholder="請輸入手機號碼" />
           )}
         />
-        {/* <Controller
-          name="address.zipcode"
-          control={control}
-          render={({ field }) => (
-            <Input
-              {...field}
-              type="text"
-              label="電子信箱"
-              error={Boolean(errors.address?.zipcode)}  
-              placeholder="請輸入電子信箱"
-            />
-          )}
-        /> */}
         <Controller
           name="email"
           control={control}
@@ -157,6 +142,7 @@ const BookerForm = () => {
           <Input type="text" {...field} label="" error={Boolean(errors.address?.detail)} placeholder="請輸入詳細地址" />
         )}
       />
+      <button type="submit">submit!</button>
     </Form>
   );
 };
