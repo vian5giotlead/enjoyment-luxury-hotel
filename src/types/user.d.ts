@@ -41,3 +41,8 @@ type UserLoginData = {
   email: string | null;
   password: string;
 };
+
+type UserRegisterData = UserInfo & {
+  password: string;
+  birthday: string;
+};

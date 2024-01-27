@@ -12,6 +12,7 @@ import { useWidth } from '@/hooks';
 import CheckIcon from '@mui/icons-material/Check';
 import { KeyboardArrowDown } from '@mui/icons-material';
 import ModalController from './ModalController';
+import { calculateStayDays, formatDate, formatNTD } from '@/utils';
 
 const MAX_ORDERS_DISPLAY = 5;
 
@@ -27,28 +28,6 @@ const MemberOrder = ({ data }: { data: Orders }) => {
   const handleShowMore = () => {
     setDisplayedOrders((prev) => prev + MAX_ORDERS_DISPLAY);
   };
-
-  function calculateStayDays(checkInDate: string, checkOutDate: string) {
-    if (!checkInDate || !checkOutDate) return;
-    const checkIn = new Date(checkInDate).getTime();
-    const checkOut = new Date(checkOutDate).getTime();
-    return (checkOut - checkIn) / (1000 * 60 * 60 * 24); // 將毫秒轉換為天
-  }
-
-  function formatDate(dateStr: string, timeStr?: string) {
-    if (!dateStr) return;
-    const days = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
-    const date = new Date(dateStr);
-    return `${date.getMonth() + 1} 月 ${date.getDate()} 日 ${days[date.getDay()]}${timeStr ? `，${timeStr}` : ''}`;
-  }
-
-  function formatNTD(num: number) {
-    if (!num) return;
-    return num.toLocaleString('zh-TW', {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 2,
-    });
-  }
 
   useEffect(() => {
     if (orderData.length > 0) {

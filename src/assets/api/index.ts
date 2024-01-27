@@ -81,3 +81,17 @@ export async function userLogin(data: UserLoginData) {
   }
   return res.json();
 }
+
+export async function userRegister(data: UserRegisterData) {
+  const res = await fetch(`${baseUrl}/api/v1/user/signup`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    throw new Error('Failed to fetch data');
+  }
+  return res.json();
+}

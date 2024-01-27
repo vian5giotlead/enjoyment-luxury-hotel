@@ -240,6 +240,57 @@ const theme: Theme = createTheme({
         },
       },
     },
+    MuiStepConnector: {
+      styleOverrides: {
+        alternativeLabel: {
+          top: '50%',
+        },
+        line: {
+          backgroundColor: '#909090',
+          height: '0.125rem',
+          border: 0,
+          borderRadius: '0.625rem',
+        },
+        root: {
+          '&.Mui-active': {
+            '&.MuiStepConnector-line': {
+              backgroundColor: 'white',
+            },
+          },
+        },
+      },
+    },
+    MuiStepIcon: {
+      styleOverrides: {
+        root: {
+          stroke: '#909090',
+          '&.Mui-active': {
+            stroke: 'transparent',
+            text: {
+              fill: 'white',
+            },
+          },
+          '&.Mui-completed': {
+            stroke: 'transparent',
+            backgroundColor: 'white',
+            borderRadius: '50%',
+          },
+        },
+      },
+    },
+    MuiStepLabel: {
+      styleOverrides: {
+        label: {
+          color: '#909090',
+          '&.Mui-active': {
+            color: 'white',
+          },
+          '&.Mui-completed': {
+            color: 'white',
+          },
+        },
+      },
+    },
   },
 });
 
