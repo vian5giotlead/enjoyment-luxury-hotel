@@ -1,3 +1,5 @@
+import { z, ZodType } from 'zod';
+
 export function formatPhoneNumber(phoneNumber: string | number) {
   // 移除所有非數字字符
   const cleaned = ('' + phoneNumber).replace(/\D/g, '');
@@ -29,4 +31,22 @@ export function formatNTD(num: number) {
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   });
+}
+
+export function schemaValidate(key: keyof typeof schema.shape) {
+  const schema = z.object({
+    email: z.string().email('請輸入有效的電子郵件地址'),
+    password: z.string().min(1),
+    confirmPassword: z.string().min(1),
+    name: z.string().min(1, '名字不能為空'),
+    city: z.string().min(1, '城市不能為空'),
+    phone: z.string().min(1, '電話號碼不能為空'),
+    detail: z.string().min(1, '地址詳情不能為空'),
+    zipcode: z.number().min(100, '郵政編碼應為有效數值').max(999, '郵政編碼應為有效數值'),
+    countryPhoneCode: z.string(),
+    birthdayYear: z.number().nonnegative(),
+    birthdayMonth: z.number().min(1).max(12),
+    birthdayDay: z.number().min(1).max(31),
+  });
+  return schema.shape[key];
 }

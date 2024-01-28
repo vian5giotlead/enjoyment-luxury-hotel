@@ -2,10 +2,10 @@
 
 import { Button, Stack } from '@mui/material';
 import { z } from 'zod';
-import Input from '../common/Input';
+import Input from '../../components/common/Input';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { updateUserData } from '@/assets/api';
+import { updateUser } from '@/assets/api';
 
 export const changePasswordDataSchema = z
   .object({
@@ -36,7 +36,7 @@ export const ChangePasswordForm = ({
   });
 
   const onSubmit = async (data: ChangePasswordDataSchema) => {
-    const result = await updateUserData({
+    const result = await updateUser({
       ...memberData,
       newPassword: data.newPassword,
       oldPassword: data.oldPassword,

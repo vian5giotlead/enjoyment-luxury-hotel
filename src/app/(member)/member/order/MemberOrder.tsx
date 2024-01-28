@@ -13,6 +13,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import { KeyboardArrowDown } from '@mui/icons-material';
 import ModalController from './ModalController';
 import { calculateStayDays, formatDate, formatNTD } from '@/utils';
+import Headline from '@/components/common/Headline';
 
 const MAX_ORDERS_DISPLAY = 5;
 
@@ -61,7 +62,7 @@ const MemberOrder = ({ data }: { data: Orders }) => {
         wrap={'nowrap'}>
         {orderData.length > 0 ? (
           <>
-            <Grid item md={7}>
+            <Grid item md={7} position={'relative'}>
               {targetOrder && (
                 <Card
                   padding={isSmallDevice ? 'md' : 'lg'}
@@ -70,6 +71,8 @@ const MemberOrder = ({ data }: { data: Orders }) => {
                     flexDirection: 'column',
                     gap: isSmallDevice ? '1.5rem' : '2.5rem',
                     alignItems: 'stretch',
+                    position: 'sticky',
+                    top: 0,
                   }}>
                   <Box>
                     <Typography variant={isSmallDevice ? 'body2' : 'body1'} component="h3" mb={'0.5rem'}>
@@ -110,28 +113,21 @@ const MemberOrder = ({ data }: { data: Orders }) => {
                         }>{`住宿人數：${targetOrder.peopleNum} 位`}</Typography>
                     </Stack>
                     <Stack direction={'column'} spacing={'0.5rem'}>
-                      <Box>
-                        {/* //TODO: 帶樣式的標題 */}
-                        <Typography variant={'title'}>{`入住：${formatDate(
-                          targetOrder.checkInDate,
-                          '15:00 可入住',
-                        )}`}</Typography>
-                      </Box>
-                      <Box>
-                        {/* //TODO: 帶樣式的標題 */}
-                        <Typography variant={'title'}>
-                          {`退房：${formatDate(targetOrder.checkOutDate, '12:00 前退房')}`}
-                        </Typography>
-                      </Box>
+                      <Headline
+                        variant={isSmallDevice ? 'subtitle1' : 'title'}
+                        title={`入住：${formatDate(targetOrder.checkInDate, '15:00 可入住')}`}
+                      />
+                      <Headline
+                        variant={isSmallDevice ? 'subtitle1' : 'title'}
+                        secondary
+                        title={`退房：${formatDate(targetOrder.checkOutDate, '12:00 前退房')}`}
+                      />
                     </Stack>
                     <Typography variant={'subtitle1'}>{`NT$ ${formatNTD(targetOrder.roomId?.price)}`}</Typography>
                   </Stack>
                   <Divider />
                   <Stack flexDirection={'column'} gap={'1.5rem'}>
-                    <Box>
-                      {/* //TODO: 帶樣式的標題 */}
-                      <Typography variant={'subtitle1'}>{'房內設備'}</Typography>
-                    </Box>
+                    <Headline variant={isSmallDevice ? 'subtitle1' : 'title'} title={'房內設備'} />
                     <Card
                       isBorder={true}
                       sx={{
@@ -149,11 +145,7 @@ const MemberOrder = ({ data }: { data: Orders }) => {
                     </Card>
                   </Stack>
                   <Stack flexDirection={'column'} gap={'1.5rem'}>
-                    <Box>
-                      {/* //TODO: 帶樣式的標題 */}
-
-                      <Typography variant={'subtitle1'}>{'備品提供'}</Typography>
-                    </Box>
+                    <Headline variant={isSmallDevice ? 'subtitle1' : 'title'} title={'備品提供'} />
                     <Card
                       isBorder={true}
                       sx={{
@@ -174,73 +166,78 @@ const MemberOrder = ({ data }: { data: Orders }) => {
                 </Card>
               )}
             </Grid>
-            <Grid item md={5}>
+            <Grid item md={5} position={'relative'}>
               <Card
                 padding={isSmallDevice ? 'md' : 'lg'}
                 sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: isSmallDevice ? '1.5rem' : '2.5rem',
-                  alignItems: 'stretch',
-                  maxHeight: '100vh',
-                  overflowY: 'auto',
+                  position: 'sticky',
+                  top: 0,
                 }}>
-                <Typography variant={isSmallDevice ? 'title' : 'h5'} component="h3">
+                <Typography variant={isSmallDevice ? 'title' : 'h5'} component="h3" mb={{ sm: '1.5rem', md: '2.5rem' }}>
                   {'歷史訂單'}
                 </Typography>
-                {orderData.length > 0 &&
-                  orderData.slice(0, displayedOrders).map((order, index) => (
-                    <Fragment key={order._id}>
-                      <Stack
-                        gap={'1.5rem'}
-                        flexDirection={isSmallDevice ? 'column' : 'row'}
-                        alignItems={'flex-start'}
-                        onClick={() => setTargetOrder(order)}
-                        sx={{ cursor: 'pointer' }}>
-                        <Image
-                          style={{
-                            objectFit: 'cover',
-                            borderRadius: '0.5rem',
-                          }}
-                          src={order.roomId?.imageUrl}
-                          alt={order.roomId?.name}
-                          objectFit="cover"
-                          width={120}
-                          height={80}
-                        />
-                        <Stack direction={'column'} gap={'1rem'}>
-                          <Typography
-                            variant={isSmallDevice ? 'body2' : 'title'}>{`預訂參考編號： ${order._id}`}</Typography>
-                          <Typography variant={isSmallDevice ? 'subtitle1' : 'h6'} component="h4">
-                            {order.roomId?.name}
-                          </Typography>
-                          <Box>
-                            <Typography variant={isSmallDevice ? 'body2' : 'body1'}>{`住宿天數：${calculateStayDays(
-                              order.checkInDate,
-                              order.checkOutDate,
-                            )} 晚`}</Typography>
+                <Box
+                  display={'flex'}
+                  flexDirection={'column'}
+                  gap={isSmallDevice ? '1.5rem' : '2.5rem'}
+                  alignItems={'stretch'}
+                  maxHeight={'100vh'}
+                  sx={{ overflowY: 'auto' }}>
+                  {orderData.length > 0 &&
+                    orderData.slice(0, displayedOrders).map((order, index) => (
+                      <Fragment key={order._id}>
+                        <Stack
+                          gap={'1.5rem'}
+                          flexDirection={isSmallDevice ? 'column' : 'row'}
+                          alignItems={'flex-start'}
+                          onClick={() => setTargetOrder(order)}
+                          sx={{ cursor: 'pointer' }}>
+                          <Image
+                            style={{
+                              objectFit: 'cover',
+                              borderRadius: '0.5rem',
+                              flexShrink: 0,
+                            }}
+                            src={order.roomId?.imageUrl}
+                            alt={order.roomId?.name}
+                            objectFit="cover"
+                            width={120}
+                            height={80}
+                          />
+                          <Stack direction={'column'} gap={'1rem'}>
                             <Typography
-                              variant={
-                                isSmallDevice ? 'body2' : 'body1'
-                              }>{`住宿人數：${order.peopleNum} 位`}</Typography>
-                          </Box>
-                          <Box>
-                            {/* //TODO: 帶樣式的標題 */}
-
-                            <Typography variant={'body1'}>{`入住：${formatDate(order.checkInDate)}`}</Typography>
-                          </Box>
-                          <Box>
-                            {/* //TODO: 帶樣式的標題 */}
-                            <Typography variant={'body1'}>{`退房：${formatDate(order.checkOutDate)}`}</Typography>
-                          </Box>
-                          <Typography variant={isSmallDevice ? 'subtitle1' : 'title'}>{`NT$ ${formatNTD(
-                            order.roomId?.price,
-                          )}`}</Typography>
+                              variant={isSmallDevice ? 'body2' : 'title'}>{`預訂參考編號： ${order._id}`}</Typography>
+                            <Typography variant={isSmallDevice ? 'subtitle1' : 'h6'} component="h4">
+                              {order.roomId?.name}
+                            </Typography>
+                            <Box>
+                              <Typography variant={isSmallDevice ? 'body2' : 'body1'}>{`住宿天數：${calculateStayDays(
+                                order.checkInDate,
+                                order.checkOutDate,
+                              )} 晚`}</Typography>
+                              <Typography
+                                variant={
+                                  isSmallDevice ? 'body2' : 'body1'
+                                }>{`住宿人數：${order.peopleNum} 位`}</Typography>
+                            </Box>
+                            <Headline
+                              variant={isSmallDevice ? 'body2' : 'body1'}
+                              title={`入住：${formatDate(order.checkInDate)}`}
+                            />
+                            <Headline
+                              variant={isSmallDevice ? 'body2' : 'body1'}
+                              secondary
+                              title={`退房：${formatDate(order.checkOutDate)}`}
+                            />
+                            <Typography variant={isSmallDevice ? 'subtitle1' : 'title'}>{`NT$ ${formatNTD(
+                              order.roomId?.price,
+                            )}`}</Typography>
+                          </Stack>
                         </Stack>
-                      </Stack>
-                      {index !== orderData.length - 1 && <Divider />}
-                    </Fragment>
-                  ))}
+                        {index !== orderData.length - 1 && <Divider />}
+                      </Fragment>
+                    ))}
+                </Box>
                 {orderData.length > MAX_ORDERS_DISPLAY && displayedOrders < orderData.length && (
                   <Button variant={'outlined'} size={'large'} endIcon={<KeyboardArrowDown />} onClick={handleShowMore}>
                     {'查看更多'}

@@ -5,6 +5,7 @@ import { Typography, Stack, Box, Button, Backdrop, Fade, Modal } from '@mui/mate
 import { Close } from '@mui/icons-material';
 
 import Drawer from './Drawer';
+import { deleteOrder } from '@/assets/api';
 
 export default function Layout({ isSmallDevice, id }: { isSmallDevice: boolean; id: string }) {
   const [openModal, setOpenModal] = useState(false);
@@ -18,9 +19,10 @@ export default function Layout({ isSmallDevice, id }: { isSmallDevice: boolean; 
   }
 
   function handleDeleteOrder(id: string) {
-    return () => {
-      console.log(id);
+    return async () => {
+      const res = await deleteOrder(id);
       setOpenModal(false);
+      return res;
     };
   }
 

@@ -119,6 +119,7 @@ const theme: Theme = createTheme({
       },
       styleOverrides: {
         root: {
+          borderRadius: '0.5rem',
           textTransform: 'none',
           fontWeight: 700,
           fontSize: '1rem',
@@ -216,7 +217,6 @@ const theme: Theme = createTheme({
         },
       ],
     },
-
     MuiAppBar: {
       styleOverrides: {
         root: {

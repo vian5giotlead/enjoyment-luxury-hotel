@@ -5,7 +5,7 @@ import { Box, Link, Stack, Typography, Button } from '@mui/material';
 
 import Card from '@/components/common/Card';
 import { useWidth } from '@/hooks';
-import { ChangePasswordForm } from '@/components/form/PasswordForm';
+import { ChangePasswordForm } from '@/app/(member)/PasswordForm';
 
 const Page = ({ data }: { data: MemberResponseData }) => {
   const [openForm, setOpenForm] = useState(false);

@@ -5,7 +5,10 @@ import { Button, Stack, Typography } from '@mui/material';
 import { TitleText } from './style';
 import Card from '@/components/common/Card';
 import { useWidth } from '@/hooks';
-import UserDataForm from '@/components/form/UserDataForm';
+import UserDataForm from '@/app/(member)/UserDataForm';
+import { SubmitHandler } from 'react-hook-form';
+import { updateUser } from '@/assets/api';
+import { formatPhoneNumber } from '@/utils';
 
 const Page = ({ data }: { data: MemberResponseData }) => {
   const [openForm, setOpenForm] = useState(false);
@@ -22,6 +25,25 @@ const Page = ({ data }: { data: MemberResponseData }) => {
     setOpenForm(true);
   };
 
+  const onSubmit: SubmitHandler<MemberEditData> = async (data) => {
+    const birthday = ` ${data.birthdayYear}-${data.birthdayMonth}-${data.birthdayDay}`;
+    const resultPhone = data.phone[0] === '0' ? data.phone.slice(1) : data.phone;
+    const phone = `(${data.countryPhoneCode}) ${formatPhoneNumber(resultPhone)}`;
+    const newMemberData: MemberUpdateData = {
+      name: data.name,
+      email: data.email,
+      phone,
+      address: {
+        zipcode: data.address.zipcode,
+        detail: data.address.detail,
+      },
+      birthday: birthday,
+    };
+    console.log(newMemberData);
+    const result = await updateUser(newMemberData);
+    console.log(result);
+  };
+
   return (
     <Card
       padding={isSmallDevice ? 'md' : 'lg'}
@@ -35,7 +57,7 @@ const Page = ({ data }: { data: MemberResponseData }) => {
         {'基本資料'}
       </Typography>
       {openForm ? (
-        <UserDataForm memberData={memberData} setOpenForm={setOpenForm} />
+        <UserDataForm memberData={memberData} setOpenForm={setOpenForm} onSubmit={onSubmit} />
       ) : (
         <Stack direction={'column'} spacing={{ sm: 2, md: 3 }}>
           <TitleText title={'姓名'} content={memberData.name} />

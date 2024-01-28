@@ -1,7 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { Button, Stack, Typography } from '@mui/material';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import {
+  Button,
+  Checkbox as BaseCheckbox,
+  FormControlLabel,
+  FormGroup,
+  Stack,
+  Typography,
+  styled,
+} from '@mui/material';
 import Image from 'next/image';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -11,25 +19,20 @@ import { citys, zipcodes } from '@/assets/cityData';
 import countryPhoneCodes from '@/assets/countryPhoneCodes.json';
 import countryFlagEmoji from '@/assets/countryFlagEmoji.json';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { updateUserData } from '@/assets/api';
-import { formatPhoneNumber } from '@/utils';
+import { formatPhoneNumber, schemaValidate } from '@/utils';
 
-export const memberDataSchema = z.object({
-  name: z.string().min(1, '名字不能為空'),
-  email: z.string().email('請輸入有效的電子郵件地址'),
-  city: z.string().min(1, '城市不能為空'),
-  phone: z.string().min(1, '電話號碼不能為空'),
-  address: z.object({
-    zipcode: z.number().min(100, '郵政編碼應為有效數值').max(999, '郵政編碼應為有效數值'),
-    detail: z.string().min(1, '地址詳情不能為空'),
-  }),
-  countryPhoneCode: z.string(),
-  birthdayYear: z.number().nonnegative(),
-  birthdayMonth: z.number().min(1).max(12),
-  birthdayDay: z.number().min(1).max(31),
-});
+const Checkbox = styled(BaseCheckbox)(({ theme }) => ({
+  color: theme.palette.primary.main,
+  '&.MuiCheckbox-colorPrimary': {
+    color: theme.palette.primary.main,
+  },
+}));
 
-type MemberDataType = z.infer<typeof memberDataSchema>;
+const Label = styled(Typography)(({ theme }) => ({
+  color: 'white',
+  [theme.breakpoints.down('md')]: { fontSize: '0.875rem' },
+  [theme.breakpoints.up('md')]: { fontSize: '1rem' },
+}));
 
 const currentYear = new Date().getFullYear();
 const years = Array.from({ length: 88 }, (_, i) => currentYear - i);
@@ -39,13 +42,34 @@ const days = Array.from({ length: 31 }, (_, i) => i + 1);
 const UserDataForm = ({
   memberData,
   setOpenForm,
+  onSubmit,
+  isRegister = false,
+  setData,
 }: {
   memberData?: MemberData;
   setOpenForm?: React.Dispatch<React.SetStateAction<boolean>>;
+  onSubmit: SubmitHandler<MemberEditData>;
+  isRegister?: boolean;
+  setData?: Dispatch<SetStateAction<MemberEditData>>;
 }) => {
   const defaultValueCity =
     memberData &&
     zipcodes.find((city) => city.zone.find((counties) => counties.zipcode === memberData.address.zipcode))?.city;
+
+  const memberDataSchema = z.object({
+    name: schemaValidate('name'),
+    countryPhoneCode: schemaValidate('countryPhoneCode'),
+    phone: schemaValidate('phone'),
+    birthdayYear: schemaValidate('birthdayYear'),
+    birthdayMonth: schemaValidate('birthdayMonth'),
+    birthdayDay: schemaValidate('birthdayDay'),
+    city: schemaValidate('city'),
+    address: z.object({
+      zipcode: schemaValidate('zipcode'),
+      detail: schemaValidate('detail'),
+    }),
+    check: isRegister ? z.boolean({ description: '請勾選同意本網站個資使用規範' }) : z.undefined(),
+  });
 
   const birthday = memberData && new Date(memberData.birthday);
 
@@ -64,7 +88,7 @@ const UserDataForm = ({
     watch,
     control,
     formState: { errors, isDirty, isValid },
-  } = useForm<MemberDataType>({
+  } = useForm<MemberEditData>({
     defaultValues: {
       ...memberData,
       city: defaultValueCity,
@@ -79,24 +103,6 @@ const UserDataForm = ({
     resolver: zodResolver(memberDataSchema),
   });
 
-  const onSubmit: SubmitHandler<MemberDataType> = async (data) => {
-    const birthday = ` ${data.birthdayYear}-${data.birthdayMonth}-${data.birthdayDay}`;
-    const resultPhone = data.phone[0] === '0' ? data.phone.slice(1) : data.phone;
-    const phone = `(${data.countryPhoneCode}) ${formatPhoneNumber(resultPhone)}`;
-    const newMemberData: MemberUpdateData = {
-      name: data.name,
-      email: data.email,
-      phone,
-      address: {
-        zipcode: data.address.zipcode,
-        detail: data.address.detail,
-      },
-      birthday: birthday,
-    };
-    console.log(newMemberData);
-    const result = await updateUserData(newMemberData);
-    console.log(result);
-  };
   const city = watch('city');
   useEffect(() => {
     if (city) {
@@ -111,9 +117,28 @@ const UserDataForm = ({
     }
   }, [city]);
 
+  const handleOnsSubmit = () => {
+    if (isRegister && setData) {
+      const data = watch();
+      const resultPhone = data.phone[0] === '0' ? data.phone.slice(1) : data.phone;
+      const phone = `(${data.countryPhoneCode}) ${formatPhoneNumber(resultPhone)}`;
+      setData((prev) => {
+        return {
+          ...prev,
+          ...data,
+          birthday: `${data.birthdayYear}-${data.birthdayMonth}-${data.birthdayDay}`,
+          phone,
+        };
+      });
+      onSubmit(data);
+    } else {
+      onSubmit(watch());
+    }
+  };
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Stack direction={'column'} spacing={'1.5rem'}>
+    <form onSubmit={handleSubmit(handleOnsSubmit)}>
+      <Stack direction={'column'} spacing={isRegister ? '1rem' : '1.5rem'}>
         <Controller
           name="name"
           control={control}
@@ -123,6 +148,7 @@ const UserDataForm = ({
               {...field}
               helperText={errors.name?.message}
               label="姓名"
+              labelColor={isRegister ? 'white' : 'black'}
               error={Boolean(errors.name)}
               placeholder="請輸入您的姓名"
             />
@@ -136,6 +162,7 @@ const UserDataForm = ({
               <Select
                 {...field}
                 label="區域號碼"
+                labelColor={isRegister ? 'white' : 'black'}
                 options={countryPhoneCodes.map((item) => ({
                   key: item.iso,
                   value: item.code,
@@ -170,6 +197,7 @@ const UserDataForm = ({
                 {...field}
                 helperText={errors.phone?.message}
                 label="手機號碼"
+                labelColor={isRegister ? 'white' : 'black'}
                 error={Boolean(errors.phone)}
                 placeholder="請輸入您的手機號碼"
                 maxLength={10}
@@ -185,6 +213,7 @@ const UserDataForm = ({
               <Select
                 {...field}
                 label="生日"
+                labelColor={isRegister ? 'white' : 'black'}
                 options={years.map((year) => ({ value: year, label: String(year) }))}
                 error={Boolean(errors.birthdayYear)}
                 placeholder="您的出生年"
@@ -226,6 +255,7 @@ const UserDataForm = ({
               <Select
                 {...field}
                 label="地址"
+                labelColor={isRegister ? 'white' : 'black'}
                 options={citys.map((city) => ({ value: city, label: city }))}
                 error={Boolean(errors.city)}
                 placeholder="您所在的城市"
@@ -260,37 +290,69 @@ const UserDataForm = ({
               {...field}
               helperText={errors.address?.detail?.message}
               label="詳細地址"
+              labelColor={isRegister ? 'white' : 'black'}
               error={Boolean(errors.address?.detail)}
               placeholder="請輸入詳細地址"
             />
           )}
         />
-        {setOpenForm && (
-          <Stack direction={'row'} justifyContent={'space-between'} gap={{ sm: 3, md: 0 }}>
-            <Button
-              sx={{
-                width: { sm: '100%', md: 'auto' },
-              }}
-              type="submit"
-              variant={'contained'}
-              size={'large'}
-              disableRipple>
-              {'儲存設定'}
-            </Button>
-            <Button
-              sx={{
-                width: { sm: '100%', md: 'auto' },
-              }}
-              type="button"
-              variant={'outlined'}
-              size={'large'}
-              disableRipple
-              onClick={() => setOpenForm(false)}>
-              {'取消'}
-            </Button>
-          </Stack>
+        {isRegister && (
+          <Controller
+            name="check"
+            control={control}
+            render={({ field }) => (
+              <FormGroup>
+                <FormControlLabel
+                  control={<Checkbox {...field} sx={{ '& .MuiSvgIcon-root': { fontSize: '1.5rem' } }} />}
+                  label={<Label color="white">我已閱讀並同意本網站個資使用規範</Label>}
+                  color="white"
+                />
+              </FormGroup>
+            )}
+          />
         )}
       </Stack>
+      {setOpenForm && (
+        <Stack direction={'row'} justifyContent={'space-between'} gap={{ sm: 3, md: 0 }}>
+          <Button
+            sx={{
+              width: { sm: '100%', md: 'auto' },
+              padding: { sm: '1rem' },
+            }}
+            type="submit"
+            variant={'contained'}
+            size={'large'}
+            disableRipple>
+            {'儲存設定'}
+          </Button>
+          <Button
+            sx={{
+              width: { sm: '100%', md: 'auto' },
+              padding: { sm: '1rem' },
+            }}
+            type="button"
+            variant={'outlined'}
+            size={'large'}
+            disableRipple
+            onClick={() => setOpenForm(false)}>
+            {'取消'}
+          </Button>
+        </Stack>
+      )}
+      {isRegister && (
+        <Button
+          sx={{
+            padding: { sm: '1rem' },
+          }}
+          fullWidth
+          type="submit"
+          variant={'contained'}
+          size={'large'}
+          disabled={!isDirty || !isValid}
+          disableRipple>
+          {'完成註冊'}
+        </Button>
+      )}
     </form>
   );
 };

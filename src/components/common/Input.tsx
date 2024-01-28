@@ -21,6 +21,7 @@ const InputElement = styled('input')(({ theme }) => ({
     [theme.breakpoints.up('md')]: { fontSize: '1rem' },
     padding: '1rem',
     lineHeight: 1.5,
+    marginBottom: '0.5rem',
     transition: theme.transitions.create(['border-color', 'background-color', 'box-shadow']),
     '&:focus': {
       boxShadow: `0 0 0 0.25rem rgba(190, 156, 124, 0.1)`,
@@ -81,7 +82,15 @@ const InputFelid = forwardRef<HTMLInputElement, InputProps>(function CustomInput
       )}
       <Input id={props.name} {...props} ref={ref} />
       {error && (
-        <FormHelperText id={`${props.name}-helper-text`} error={error || isDirty}>
+        <FormHelperText
+          id={`${props.name}-helper-text`}
+          error={error || isDirty}
+          sx={{
+            fontWeight: 700,
+            fontSize: '0.875rem',
+            lineHeight: 1.5,
+            letterSpacing: '0.0175rem',
+          }}>
           {helperText}
         </FormHelperText>
       )}

@@ -3,12 +3,10 @@ import { Grid, Link } from '@mui/material';
 import ChangePasswordPanel from './ChangePasswordPanel';
 import MemberDataPanel from './MemberDataPanel';
 import { Container } from './style';
-import { getUserData } from '@/assets/api';
+import { getUser } from '@/assets/api';
 
-
-export default async function Page()
-{
-  const data: MemberResponseData = await getUserData();
+export default async function Page() {
+  const data: MemberResponseData = await getUser();
   return (
     <Container>
       <Grid

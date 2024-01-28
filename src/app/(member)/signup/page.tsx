@@ -5,8 +5,12 @@ import { useWidth } from '@/hooks';
 import HorizontalWave from '@/components/common/HorizontalWave';
 import Image from 'next/image';
 import cover from '@/assets/images/login.jpg';
-import RegisterForm from './RegisterForm';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { userRegister } from '@/assets/api';
+import { formatPhoneNumber } from '@/utils';
+import PasswordForm from './PasswordForm';
+import UserDataForm from '@/app/(member)/UserDataForm';
+import { useLocalStorage } from '@uidotdev/usehooks';
 
 const template = {
   subTitle: '享樂酒店，誠摯歡迎',
@@ -16,20 +20,17 @@ const template = {
 const steps = ['輸入信箱及密碼', '填寫基本資料'];
 
 const Page = () => {
+  const [token, setToken] = useLocalStorage<string | null>('token', null);
   const widthSize = useWidth();
   const isSmallDevice = widthSize === 'sm';
   const [activeStep, setActiveStep] = useState(0);
   const [skipped, setSkipped] = useState(new Set<number>());
 
-  const [userData, setUserData] = useState({
-    email: '',
-    password: '',
-    confirmPassword: '',
-    name: '',
-    birthday: '',
-    phone: '',
-    address: '',
-  });
+  const [userData, setUserData] = useState({} as MemberEditData);
+
+  useEffect(() => {
+    console.log(userData);
+  }, [userData]);
 
   const isStepSkipped = (step: number) => {
     return skipped.has(step);
@@ -44,6 +45,23 @@ const Page = () => {
 
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
+  };
+
+  const onSubmit = async () => {
+    const res = await userRegister({
+      email: userData.email,
+      password: userData.password as string,
+      name: userData.name,
+      address: {
+        zipcode: userData.address.zipcode,
+        detail: userData.address.detail,
+      },
+      birthday: userData.birthday,
+      phone: userData.phone,
+    });
+    if (res.status === true) {
+      setToken(res.token);
+    }
   };
 
   return (
@@ -100,17 +118,29 @@ const Page = () => {
                 </Stepper>
               </Box>
             </Grid>
-            <RegisterForm step={1} handleNext={handleNext} />
-            <Typography
-              variant={isSmallDevice ? 'body2' : 'body1'}
-              component="span"
-              sx={{ fontWeight: 400 }}
-              color="white">
-              {`已經有會員了嗎?`}
-              <Link href={'/login'} sx={{ marginLeft: '0.5rem' }}>
-                立即登入
-              </Link>
-            </Typography>
+            <Box>
+              <Grid item>
+                {activeStep === 0 ? (
+                  <>
+                    <PasswordForm handleNext={handleNext} setData={setUserData} />
+                  </>
+                ) : (
+                  <>
+                    <UserDataForm setData={setUserData} onSubmit={onSubmit} isRegister={true} />
+                  </>
+                )}
+              </Grid>
+              <Typography
+                variant={isSmallDevice ? 'body2' : 'body1'}
+                component="p"
+                sx={{ fontWeight: 400, marginTop: '1rem' }}
+                color="white">
+                {`已經有會員了嗎?`}
+                <Link href={'/login'} sx={{ marginLeft: '0.5rem' }}>
+                  立即登入
+                </Link>
+              </Typography>
+            </Box>
           </Grid>
         </Grid>
       </Grid>
