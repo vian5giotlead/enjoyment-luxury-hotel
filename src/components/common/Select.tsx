@@ -17,7 +17,6 @@ const Select = forwardRef(function Select<TValue extends {}, Multiple extends bo
   const slots: BaseSelectProps<TValue, Multiple>['slots'] = {
     root: CustomButton,
     listbox: DropdownList,
-    popper: Popper,
     ...props.slots,
   };
   return <BaseSelect {...props} ref={ref} slots={slots} />;
@@ -180,6 +179,7 @@ const Label = styled('label')(
 
 interface SelectProps {
   label: string;
+  labelColor?: string;
   options: {
     value: string | number;
     label?: string;
@@ -196,10 +196,15 @@ interface SelectProps {
 }
 
 const StyledSelect = forwardRef<HTMLSelectElement, SelectProps>(
-  ({ label, options, error, placeholder, helperText, onChange, name, disabled = false, sx }, ref) => {
+  (
+    { label, labelColor = 'black', options, error, placeholder, helperText, onChange, name, disabled = false, sx },
+    ref,
+  ) => {
     return (
       <FormControl variant="standard" error={error} sx={{ ...sx, flex: 'auto' }}>
-        <Label htmlFor={name}>{label}</Label>
+        <Label htmlFor={name} sx={{ color: labelColor }}>
+          {label}
+        </Label>
         <Select id={name} name={name} defaultValue="" disabled={disabled}>
           <DropdownListItem disabled value="">
             <em>{placeholder}</em>
