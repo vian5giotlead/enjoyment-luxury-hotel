@@ -1,6 +1,7 @@
 //mui
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import Title from '@/app/c.title';
 import AboutImage from '@/assets/images/about.png';
 
 export default function About() {
@@ -38,32 +39,12 @@ export default function About() {
             {/* 關於我們 */}
             <Box>
               <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: { sm: '40px', md: '80px' } }}>
-                <Box>
-                  <Typography
-                    color="white"
-                    sx={{
-                      whiteSpace: 'nowrap',
-                      fontSize: { sm: '32px', md: '48px' },
-                      fontWeight: { sm: 'bold', md: 'bold' },
-                    }}>
-                    關於
-                  </Typography>
-                  <Typography
-                    color="white"
-                    sx={{
-                      whiteSpace: 'nowrap',
-                      fontSize: { sm: '32px', md: '48px' },
-                      fontWeight: { sm: 'bold', md: 'bold' },
-                    }}>
-                    我們
-                  </Typography>
-                </Box>
+                <Title txt1="關於" txt2="我們" color="white" />
                 <Box
                   sx={{
-                    width: { sm: '100px', md: '165px' },
+                    width: { sm: '160px', md: '165px' },
                     height: '2px',
                     backgroundColor: 'white',
-                    marginLeft: '40px',
                   }}></Box>
               </Box>
               <Box>
