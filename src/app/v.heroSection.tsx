@@ -11,7 +11,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/autoplay';
 //component
-import LinkButton from '@/app/c.LinkButton';
+import LinkButton from '@/app/c.linkButton';
 // image
 import BannerImg from '@/assets/images/banner.png';
 

@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
@@ -14,7 +14,11 @@ import useScrollTrigger from '@mui/material/useScrollTrigger';
 //images
 import LogoWhite from '@/assets/images/logoWhite.png';
 // componets
+import Loader from '@/components/common/Loader';
 import Menu from '@/app/c.menu';
+// others
+import { useLocalStorage } from '@uidotdev/usehooks';
+import { apiCheckUserIsLogin, getUser } from '@/assets/api';
 
 function HideOnScroll({ children, window }: { children: React.ReactElement; window?: () => Window }) {
   const trigger = useScrollTrigger({
@@ -34,6 +38,10 @@ export default function Header(props: any) {
   const [istransparent, setIsTransparent] = useState(true);
   const [isFixed, setIsFixed] = useState(true);
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLogin, setIsLogin] = useLocalStorage<boolean | null>('isLogin', false);
+  const [token, setToken] = useLocalStorage<string | null>('token', null);
+  const [userInfo, setUserInfo] = useState({ name: '' });
 
   const transparentPathList = ['/'];
   const fixedPathList = ['/'];
@@ -57,13 +65,41 @@ export default function Header(props: any) {
     setOpenDrawer((prev) => !prev);
   };
 
-  useLayoutEffect(() => {
+  const getUserInfo = async () => {
+    await getUser().then((res: MemberResponseData) => {
+      if (res.status === true) setUserInfo(res.result);
+    });
+  };
+
+  const getUserIsLogin = async () => {
+    setIsLoading(true);
+    await apiCheckUserIsLogin()
+      .then((res: CheckLoginSchema) => {
+        setIsLogin(res.status);
+        if (res.status === true) setToken(res.token);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
+  useEffect(() => {
     handlePath();
     // eslint-disable-next-line
   }, [pathname]);
 
+  useEffect(() => {
+    const fn = async () => {
+      await getUserIsLogin();
+      await getUserInfo();
+    };
+    fn();
+    // eslint-disable-next-line
+  }, []);
+
   return (
     <>
+      {isLoading && <Loader>獲取資料中</Loader>}
       <HideOnScroll {...props}>
         <AppBar
           position={isFixed ? 'fixed' : 'sticky'}
@@ -95,7 +131,7 @@ export default function Header(props: any) {
               <Typography component="h2">享樂酒店 Enjoyment luxury hotel</Typography>
             </Box>
             <Box sx={{ display: { sm: 'none', md: 'block' } }}>
-              <Menu />
+              <Menu userInfo={userInfo} />
             </Box>
             <IconButton
               sx={{ display: { sm: 'block', md: 'none' } }}
@@ -136,7 +172,7 @@ export default function Header(props: any) {
             width: '100%',
             padding: '0 20px',
           }}>
-          <Menu isDarwerOpen={openDrawer} toggleDrawer={toggleDrawer} />
+          <Menu userInfo={userInfo} isDarwerOpen={openDrawer} toggleDrawer={toggleDrawer} />
         </Box>
       </Drawer>
     </>

@@ -108,3 +108,67 @@ export async function verifyEmail(email: string) {
   }
   return res.json();
 }
+
+export async function apiCheckUserIsLogin() {
+  const res = await fetch(`${baseUrl}/api/v1/user/check`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch data');
+  }
+
+  return res.json();
+}
+
+export async function apiGetNews() {
+  const res = await fetch(`${baseUrl}/api/v1/home/news/`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch data');
+  }
+
+  return res.json();
+}
+
+export async function apiGetRoomType() {
+  const res = await fetch(`${baseUrl}/api/v1/rooms/`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch data');
+  }
+
+  return res.json();
+}
+
+export async function apiGetCluinary() {
+  const res = await fetch(`${baseUrl}/api/v1/home/culinary/`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch data');
+  }
+
+  return res.json();
+}

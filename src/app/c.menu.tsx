@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -7,9 +7,20 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 
-export default function NavMenu({ isDarwerOpen, toggleDrawer }: { isDarwerOpen?: boolean; toggleDrawer?: () => void }) {
+import { useLocalStorage } from '@uidotdev/usehooks';
+
+type menuDomSchema = {
+  isDarwerOpen?: boolean;
+  toggleDrawer?: () => void;
+  userInfo: MemberData | { name: string };
+};
+
+export default function NavMenu({ isDarwerOpen, toggleDrawer, userInfo }: menuDomSchema) {
   const [menuClickDom, setMenuClickDom] = useState<null | HTMLElement>(null);
   const [openMenu, setOpenMenu] = useState(false);
+  const [isLogin, setIsLogin] = useLocalStorage<boolean | null>('isLogin', false);
+  const [token, setToken] = useLocalStorage<string | null>('token', null);
+
   const atClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     if (isDarwerOpen && toggleDrawer) {
       toggleDrawer();
@@ -31,6 +42,8 @@ export default function NavMenu({ isDarwerOpen, toggleDrawer }: { isDarwerOpen?:
 
   const handleLogOut = () => {
     setOpenMenu(false);
+    setIsLogin(false);
+    setToken(null);
     console.log('logout');
   };
 
@@ -42,40 +55,51 @@ export default function NavMenu({ isDarwerOpen, toggleDrawer }: { isDarwerOpen?:
             客房旅宿
           </Typography>
         </Link>
-        <Link className="nav-link" href="/login" onClick={atClick}>
-          <Typography component="span" color="white">
-            會員登入
-          </Typography>
-        </Link>
-        <Box
-          id="menu-basic"
-          className="nav-link"
-          component="a"
-          onClick={handleOpenMenu}
-          aria-controls={openMenu ? 'member-menu' : undefined}
-          aria-haspopup="true"
-          aria-expanded={openMenu ? 'true' : undefined}
-          sx={{ display: { sm: 'none', md: 'flex' } }}>
-          <Typography component="i" color="white" sx={{ padding: '0px 6px 0px 0px' }}>
-            <PersonOutlineIcon />
-          </Typography>
-          <Typography component="span" color="white">
-            {`Jessica`}
-          </Typography>
-        </Box>
-        <Box sx={{ display: { sm: 'block', md: 'none' } }}>
-          <Link className="nav-link" href="/member" onClick={atClick}>
+
+        {!isLogin && (
+          <Link className="nav-link" href="/login" onClick={atClick}>
             <Typography component="span" color="white">
-              我的帳戶
+              會員登入
             </Typography>
           </Link>
-        </Box>
+        )}
+
+        {isLogin && (
+          <Box
+            id="menu-basic"
+            className="nav-link"
+            component="a"
+            onClick={handleOpenMenu}
+            aria-controls={openMenu ? 'member-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={openMenu ? 'true' : undefined}
+            sx={{ display: { sm: 'none', md: 'flex' } }}>
+            <Typography component="i" color="white" sx={{ padding: '0px 6px 0px 0px' }}>
+              <PersonOutlineIcon />
+            </Typography>
+            <Typography component="span" color="white">
+              {userInfo.name}
+            </Typography>
+          </Box>
+        )}
+
+        {isLogin && (
+          <Box sx={{ display: { sm: 'block', md: 'none' } }}>
+            <Link className="nav-link" href="/member" onClick={atClick}>
+              <Typography component="span" color="white">
+                我的帳戶
+              </Typography>
+            </Link>
+          </Box>
+        )}
+
         <Link className="nav-link active" href="/room-type" onClick={atClick}>
           <Typography component="span" color="white">
             立即訂房
           </Typography>
         </Link>
       </Stack>
+
       <Menu
         id="member-menu"
         open={openMenu}
