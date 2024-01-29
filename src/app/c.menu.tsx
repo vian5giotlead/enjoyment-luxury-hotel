@@ -70,7 +70,7 @@ export default function NavMenu({ isDarwerOpen, toggleDrawer }: { isDarwerOpen?:
             </Typography>
           </Link>
         </Box>
-        <Link className="nav-link active" href="/roomBooking" onClick={atClick}>
+        <Link className="nav-link active" href="/" onClick={atClick}>
           <Typography component="span" color="white">
             立即訂房
           </Typography>
