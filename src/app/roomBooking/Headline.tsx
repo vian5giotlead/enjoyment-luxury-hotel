@@ -1,17 +1,12 @@
 import { Box, Stack, Typography } from '@mui/material';
 
 interface HeadlineProps {
-  title: string,
-  fontSizeStyle?: string
+  title: string;
+  fontSizeStyle?: string;
+  isGray?: boolean
 }
 
-/**
- * 
- * TODO
- * Stack 圓弧樣式
- */
-
-function Headline({title, fontSizeStyle}: HeadlineProps) {
+function Headline({title, fontSizeStyle, isGray = false}: HeadlineProps) {
   
   return (
     <Box display='flex' alignItems='center'
@@ -20,7 +15,7 @@ function Headline({title, fontSizeStyle}: HeadlineProps) {
         width: '4px',
         height: '24px',
         mr: '12px',
-        bgcolor: 'primary.main'
+        bgcolor: isGray ? '#909090' : 'primary.main'
       }} />
       <Typography sx={{
         fontSize: fontSizeStyle === 'normal' ? '16px' : {sm: '16px', md: '24px'},

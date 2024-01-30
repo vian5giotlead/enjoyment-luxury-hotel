@@ -1,13 +1,11 @@
-'use client';
-
+'use client'
 import * as React from 'react';
 import { Box, Button, Container, Grid, Stack, Typography, Link } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-//import { useMediaQuery } from '@mui/material';
 import BedIcon from '@mui/icons-material/Bed';
 import PersonIcon from '@mui/icons-material/Person';
 import CheckIcon from '@mui/icons-material/Check';
-import Check from '@mui/icons-material/Check';
+import AspectRatioIcon from '@mui/icons-material/AspectRatio';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import SquareCard from '@/components/room/SquareCard';
 import Headline from '@/app/roomBooking/Headline';
@@ -15,8 +13,6 @@ import type { NextPage } from 'next';
 import Card from '@/components/common/Card';
 import { useWidth } from '@/hooks';
 import BookerForm from './BookerForm';
-import RoomFacilityBlock from '@/components/room/RoomFacilityBlock';
-import LoginForm from './LoginForm';
 
 const facilityInfo = [
   {
@@ -29,18 +25,34 @@ const facilityInfo = [
   },
 ];
 
+const roomBookData = {
+  roomId: '65a4e32683315f6587b0cb47',
+  checkInDate: '2023/11/18',
+  checkOutDate: '2023/11/19',
+  peopleNum: 2,
+};
+
+interface MemberData {
+  status: boolean;
+  result: {
+    address: {
+      zipcode: number;
+      detail: string;
+    };
+    _id: string;
+    name: string;
+    email: string;
+    phone: string;
+    birthday: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
 const RoomBooking: NextPage = () => {
   const theme = useTheme();
-  //const matches = useMediaQuery(() => theme.breakpoints.down('md'));
   const widthSize = useWidth();
   const isSmallDevice = widthSize;
-
-  const propData ={
-    roomId: "65251f6095429cd58654bf12",
-    checkInDate: "2023/06/18",
-    checkOutDate: "2023/06/19",
-    peopleNum: 2
-  };
 
   return (
     <>
@@ -93,17 +105,7 @@ const RoomBooking: NextPage = () => {
                 </Stack>
               </Box>
               <hr style={{ marginBottom: '24px' }} />
-              <Box component="section">
-                <Stack direction={'row'} justifyContent={'space-between'} sx={{ marginBottom: '40px' }}>
-                  <Typography variant={'h4'} component="h3">
-                    訂房人資訊
-                  </Typography>
-                  <Link component={'button'} underline={'always'} fontWeight={700}>
-                    {'套用會員資料'}
-                  </Link>
-                </Stack>
-                <LoginForm props={propData} />
-              </Box>
+              <BookerForm roomBookInfo={roomBookData} />
               <hr style={{ marginBottom: '24px' }} />
               <Box component="section">
                 <Typography variant={'h4'} component="h3" sx={{ marginBottom: '40px' }}>
@@ -114,7 +116,7 @@ const RoomBooking: NextPage = () => {
                   <Grid container>
                     <Grid sx={{ mr: 2 }}>
                       <SquareCard title="24坪">
-                        <BedIcon color="primary" sx={{ fontSize: 24 }} />
+                        <AspectRatioIcon color="primary" sx={{ fontSize: 24 }} />
                       </SquareCard>
                     </Grid>
                     <Grid sx={{ mr: 2 }}>
@@ -131,31 +133,20 @@ const RoomBooking: NextPage = () => {
                 </Box>
                 <Box sx={{ mb: 3, width: '100%' }}>
                   <Headline title="房間格局" />
-                  <Box sx={{ width: '100%' }}>
-                    <RoomFacilityBlock facilities={facilityInfo} />
-                  </Box>
-                  {/* <Grid container spacing={1} columnSpacing={5} width="100%">
-            <Grid item sm={6} lg={2.4}>
-              <Stack direction="row">
-                <Check color="primary" sx={{ fontSize: 24 }} />
-                <Typography variant="title" ml={1}>
-                  hello
-                </Typography>
-              </Stack>
-            </Grid>
-            <Grid item sm={6} lg={2.4}>
-              <Stack direction="row">
-                <Check color="primary" sx={{ fontSize: 24 }} />
-                <Typography variant="title" ml={1}>
-                  hello
-                </Typography>
-              </Stack>
-            </Grid>
-    </Grid> */}
+                  <Stack bgcolor={'#ffffff'} direction={'row'} p={3} borderRadius={2}>
+                    <Box sx={{ display: 'flex' }} mr={'40px'}>
+                      <CheckIcon color="primary" sx={{ fontSize: 24 }} />
+                      <Typography>市景</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex' }} mr={'40px'}>
+                      <CheckIcon color="primary" sx={{ fontSize: 24 }} />
+                      <Typography>獨立衛浴</Typography>
+                    </Box>
+                  </Stack>
                 </Box>
                 <Box sx={{ mb: 3 }}>
                   <Headline title="房內設備" />
-                  <Stack bgcolor={'#ffffff'} direction={'row'} p={3}>
+                  <Stack bgcolor={'#ffffff'} direction={'row'} p={3} borderRadius={2}>
                     <Box sx={{ display: 'flex' }} mr={'40px'}>
                       <CheckIcon color="primary" sx={{ fontSize: 24 }} />
                       <Typography>平面電視</Typography>
@@ -168,7 +159,7 @@ const RoomBooking: NextPage = () => {
                 </Box>
                 <Box mb={{ sm: 5, md: 15 }}>
                   <Headline title="備品提供" />
-                  <Stack bgcolor={'#ffffff'} direction={'row'} p={3}>
+                  <Stack bgcolor={'#ffffff'} direction={'row'} p={3} borderRadius={2}>
                     <Box sx={{ display: 'flex' }} mr={'40px'}>
                       <CheckIcon color="primary" sx={{ fontSize: 24 }} />
                       <Typography>衛生紙</Typography>
@@ -215,7 +206,9 @@ const RoomBooking: NextPage = () => {
                   <Typography fontWeight={700}>總價</Typography>
                   <Typography fontWeight={700}>NT$ 20,000</Typography>
                 </Stack>
-                <Button variant="contained" type="submit" form="my-form">確認訂房</Button>
+                <Button variant="contained" type="submit" form="my-form">
+                  確認訂房
+                </Button>
               </Card>
             </Box>
           </Stack>
