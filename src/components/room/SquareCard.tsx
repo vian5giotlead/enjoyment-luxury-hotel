@@ -1,8 +1,13 @@
 import { Box, IconButton, Typography } from '@mui/material';
-import { SquareCardProps } from '@/app/(room)/room-type/_aggregation';
+
+interface SquareCardProps {
+  title: string | number;
+  children: React.ReactNode;
+  isBorder?: boolean;
+}
 
 function SquareCard(props: SquareCardProps) {
-  const { title, children } = props;
+  const { title, children, isBorder } = props;
 
   return (
     <>
@@ -14,9 +19,9 @@ function SquareCard(props: SquareCardProps) {
         alignItems="flex-start"
         sx={{
           p: '20.5px 16px',
+          backgroundColor: '#fff',
           borderRadius: '8px',
-          border: '1px solid ',
-          borderColor: 'primary.light',
+          border: isBorder ? '1px solid #F1EAE4' : '',
         }}>
         <IconButton color="primary" size="large" sx={{ p: 0, cursor: 'auto', '&:hover': 'none' }}>
           {children}

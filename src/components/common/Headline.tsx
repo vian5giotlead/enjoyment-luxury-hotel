@@ -1,11 +1,12 @@
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography, TypographyProps } from '@mui/material';
 
-interface HeadlineProps {
+interface HeadlineProps extends TypographyProps {
   title: string;
+  secondary?: boolean;
 }
 
 export default function Headline(props: HeadlineProps) {
-  const { title } = props;
+  const { title, secondary = false, variant = 'h5' } = props;
   return (
     <Box display="flex" alignItems="center">
       <Stack
@@ -13,11 +14,11 @@ export default function Headline(props: HeadlineProps) {
           width: '4px',
           height: '24px',
           mr: '12px',
-          bgcolor: 'primary.main',
+          bgcolor: secondary ? '#909090' : 'primary.main',
           borderRadius: '10px',
         }}
       />
-      <Typography fontSize={{ sm: '16px', md: '24px'}} fontWeight={700}>{title}</Typography>
+      <Typography variant={variant}>{title}</Typography>
     </Box>
   );
 }
