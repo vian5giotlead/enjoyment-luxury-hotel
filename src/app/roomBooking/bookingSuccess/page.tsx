@@ -2,13 +2,13 @@
 
 import * as React from 'react';
 import { Box, Button, Container, Stack, Typography } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import Check from '@mui/icons-material/Check';
 import type { NextPage } from 'next';
 import Card from '@/components/common/Card';
 import { useWidth } from '@/hooks';
-import Headline from '@/components/common/Headline';
-
+import HorizontalWave from '@/components/common/HorizontalWave';
+import Headline from '@/app/roomBooking/Headline';
+import Link from 'next/link';
 
 const orderInfo = {
   status: true,
@@ -99,7 +99,6 @@ function timeFormat(checkDate: string): string {
 }
 
 const BookingSuccess: NextPage = () => {
-  const theme = useTheme();
   const widthSize = useWidth();
   const isSmallDevice = widthSize;
 
@@ -144,7 +143,13 @@ const BookingSuccess: NextPage = () => {
                 <Typography component="h3" fontSize={{ sm: '16px', md: '24px' }} fontWeight={700} mb={{ sm: 3, md: 5 }}>
                   立即查看您的訂單紀錄
                 </Typography>
-                <Button variant="contained">前往我的訂單</Button>
+                <Button variant="contained">
+                  <Link className="link" href="/member/order">
+                    <Typography component="span" color="white">
+                      前往我的訂單
+                    </Typography>
+                  </Link>
+                </Button>
               </Box>
               <Box component="section">
                 <Typography variant={'h5'} component="h5" mb={{ sm: 4, md: 5 }}>
@@ -170,7 +175,7 @@ const BookingSuccess: NextPage = () => {
                   flexDirection: 'column',
                   marginBottom: '60px',
                 }}>
-                <Typography mb={1}>預訂參考編號： {orderInfo.result.orderUserId}</Typography>
+                <Typography mb={1}>預訂參考編號： {orderInfo.result._id}</Typography>
                 <Typography
                   component="h4"
                   mb={{ sm: 3, md: 5 }}
@@ -196,12 +201,15 @@ const BookingSuccess: NextPage = () => {
                     </Typography>
                   </Stack>
                   <Box mb={3}>
-                    <Typography fontWeight={700}>
-                      入住：{timeFormat(orderInfo.result.checkInDate)}，15:00 可入住
-                    </Typography>
-                    <Typography fontWeight={700}>
-                      退房：{timeFormat(orderInfo.result.checkOutDate)}，12:00 前退房
-                    </Typography>
+                    <Headline
+                      title={`入住：${timeFormat(orderInfo.result.checkInDate)}，15:00 可入住`}
+                      fontSizeStyle="normal"
+                    />
+                    <Headline
+                      title={`退房：${timeFormat(orderInfo.result.checkOutDate)}，12:00 前退房`}
+                      fontSizeStyle="normal"
+                      isGray={true}
+                    />
                   </Box>
                   <Typography fontWeight={700}>NT$ {orderInfo.result.roomId.price}</Typography>
                 </Box>
@@ -215,9 +223,9 @@ const BookingSuccess: NextPage = () => {
                     borderRadius={1}
                     useFlexGap
                     flexWrap="wrap">
-                    {orderInfo.result.roomId.facilityInfo.map((item) => {
+                    {orderInfo.result.roomId.facilityInfo.map((item, i) => {
                       return (
-                        <Box sx={{ display: 'flex' }} mb={'10px'} width={'50%'}>
+                        <Box key={i} sx={{ display: 'flex' }} mb={'10px'} width={'50%'}>
                           <Check color="primary" sx={{ fontSize: 24 }} />
                           <Typography>{item.title}</Typography>
                         </Box>
@@ -235,9 +243,9 @@ const BookingSuccess: NextPage = () => {
                     borderRadius={1}
                     useFlexGap
                     flexWrap="wrap">
-                    {orderInfo.result.roomId.amenityInfo.map((item) => {
+                    {orderInfo.result.roomId.amenityInfo.map((item, i) => {
                       return (
-                        <Box sx={{ display: 'flex' }} mb={'10px'} width={'50%'}>
+                        <Box key={i} sx={{ display: 'flex' }} mb={'10px'} width={'50%'}>
                           <Check color="primary" sx={{ fontSize: 24 }} />
                           <Typography>{item.title}</Typography>
                         </Box>
@@ -249,6 +257,7 @@ const BookingSuccess: NextPage = () => {
             </Box>
           </Stack>
         </Container>
+        <HorizontalWave />
       </Box>
     </>
   );

@@ -14,17 +14,6 @@ import Card from '@/components/common/Card';
 import { useWidth } from '@/hooks';
 import BookerForm from './BookerForm';
 
-const facilityInfo = [
-  {
-    title: '平面電視',
-    isProvide: true,
-  },
-  {
-    title: '吹風機',
-    isProvide: true,
-  },
-];
-
 const roomBookData = {
   roomId: '65a4e32683315f6587b0cb47',
   checkInDate: '2023/11/18',

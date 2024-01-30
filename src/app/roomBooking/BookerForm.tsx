@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation'
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, Stack, Typography, Box, styled } from '@mui/material';
@@ -6,7 +7,7 @@ import { z } from 'zod';
 import Input from '@/components/common/Input';
 import Select from '@/components/common/Select';
 import { citys, zipcodes } from '@/assets/cityData';
-import { getUserData } from '@/assets/api';
+import { getUser } from '@/assets/api';
 
 const Form = styled('form', { shouldForwardProp: () => true })(({ theme }) => ({
   '& .MuiInputBase-root': {
@@ -97,6 +98,7 @@ interface BookerFormProps {
 
 const BookerForm = (roomBookInfo: BookerFormProps) => {
   const [counties, setCounties] = useState<locationInfo[] | []>([]);
+  const router = useRouter();
 
   const {
     control,
@@ -139,30 +141,30 @@ const BookerForm = (roomBookInfo: BookerFormProps) => {
     };
 
     console.log(orderObject);
-    fetch(`${baseUrl}/api/v1/orders/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: token,
-      },
-      body: JSON.stringify(orderObject),
-    })
-      .then((response) => response.json())
-      .then((res) => {
-        // { status: 'true', result: [{...}] }
-        const { result } = res;
-        console.log(res);
-        console.log(result);
-        console.log(JSON.stringify(result));
-      });
+    // fetch(`${baseUrl}/api/v1/orders/`, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     Authorization: token,
+    //   },
+    //   body: JSON.stringify(orderObject),
+    // })
+    //   .then((response) => response.json())
+    //   .then((res) => {
+    //     // { status: 'true', result: [{...}] }
+    //     const { result } = res;
+    //     console.log(res);
+    //     console.log(result);
+    //     console.log(JSON.stringify(result));
+    //   });
   }
 
   const onSubmit = (data: bookerData) => {
     try {
       const finalData = { ...data };
       //console.log(finalData);
-
       handleFinalData(finalData);
+      router.push('/roomBooking/bookingSuccess');
       //console.log(roomBookInfo);
     } catch {
       throw new Error('Something is wrong');
@@ -180,7 +182,7 @@ const BookerForm = (roomBookInfo: BookerFormProps) => {
 
   const useMemberData = async () => {
     let userCity: string = '';
-    memberData = await getUserData();
+    memberData = await getUser();
     const zipcode: number = memberData.result.address.zipcode;
     if (zipcode) {
       const findCity = zipcodes.find((item) => {
