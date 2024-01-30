@@ -37,7 +37,7 @@ export default function NavMenu({ isDarwerOpen, toggleDrawer }: { isDarwerOpen?:
   return (
     <>
       <Stack component="nav" spacing={0} direction={{ sm: 'column', md: 'row' }}>
-        <Link className="nav-link" href="/" onClick={atClick}>
+        <Link className="nav-link" href="/room-type" onClick={atClick}>
           <Typography component="span" color="white">
             客房旅宿
           </Typography>
@@ -70,7 +70,7 @@ export default function NavMenu({ isDarwerOpen, toggleDrawer }: { isDarwerOpen?:
             </Typography>
           </Link>
         </Box>
-        <Link className="nav-link active" href="/" onClick={atClick}>
+        <Link className="nav-link active" href="/room-type" onClick={atClick}>
           <Typography component="span" color="white">
             立即訂房
           </Typography>

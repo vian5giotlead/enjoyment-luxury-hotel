@@ -5,6 +5,8 @@ import Image from 'next/image';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+
+import Title from '@/app/c.title';
 import { FakeNews } from './fakeData';
 import { NewsSchema } from '@/types';
 import DotImage from '@/assets/images/dot.png';
@@ -18,10 +20,7 @@ export default function News() {
   //   fetch('https://ts-freyja-api.onrender.com/api/v1/home/news', { method: 'GET' })
   //     .then((response) => response.json())
   //     .then((res) => {
-  //       // { status: 'true', result: [{...}] }
   //       const { result } = res;
-  //       console.log(res);
-  //       console.log(JSON.stringify(result));
   //       setData(result);
   //     });
   // }, []);
@@ -60,27 +59,7 @@ export default function News() {
         sx={{ position: 'relative', padding: { sm: '80px 12px', md: '120px 0' }, margin: '0 auto', zIndex: '1' }}>
         {/* 最新消息 */}
         <Box sx={{ marginRight: { md: '65px' } }}>
-          <Typography
-            color="primary"
-            sx={{
-              paddingRight: '40px',
-              whiteSpace: 'nowrap',
-              fontSize: { sm: '32px', md: '48px' },
-              fontWeight: { sm: 'bold', md: 'bold' },
-            }}>
-            最新
-          </Typography>
-          <Typography
-            color="primary"
-            sx={{
-              paddingRight: '40px',
-              marginBottom: { sm: '24px', md: '40px' },
-              whiteSpace: 'nowrap',
-              fontSize: { sm: '32px', md: '48px' },
-              fontWeight: { sm: 'bold', md: 'bold' },
-            }}>
-            消息
-          </Typography>
+          <Title txt1={'最新'} txt2={'消息'} color={'primary'} />
           <Box
             sx={{
               width: { sm: '140px', md: 'auto' },
@@ -96,7 +75,7 @@ export default function News() {
                 spacing={1}
                 direction={{ sm: 'column', md: 'row' }}
                 key={news._id}
-                sx={{ marginBottom: '40px', padding: { sm: '40px 0px 0px 0px' } }}>
+                sx={{ marginBottom: '40px', padding: { sm: '40px 0px 0px 0px', md: '0px' } }}>
                 <Image className="news-image" src={news.image} alt={news.title} width={474} height={294} />
                 <Box
                   sx={{

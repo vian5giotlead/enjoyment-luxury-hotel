@@ -1,4 +1,4 @@
-interface RoomTypeCardProps {
+export type RoomTypeSchema = {
   _id: string;
   name: string;
   description: string;
@@ -8,11 +8,4 @@ interface RoomTypeCardProps {
   areaInfo: string;
   bedInfo: string;
   maxPeople: number;
-}
-
-interface SquareCardProps {
-  title: string | number;
-  children: React.ReactNode;
-}
-
-export type { RoomTypeCardProps, SquareCardProps };
+};

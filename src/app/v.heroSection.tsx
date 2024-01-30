@@ -18,7 +18,7 @@ import BannerImg from '@/assets/images/banner.png';
 export default function HeroSecition() {
   return (
     <Swiper
-      className="hero-secition"
+      className="hero-section"
       modules={[Pagination, Autoplay]}
       spaceBetween={0}
       slidesPerView={1}
@@ -130,7 +130,7 @@ export default function HeroSecition() {
                         sx={{ paddingTop: '24px', paddingBottom: '40px', fontSize: { sm: '16px', md: '48px' } }}>
                         我們致力於為您提供無與倫比的奢華體驗與優質服務
                       </Typography>
-                      <LinkButton href="/">立即訂房</LinkButton>
+                      <LinkButton href="/room-type">立即訂房</LinkButton>
                     </Box>
                   </Box>
                 </Stack>
