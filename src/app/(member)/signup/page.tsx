@@ -66,12 +66,17 @@ const Page = () => {
 
   return (
     <Grid container direction={isSmallDevice ? 'column' : 'row'}>
-      <Grid item md={6}>
+      <Grid
+        item
+        md={6}
+        sx={{
+          display: isSmallDevice ? 'hidden' : '',
+        }}>
         <Box position={'relative'} sx={{ maxHeight: '100%', minHeight: '100dvh' }}>
           <Image src={cover.src} alt="cover" layout="fill" objectFit="cover" />
         </Box>
       </Grid>
-      <Grid item md={6}>
+      <Grid item sm={12} md={6}>
         <Box position={'relative'}>
           <Box
             position={'absolute'}
