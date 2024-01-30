@@ -1,7 +1,6 @@
 'use client'
 import * as React from 'react';
 import { Box, Button, Container, Grid, Stack, Typography, Link } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import BedIcon from '@mui/icons-material/Bed';
 import PersonIcon from '@mui/icons-material/Person';
 import CheckIcon from '@mui/icons-material/Check';
@@ -13,17 +12,7 @@ import type { NextPage } from 'next';
 import Card from '@/components/common/Card';
 import { useWidth } from '@/hooks';
 import BookerForm from './BookerForm';
-
-const facilityInfo = [
-  {
-    title: '平面電視',
-    isProvide: true,
-  },
-  {
-    title: '吹風機',
-    isProvide: true,
-  },
-];
+import { useRouter } from 'next/router';
 
 const roomBookData = {
   roomId: '65a4e32683315f6587b0cb47',
@@ -50,9 +39,15 @@ interface MemberData {
 }
 
 const RoomBooking: NextPage = () => {
-  const theme = useTheme();
   const widthSize = useWidth();
   const isSmallDevice = widthSize;
+  // const router = useRouter();
+  // if (router?.query) {
+  //   // Access the query parameters
+  //   const data = router.query;
+  //   // Do something with the query parameters
+  //   console.log(data);
+  // }
 
   return (
     <>
