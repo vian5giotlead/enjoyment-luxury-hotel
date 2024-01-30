@@ -6,7 +6,7 @@ import { z } from 'zod';
 import Input from '@/components/common/Input';
 import Select from '@/components/common/Select';
 import { citys, zipcodes } from '@/assets/cityData';
-import { getUserData } from '@/assets/api';
+import { getUser } from '@/assets/api';
 
 const Form = styled('form', { shouldForwardProp: () => true })(({ theme }) => ({
   '& .MuiInputBase-root': {
@@ -180,7 +180,7 @@ const BookerForm = (roomBookInfo: BookerFormProps) => {
 
   const useMemberData = async () => {
     let userCity: string = '';
-    memberData = await getUserData();
+    memberData = await getUser();
     const zipcode: number = memberData.result.address.zipcode;
     if (zipcode) {
       const findCity = zipcodes.find((item) => {
