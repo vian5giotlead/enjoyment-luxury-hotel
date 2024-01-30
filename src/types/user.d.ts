@@ -57,3 +57,8 @@ type UserRegisterData = UserInfo & {
   password?: string;
   birthday?: string;
 };
+
+type CheckLoginSchema = {
+  status: boolean;
+  token: string;
+};
