@@ -43,7 +43,7 @@ export default function NavMenu({ isDarwerOpen, toggleDrawer, userInfo }: menuDo
   const handleLogOut = () => {
     setOpenMenu(false);
     setIsLogin(false);
-    Cookies.set('token', '');
+    Cookies.remove('token');
     console.log('logout');
   };
 
