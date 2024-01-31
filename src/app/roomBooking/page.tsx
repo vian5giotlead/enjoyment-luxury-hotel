@@ -12,7 +12,7 @@ import type { NextPage } from 'next';
 import Card from '@/components/common/Card';
 import { useWidth } from '@/hooks';
 import BookerForm from './BookerForm';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { getRoomDetail } from '@/assets/api';
 import { useState, useEffect } from 'react';
 import { timeFormat, calcDays } from './tool';
@@ -98,6 +98,7 @@ const initRoomData = {
 const RoomBooking: NextPage = () => {
   const widthSize = useWidth();
   const isSmallDevice = widthSize;
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [roomDetail, setRoomDetail] = useState<RoomTypeSchema>(initRoomData);
 
@@ -118,7 +119,7 @@ const RoomBooking: NextPage = () => {
     };
   }
 
-  const nightCount:number = calcDays(checkInDate, checkOutDate);
+  const nightCount: number = calcDays(checkInDate, checkOutDate);
 
   useEffect(() => {
     (async () => {
@@ -126,6 +127,10 @@ const RoomBooking: NextPage = () => {
       setRoomDetail(res.result);
     })();
   }, []);
+
+  function handleEdit() {
+    router.back();
+  }
 
   return (
     <>
@@ -153,7 +158,12 @@ const RoomBooking: NextPage = () => {
                     <Headline title="選擇房型" fontSizeStyle="normal" />
                     <Typography>{roomDetail.name}</Typography>
                   </Box>
-                  <Link component={'button'} underline={'always'} fontWeight={700} color={'#000000'}>
+                  <Link
+                    component={'button'}
+                    underline={'always'}
+                    fontWeight={700}
+                    color={'#000000'}
+                    onClick={handleEdit}>
                     {'編輯'}
                   </Link>
                 </Stack>
@@ -163,7 +173,12 @@ const RoomBooking: NextPage = () => {
                     <Typography>{`入住：${timeFormat(checkInDate)}`}</Typography>
                     <Typography>{`退房：${timeFormat(checkOutDate)}`}</Typography>
                   </Box>
-                  <Link component={'button'} underline={'always'} fontWeight={700} color={'#000000'}>
+                  <Link
+                    component={'button'}
+                    underline={'always'}
+                    fontWeight={700}
+                    color={'#000000'}
+                    onClick={handleEdit}>
                     {'編輯'}
                   </Link>
                 </Stack>
@@ -172,7 +187,12 @@ const RoomBooking: NextPage = () => {
                     <Headline title="房客人數" fontSizeStyle="normal" />
                     <Typography>{`${peopleNum} 人`}</Typography>
                   </Box>
-                  <Link component={'button'} underline={'always'} fontWeight={700} color={'#000000'}>
+                  <Link
+                    component={'button'}
+                    underline={'always'}
+                    fontWeight={700}
+                    color={'#000000'}
+                    onClick={handleEdit}>
                     {'編輯'}
                   </Link>
                 </Stack>
