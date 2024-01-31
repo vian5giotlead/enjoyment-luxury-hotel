@@ -1,8 +1,11 @@
-import Cookies from 'js-cookie';
+'use server';
+
+import { cookies } from 'next/headers';
+import { getCookie, setCookie } from 'cookies-next';
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
-const token = Cookies.get('token') || '';
+const token = getCookie('token', { cookies }) || '';
 
 export async function getUser() {
   const res = await fetch(`${baseUrl}/api/v1/user`, {
@@ -17,9 +20,9 @@ export async function getUser() {
     throw new Error('Failed to fetch data');
   }
   // next.js 會噴 重複呼喚 res.json() 的錯，所以又再宣告變數了一次
-  const data = await res.json();
-  if (data.token) Cookies.set('token', data.token);
-  return data;
+  const response = await res.json();
+  if (response.token) setCookie('token', response.token, { cookies });
+  return response;
 }
 
 export async function updateUser(data: MemberUpdateData) {
@@ -35,7 +38,7 @@ export async function updateUser(data: MemberUpdateData) {
     throw new Error('Failed to fetch data');
   }
   const response = await res.json();
-  if (response.token) Cookies.set('token', response.token);
+  if (response.token) setCookie('token', response.token, { cookies });
   return response;
 }
 
@@ -82,7 +85,7 @@ export async function userLogin(data: UserLoginData) {
     throw new Error('Failed to fetch data');
   }
   const response = await res.json();
-  if (response.token) Cookies.set('token', response.token);
+  if (response.token) setCookie('token', response.token, { cookies });
   return response;
 }
 
@@ -98,7 +101,7 @@ export async function userRegister(data: UserRegisterData) {
     throw new Error('Failed to fetch data');
   }
   const response = await res.json();
-  if (response.token) Cookies.set('token', response.token);
+  if (response.token) setCookie('token', response.token, { cookies });
   return response;
 }
 
@@ -130,7 +133,7 @@ export async function apiCheckUserIsLogin() {
   }
 
   const response = await res.json();
-  if (response.token) Cookies.set('token', response.token);
+  if (response.token) setCookie('token', response.token, { cookies });
   return response;
 }
 
@@ -213,7 +216,6 @@ export async function postOrder(data: OrderPostData) {
 
   return res.json();
 }
-
 
 export async function getOrderDetail(orderId: string) {
   const res = await fetch(`${baseUrl}/api/v1/orders/${orderId}`, {
