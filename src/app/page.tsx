@@ -5,7 +5,6 @@ import RoomType from '@/app/v.roomType';
 import FoodType from '@/app/v.foodType';
 import Transportation from '@/app/v.transportation';
 import Line from '@/app/v.line';
-import Footer from '@/components/common/Footer';
 
 export default function Home() {
   return (
@@ -19,7 +18,6 @@ export default function Home() {
         <Transportation />
       </main>
       <Line />
-      <Footer />
     </>
   );
 }

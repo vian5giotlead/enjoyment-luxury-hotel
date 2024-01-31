@@ -43,8 +43,8 @@ export default function Header(props: any) {
   const [token, setToken] = useLocalStorage<string | null>('token', null);
   const [userInfo, setUserInfo] = useState({ name: '' });
 
-  const transparentPathList = ['/'];
-  const fixedPathList = ['/'];
+  const transparentPathList = ['/', '/room-type'];
+  const fixedPathList = ['/', '/room-type'];
 
   const handleHome = () => {
     router.push('/');
@@ -99,7 +99,7 @@ export default function Header(props: any) {
 
   return (
     <>
-      {isLoading && <Loader>獲取資料中</Loader>}
+      {isLoading && <Loader />}
       <HideOnScroll {...props}>
         <AppBar
           position={isFixed ? 'fixed' : 'sticky'}
