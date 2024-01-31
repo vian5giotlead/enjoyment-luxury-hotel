@@ -126,6 +126,7 @@ export async function apiCheckUserIsLogin() {
     throw new Error('Failed to fetch data');
   }
 
+  res.json().then((data) => data.token && Cookies.set('token', data.token));
   return res.json();
 }
 
@@ -161,7 +162,7 @@ export async function apiGetRoomType() {
   return res.json();
 }
 
-export async function apiGetCluinary() {
+export async function apiGetCulinary() {
   const res = await fetch(`${baseUrl}/api/v1/home/culinary/`, {
     method: 'GET',
     headers: {

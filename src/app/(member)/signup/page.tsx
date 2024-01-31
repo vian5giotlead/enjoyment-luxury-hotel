@@ -6,6 +6,7 @@ import HorizontalWave from '@/components/common/HorizontalWave';
 import Image from 'next/image';
 import cover from '@/assets/images/login.jpg';
 import { useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
 import { userRegister } from '@/assets/api';
 import { formatPhoneNumber } from '@/utils';
 import PasswordForm from './PasswordForm';
@@ -20,7 +21,6 @@ const template = {
 const steps = ['輸入信箱及密碼', '填寫基本資料'];
 
 const Page = () => {
-  const [token, setToken] = useLocalStorage<string | null>('token', null);
   const widthSize = useWidth();
   const isSmallDevice = widthSize === 'sm';
   const [activeStep, setActiveStep] = useState(0);
@@ -60,7 +60,7 @@ const Page = () => {
       phone: userData.phone,
     });
     if (res.status === true) {
-      setToken(res.token);
+      Cookies.set('token', res.token);
     }
   };
 

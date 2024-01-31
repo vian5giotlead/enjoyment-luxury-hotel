@@ -12,13 +12,13 @@ import Typography from '@mui/material/Typography';
 import TitleBox from '@/app/c.titleBox';
 import LineImage from '@/assets/images/line.png';
 import DotImage from '@/assets/images/dot.png';
-import { apiGetCluinary } from '@/assets/api';
+import { apiGetCulinary } from '@/assets/api';
 
 export default function FoodType() {
-  const [data, setData] = useState<FoodTypdSchema[]>([]);
+  const [data, setData] = useState<FoodTypeSchema[]>([]);
 
   const getFoodType = async () => {
-    await apiGetCluinary().then((res: FoodTypeResponseData) => {
+    await apiGetCulinary().then((res: FoodTypeResponseData) => {
       if (res.status === true) setData(res.result);
     });
   };

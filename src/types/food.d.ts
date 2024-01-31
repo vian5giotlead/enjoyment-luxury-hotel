@@ -1,4 +1,4 @@
-type FoodTypdSchema = {
+type FoodTypeSchema = {
   _id: string;
   title: string;
   description: string;
@@ -10,5 +10,5 @@ type FoodTypdSchema = {
 
 type FoodTypeResponseData = {
   status: boolean;
-  result: FoodTypdSchema[];
+  result: FoodTypeSchema[];
 };

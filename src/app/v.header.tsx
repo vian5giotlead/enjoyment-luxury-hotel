@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -40,7 +41,6 @@ export default function Header(props: any) {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isLogin, setIsLogin] = useLocalStorage<boolean | null>('isLogin', false);
-  const [token, setToken] = useLocalStorage<string | null>('token', null);
   const [userInfo, setUserInfo] = useState({ name: '' });
 
   const transparentPathList = ['/', '/room-type'];
@@ -76,7 +76,7 @@ export default function Header(props: any) {
     await apiCheckUserIsLogin()
       .then((res: CheckLoginSchema) => {
         setIsLogin(res.status);
-        if (res.status === true) setToken(res.token);
+        if (res.status === true) Cookies.set('token', res.token);
       })
       .finally(() => {
         setIsLoading(false);
