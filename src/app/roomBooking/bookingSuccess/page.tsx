@@ -9,8 +9,11 @@ import { useWidth } from '@/hooks';
 import HorizontalWave from '@/components/common/HorizontalWave';
 import Headline from '@/app/roomBooking/Headline';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import { getOrderDetail } from '@/assets/api';
+import { useState, useEffect } from 'react';
 
-const orderInfo = {
+const initOrderInfo: OrderInfo = {
   status: true,
   result: {
     userInfo: {
@@ -44,30 +47,10 @@ const orderInfo = {
           title: '平面電視',
           isProvide: true,
         },
-        {
-          title: '吹風機',
-          isProvide: true,
-        },
-        {
-          title: '手電筒',
-          isProvide: true,
-        },
-        {
-          title: '音響',
-          isProvide: true,
-        },
       ],
       amenityInfo: [
         {
           title: '衛生紙',
-          isProvide: true,
-        },
-        {
-          title: '拖鞋',
-          isProvide: true,
-        },
-        {
-          title: '牙刷',
           isProvide: true,
         },
       ],
@@ -75,12 +58,12 @@ const orderInfo = {
       createdAt: '2023-10-29T11:47:45.641Z',
       updatedAt: '2023-10-29T11:47:45.641Z',
     },
-    checkInDate: '2024-01-03T16:00:00.000Z',
-    checkOutDate: '2024-01-04T16:00:00.000Z',
+    checkInDate: '2023-06-17T16:00:00.000Z',
+    checkOutDate: '2023-06-18T16:00:00.000Z',
     peopleNum: 2,
     orderUserId: '6533f0ef4cdf5b7f762747b0',
     status: 0,
-    createdAt: '2024-10-29T10:26:34.498Z',
+    createdAt: '2023-10-29T10:26:34.498Z',
     updatedAt: '2023-10-29T10:26:34.498Z',
   },
 };
@@ -99,8 +82,18 @@ function timeFormat(checkDate: string): string {
 }
 
 const BookingSuccess: NextPage = () => {
+  const [orderInfo, setOrderInfo] = useState<OrderInfo>(initOrderInfo);
   const widthSize = useWidth();
   const isSmallDevice = widthSize;
+  const searchParams = useSearchParams();
+  const orderId = searchParams.get('id')!;
+
+  useEffect(() => {
+    (async () => {
+      const res = await getOrderDetail(orderId);
+      setOrderInfo(res);
+    })();
+  }, []);
 
   return (
     <>
@@ -130,7 +123,7 @@ const BookingSuccess: NextPage = () => {
                     <Check sx={{ fontSize: 40, color: '#ffffff' }} />
                   </Stack>
                   <Typography component="h2" fontSize={{ sm: '32px', md: '40px' }} fontWeight={700}>
-                    恭喜，Jessica！
+                    恭喜，{orderInfo.result.userInfo.name}！
                     <br />
                     您已預訂成功
                   </Typography>
@@ -175,7 +168,7 @@ const BookingSuccess: NextPage = () => {
                   flexDirection: 'column',
                   marginBottom: '60px',
                 }}>
-                <Typography mb={1}>預訂參考編號： {orderInfo.result._id}</Typography>
+                <Typography mb={1}>預訂參考編號： {orderId}</Typography>
                 <Typography
                   component="h4"
                   mb={{ sm: 3, md: 5 }}
@@ -184,7 +177,7 @@ const BookingSuccess: NextPage = () => {
                   即將來的行程
                 </Typography>
                 <img
-                  src="https://raw.githubusercontent.com/hexschool/2022-web-layout-training/main/typescript-hotel/%E6%A1%8C%E6%A9%9F%E7%89%88/room3-1.png"
+                  src={orderInfo.result.roomId.imageUrl}
                   alt="room image"
                   style={{ borderRadius: '8px', marginBottom: '28px' }}
                 />

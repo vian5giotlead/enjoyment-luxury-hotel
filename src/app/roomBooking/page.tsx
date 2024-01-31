@@ -117,7 +117,7 @@ const RoomBooking: NextPage = () => {
   let peopleNum = 'no data';
   let checkInDate = 'no data';
   let checkOutDate: string | null = 'no data';
-  if (searchParams.has('name')) {
+  if (searchParams.has('peopleNum')) {
     roomId = searchParams.get('_id')!;
     peopleNum = searchParams.get('peopleNum')!;
     checkInDate = searchParams.get('checkInDate')!;
