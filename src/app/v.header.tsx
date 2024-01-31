@@ -76,7 +76,7 @@ export default function Header(props: any) {
     await apiCheckUserIsLogin()
       .then((res: CheckLoginSchema) => {
         setIsLogin(res.status);
-        if (res.status === true) Cookies.set('token', res.token);
+        if (res.status) getUserInfo();
       })
       .finally(() => {
         setIsLoading(false);
@@ -89,11 +89,7 @@ export default function Header(props: any) {
   }, [pathname]);
 
   useEffect(() => {
-    const fn = async () => {
-      await getUserIsLogin();
-      await getUserInfo();
-    };
-    fn();
+    getUserIsLogin();
     // eslint-disable-next-line
   }, []);
 

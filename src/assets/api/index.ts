@@ -17,9 +17,10 @@ export async function getUser() {
   if (!res.ok) {
     throw new Error('Failed to fetch data');
   }
-  res.json().then((data) => data.token && Cookies.set('token', data.token));
-
-  return res.json();
+  // next.js 會噴 重複呼喚 res.json() 的錯，所以又再宣告變數了一次
+  const data = await res.json();
+  if (data.token) Cookies.set('token', data.token);
+  return data;
 }
 
 export async function updateUser(data: MemberUpdateData) {
@@ -34,9 +35,9 @@ export async function updateUser(data: MemberUpdateData) {
   if (!res.ok) {
     throw new Error('Failed to fetch data');
   }
-  console.log(res);
-
-  return res.json();
+  const response = await res.json();
+  if (response.token) Cookies.set('token', response.token);
+  return response;
 }
 
 export async function getOrders() {
@@ -81,8 +82,9 @@ export async function userLogin(data: UserLoginData) {
   if (!res.ok) {
     throw new Error('Failed to fetch data');
   }
-  res.json().then((data) => data.token && Cookies.set('token', data.token));
-  return res.json();
+  const response = await res.json();
+  if (response.token) Cookies.set('token', response.token);
+  return response;
 }
 
 export async function userRegister(data: UserRegisterData) {
@@ -96,8 +98,9 @@ export async function userRegister(data: UserRegisterData) {
   if (!res.ok) {
     throw new Error('Failed to fetch data');
   }
-  res.json().then((data) => data.token && Cookies.set('token', data.token));
-  return res.json();
+  const response = await res.json();
+  if (response.token) Cookies.set('token', response.token);
+  return response;
 }
 
 export async function verifyEmail(email: string) {
@@ -127,8 +130,9 @@ export async function apiCheckUserIsLogin() {
     throw new Error('Failed to fetch data');
   }
 
-  res.json().then((data) => data.token && Cookies.set('token', data.token));
-  return res.json();
+  const response = await res.json();
+  if (response.token) Cookies.set('token', response.token);
+  return response;
 }
 
 export async function apiGetNews() {
