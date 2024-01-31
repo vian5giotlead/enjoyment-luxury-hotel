@@ -2,8 +2,7 @@ import Cookies from 'js-cookie';
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
-const token =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWFlMDRkYzE0ZjM5NmUwNTlhOWM3M2EiLCJpYXQiOjE3MDYyMDE1ODksImV4cCI6MTcwNjgwNjM4OX0.34299tu2787_3J0RG7lJ4dZpiCQNyNcOPkuNXqnbUAk';
+const token = Cookies.get('token') || '';
 
 export async function getUser() {
   const res = await fetch(`${baseUrl}/api/v1/user`, {
