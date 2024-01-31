@@ -7,6 +7,8 @@ import Input from '@/components/common/Input';
 import Select from '@/components/common/Select';
 import { citys, zipcodes } from '@/assets/cityData';
 import { getUser } from '@/assets/api';
+import { postOrder } from '@/assets/api';
+import Cookies from 'js-cookie';
 
 const Form = styled('form', { shouldForwardProp: () => true })(({ theme }) => ({
   '& .MuiInputBase-root': {
@@ -24,11 +26,6 @@ export const bookerDataSchema = z.object({
     city: z.string().min(1, '城市不能為空'),
   }),
 });
-
-const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-
-const token =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWFlMDRkYzE0ZjM5NmUwNTlhOWM3M2EiLCJpYXQiOjE3MDYyMDE1ODksImV4cCI6MTcwNjgwNjM4OX0.34299tu2787_3J0RG7lJ4dZpiCQNyNcOPkuNXqnbUAk';
 
 const cities = citys;
 
@@ -97,6 +94,7 @@ interface BookerFormProps {
 
 const BookerForm = (roomBookInfo: BookerFormProps) => {
   const [counties, setCounties] = useState<locationInfo[] | []>([]);
+  const token = Cookies.get('token');
 
   const {
     control,
@@ -109,7 +107,7 @@ const BookerForm = (roomBookInfo: BookerFormProps) => {
     defaultValues: bookerDataTemplate,
   });
 
-  function handleFinalData(finalData: bookerData) {
+  async function handleFinalData(finalData: bookerData) {
     let zipcode: number = 102;
     zipcodes.find((item) => {
       if (item.city === finalData.address.city) {
@@ -122,7 +120,7 @@ const BookerForm = (roomBookInfo: BookerFormProps) => {
     });
 
     const roomInfo = roomBookInfo.roomBookInfo;
-    const orderObject = {
+    const orderObject: OrderPostData = {
       roomId: roomInfo.roomId,
       checkInDate: roomInfo.checkInDate,
       checkOutDate: roomInfo.checkOutDate,
@@ -139,33 +137,39 @@ const BookerForm = (roomBookInfo: BookerFormProps) => {
     };
 
     console.log(orderObject);
-    fetch(`${baseUrl}/api/v1/orders/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: token,
-      },
-      body: JSON.stringify(orderObject),
-    })
-      .then((response) => response.json())
-      .then((res) => {
-        // { status: 'true', result: [{...}] }
-        const { result } = res;
-        console.log(res);
-        console.log(result);
-        console.log(JSON.stringify(result));
-      });
+    const responseOrderInfo = await postOrder(orderObject);
+    console.log(responseOrderInfo.result);
+    // fetch(`${baseUrl}/api/v1/orders/`, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     Authorization: token,
+    //   },
+    //   body: JSON.stringify(orderObject),
+    // })
+    //   .then((response) => response.json())
+    //   .then((res) => {
+    //     // { status: 'true', result: [{...}] }
+    //     const { result } = res;
+    //     console.log(res);
+    //     console.log(result);
+    //     console.log(JSON.stringify(result));
+    //   });
   }
 
   const onSubmit = (data: bookerData) => {
-    try {
-      const finalData = { ...data };
-      //console.log(finalData);
+    if (token) {
+      try {
+        const finalData = { ...data };
+        //console.log(finalData);
 
-      handleFinalData(finalData);
-      //console.log(roomBookInfo);
-    } catch {
-      throw new Error('Something is wrong');
+        handleFinalData(finalData);
+        //console.log(roomBookInfo);
+      } catch {
+        throw new Error('Fail to submit the form!');
+      }
+    } else {
+      alert('請先登入會員');
     }
   };
 
@@ -179,35 +183,40 @@ const BookerForm = (roomBookInfo: BookerFormProps) => {
   }, [city]);
 
   const useMemberData = async () => {
-    let userCity: string = '';
-    memberData = await getUser();
-    const zipcode: number = memberData.result.address.zipcode;
-    if (zipcode) {
-      const findCity = zipcodes.find((item) => {
-        const zones = item.zone;
-        zones.find((i) => {
-          if (i.zipcode === zipcode) {
-            userCity = i.city;
-            const userCounty = i.county;
-            //console.log(userCity, userCounty);
-            // 將會員的地址區域放到表單中
-          }
+    if (token) {
+      let userCity: string = '';
+      let userCounty: string = '';
+      memberData = await getUser();
+      const zipcode: number = memberData.result.address.zipcode;
+      if (zipcode) {
+        const findCity = zipcodes.find((item) => {
+          const zones = item.zone;
+          zones.find((i) => {
+            if (i.zipcode === zipcode) {
+              userCity = i.city;
+              userCounty = i.county;
+              //console.log(userCity, userCounty);
+              // 將會員的地址區域放到表單中
+            }
+          });
         });
-      });
-    }
-    reset(
-      {
-        name: memberData.result.name,
-        email: memberData.result.email,
-        phone: memberData.result.phone,
-        address: {
-          city: '臺北市',
-          county: '中山區',
-          detail: memberData.result.address.detail,
+      }
+      reset(
+        {
+          name: memberData.result.name,
+          email: memberData.result.email,
+          phone: memberData.result.phone,
+          address: {
+            city: userCity,
+            county: userCounty,
+            detail: memberData.result.address.detail,
+          },
         },
-      },
-      { keepDefaultValues: true },
-    );
+        { keepDefaultValues: true },
+      );
+    } else {
+      alert('請先登入會員');
+    }
   };
 
   return (
