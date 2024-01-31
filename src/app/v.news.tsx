@@ -5,25 +5,25 @@ import Image from 'next/image';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-
+// others
 import Title from '@/app/c.title';
-import { FakeNews } from './fakeData';
-import { NewsSchema } from '@/types';
 import DotImage from '@/assets/images/dot.png';
+import { apiGetNews } from '@/assets/api';
 
 export default function News() {
   // 因為免費方案 API 會睡著，避免等太久先塞一樣的資料
-  const [data, setData] = useState<NewsSchema[]>(FakeNews);
+  const [data, setData] = useState<NewsSchema[]>([]);
 
-  // TODO: 繳交作業前開啟此
-  // useEffect(() => {
-  //   fetch('https://ts-freyja-api.onrender.com/api/v1/home/news', { method: 'GET' })
-  //     .then((response) => response.json())
-  //     .then((res) => {
-  //       const { result } = res;
-  //       setData(result);
-  //     });
-  // }, []);
+  const getNews = async () => {
+    await apiGetNews().then((res: NewsResponseData) => {
+      if (res.status === true) setData(res.result);
+    });
+  };
+
+  useEffect(() => {
+    getNews();
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <Box component="section" className="news-section" sx={{ backgroundColor: '#F7F2EE', position: 'relative' }}>

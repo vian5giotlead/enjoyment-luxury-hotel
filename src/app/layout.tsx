@@ -3,7 +3,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import GlobalStyles from '@mui/material/GlobalStyles';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
-import Header from '@/app/c.header';
+import Header from '@/app/v.header';
+import Footer from '@/app/v.footer';
 import ScrollTop from '@/app/c.scrollTop';
 import theme from '@/theme';
 import '@/assets/scss/index.scss';
@@ -29,6 +30,7 @@ export default function RootLayout(props: any) {
             <div id="back-to-top-anchor"></div>
             <Header {...props} />
             {children}
+            <Footer />
             <ScrollTop {...props} />
           </ThemeProvider>
         </AppRouterCacheProvider>

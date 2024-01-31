@@ -1,4 +1,9 @@
-export type RoomTypeSchema = {
+type RoomInfoSchema = {
+  title: string;
+  isProvide: boolean;
+};
+
+type RoomTypeSchema = {
   _id: string;
   name: string;
   description: string;
@@ -8,4 +13,15 @@ export type RoomTypeSchema = {
   areaInfo: string;
   bedInfo: string;
   maxPeople: number;
+  status: number;
+  layoutInfo: RoomInfoSchema[];
+  facilityInfo: RoomInfoSchema[];
+  amenityInfo: RoomInfoSchema[];
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+type RoomTypeResponseData = {
+  status: boolean;
+  result: RoomTypeSchema[];
 };

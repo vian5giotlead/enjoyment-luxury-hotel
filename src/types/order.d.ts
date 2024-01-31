@@ -44,3 +44,64 @@ type OrderResponseData = {
   status: boolean;
   result: Orders;
 };
+
+type OrderPostData = {
+  roomId: string;
+  checkInDate: string;
+  checkOutDate: string;
+  peopleNum: number;
+  userInfo: {
+    name: string;
+    phone: string;
+    email: string;
+    address: {
+      zipcode: number;
+      detail: string;
+    };
+  };
+};
+
+type OrderInfo = {
+  status: boolean,
+  result: {
+    userInfo: {
+      address: {
+        zipcode: number,
+        detail: string,
+      },
+      name: string,
+      phone: string,
+      email: string,
+    },
+    _id: string,
+    roomId: {
+      name: string,
+      description: string,
+      imageUrl: string,
+      imageUrlList: string[],
+      areaInfo: string,
+      bedInfo: string,
+      maxPeople: number,
+      price: number,
+      status: number,
+      layoutInfo: [
+        {
+          title: string,
+          isProvide: boolean,
+        },
+      ],
+      facilityInfo: FacilityInfo[],
+      amenityInfo: AmenityInfo[],
+      _id: string,
+      createdAt: string,
+      updatedAt: string,
+    },
+    checkInDate: string,
+    checkOutDate: string,
+    peopleNum: number,
+    orderUserId: string,
+    status: number,
+    createdAt: string,
+    updatedAt: string,
+  },
+};

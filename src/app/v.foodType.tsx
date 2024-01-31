@@ -9,14 +9,24 @@ import 'swiper/css/autoplay';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 // others
-import { FoodTypdSchema } from '@/types';
 import TitleBox from '@/app/c.titleBox';
 import LineImage from '@/assets/images/line.png';
 import DotImage from '@/assets/images/dot.png';
-import { FakeFood } from './fakeData';
+import { apiGetCulinary } from '@/assets/api';
 
 export default function FoodType() {
-  const [data, setData] = useState<FoodTypdSchema[]>(FakeFood);
+  const [data, setData] = useState<FoodTypeSchema[]>([]);
+
+  const getFoodType = async () => {
+    await apiGetCulinary().then((res: FoodTypeResponseData) => {
+      if (res.status === true) setData(res.result);
+    });
+  };
+
+  useEffect(() => {
+    getFoodType();
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <Box

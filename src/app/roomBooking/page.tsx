@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { Box, Button, Container, Grid, Stack, Typography, Link } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 import BedIcon from '@mui/icons-material/Bed';
 import PersonIcon from '@mui/icons-material/Person';
 import CheckIcon from '@mui/icons-material/Check';
@@ -13,6 +12,9 @@ import type { NextPage } from 'next';
 import Card from '@/components/common/Card';
 import { useWidth } from '@/hooks';
 import BookerForm from './BookerForm';
+import { useSearchParams } from 'next/navigation';
+import { getRoomDetail } from '@/assets/api';
+import { useState, useEffect } from 'react';
 
 const roomBookData = {
   roomId: '65a4e32683315f6587b0cb47',
@@ -38,10 +40,98 @@ interface MemberData {
   };
 }
 
+const initRoomData = {
+  _id: '65a4e32683315f6587b0cb47',
+  name: '玉璽雙床房',
+  description: '',
+  imageUrl:
+    'https://images.unsplash.com/photo-1598928636135-d146006ff4be?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+  imageUrlList: [''],
+  areaInfo: '28 坪',
+  bedInfo: '1 張大床',
+  maxPeople: 2,
+  price: 12000,
+  status: 1,
+  facilityInfo: [
+    {
+      "title": "空調",
+      "isProvide": true
+    },
+    {
+      "title": "電視",
+      "isProvide": true
+    },
+    {
+      "title": "咖啡機",
+      "isProvide": true
+    }
+  ],
+  amenityInfo: [
+    {
+      title: '吹風機',
+      isProvide: true,
+    },
+    {
+      title: '香皂',
+      isProvide: true,
+    },
+    {
+      title: '拖鞋',
+      isProvide: true,
+    },
+  ],
+  layoutInfo: [
+    {
+      "title": "市景",
+      "isProvide": false
+    },
+    {
+      "title": "獨立衛浴",
+      "isProvide": true
+    }
+  ],
+  createdAt: '',
+  updatedAt: '',
+};
+
+function getDay(date: string): string {
+  const days = ['星期天', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+  const num = new Date(date).getDay();
+  return days[num];
+}
+
+function timeFormat(checkDate: string): string {
+  const month = checkDate.split('/')[1];
+  const day = checkDate.split('/')[2];
+  const date = checkDate;
+  return `${month} 月 ${day} 號${getDay(date)}`;
+}
+
 const RoomBooking: NextPage = () => {
-  const theme = useTheme();
   const widthSize = useWidth();
   const isSmallDevice = widthSize;
+  const searchParams = useSearchParams();
+  const [roomDetail, setRoomDetail] = useState<RoomTypeSchema>(initRoomData);
+
+  let roomId = 'no data';
+  let peopleNum = 'no data';
+  let checkInDate = 'no data';
+  let checkOutDate: string | null = 'no data';
+  if (searchParams.has('name')) {
+    roomId = searchParams.get('_id')!;
+    peopleNum = searchParams.get('peopleNum')!;
+    checkInDate = searchParams.get('checkInDate')!;
+    checkOutDate = searchParams.get('checkOutDate')!;
+  }
+
+  let nightCount = 2;
+
+  useEffect(() => {
+    (async () => {
+      const res = await getRoomDetail(roomId);
+      setRoomDetail(res.result);
+    })();
+  }, []);
 
   return (
     <>
@@ -67,7 +157,7 @@ const RoomBooking: NextPage = () => {
                 <Stack flexDirection={'row'} justifyContent={'space-between'} alignItems={'center'} sx={{ mb: '24px' }}>
                   <Box>
                     <Headline title="選擇房型" fontSizeStyle="normal" />
-                    <Typography>尊爵雙人房</Typography>
+                    <Typography>{roomDetail.name}</Typography>
                   </Box>
                   <Link component={'button'} underline={'always'} fontWeight={700} color={'#000000'}>
                     {'編輯'}
@@ -76,8 +166,8 @@ const RoomBooking: NextPage = () => {
                 <Stack flexDirection={'row'} justifyContent={'space-between'} alignItems={'center'} sx={{ mb: '24px' }}>
                   <Box>
                     <Headline title="訂房日期" fontSizeStyle="normal" />
-                    <Typography>入住：12 月 4 日星期二</Typography>
-                    <Typography>退房：12 月 6 日星期三</Typography>
+                    <Typography>{`入住：${timeFormat(checkInDate)}`}</Typography>
+                    <Typography>{`退房：${timeFormat(checkOutDate)}`}</Typography>
                   </Box>
                   <Link component={'button'} underline={'always'} fontWeight={700} color={'#000000'}>
                     {'編輯'}
@@ -86,7 +176,7 @@ const RoomBooking: NextPage = () => {
                 <Stack flexDirection={'row'} justifyContent={'space-between'} alignItems={'center'} sx={{ mb: '24px' }}>
                   <Box>
                     <Headline title="房客人數" fontSizeStyle="normal" />
-                    <Typography>2 人</Typography>
+                    <Typography>{`${peopleNum} 人`}</Typography>
                   </Box>
                   <Link component={'button'} underline={'always'} fontWeight={700} color={'#000000'}>
                     {'編輯'}
@@ -104,17 +194,17 @@ const RoomBooking: NextPage = () => {
                   <Headline title="房型基本資訊" />
                   <Grid container>
                     <Grid sx={{ mr: 2 }}>
-                      <SquareCard title="24坪">
+                      <SquareCard title={roomDetail.areaInfo}>
                         <AspectRatioIcon color="primary" sx={{ fontSize: 24 }} />
                       </SquareCard>
                     </Grid>
                     <Grid sx={{ mr: 2 }}>
-                      <SquareCard title="一張床">
+                      <SquareCard title={roomDetail.bedInfo}>
                         <BedIcon color="primary" sx={{ fontSize: 24 }} />
                       </SquareCard>
                     </Grid>
                     <Grid>
-                      <SquareCard title="2-4 人">
+                      <SquareCard title={`${roomDetail.maxPeople} 人`}>
                         <PersonIcon color="primary" sx={{ fontSize: 24 }} />
                       </SquareCard>
                     </Grid>
@@ -123,64 +213,64 @@ const RoomBooking: NextPage = () => {
                 <Box sx={{ mb: 3, width: '100%' }}>
                   <Headline title="房間格局" />
                   <Stack
-                    bgcolor={'#ffffff'}
                     direction={'row'}
+                    bgcolor={'#ffffff'}
                     mt={3}
                     p={3}
                     border={'1px solid #ececec'}
                     borderRadius={1}
                     useFlexGap
                     flexWrap="wrap">
-                    <Box sx={{ display: 'flex' }} mr={'40px'}>
-                      <CheckIcon color="primary" sx={{ fontSize: 24 }} />
-                      <Typography>市景</Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex' }} mr={'40px'}>
-                      <CheckIcon color="primary" sx={{ fontSize: 24 }} />
-                      <Typography>獨立衛浴</Typography>
-                    </Box>
+                    {roomDetail.layoutInfo.map((item, i) => {
+                      return (
+                        <Box key={i} sx={{ display: 'flex' }} mb={'10px'} width={'33.3%'}>
+                          <CheckIcon color="primary" sx={{ fontSize: 24 }} />
+                          <Typography>{item.title}</Typography>
+                        </Box>
+                      );
+                    })}
                   </Stack>
                 </Box>
                 <Box sx={{ mb: 3 }}>
                   <Headline title="房內設備" />
                   <Stack
-                    bgcolor={'#ffffff'}
                     direction={'row'}
+                    bgcolor={'#ffffff'}
                     mt={3}
                     p={3}
                     border={'1px solid #ececec'}
                     borderRadius={1}
                     useFlexGap
                     flexWrap="wrap">
-                    <Box sx={{ display: 'flex' }} mr={'40px'}>
-                      <CheckIcon color="primary" sx={{ fontSize: 24 }} />
-                      <Typography>平面電視</Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex' }} mr={'40px'}>
-                      <CheckIcon color="primary" sx={{ fontSize: 24 }} />
-                      <Typography>吹風機</Typography>
-                    </Box>
+                    {roomDetail.facilityInfo.map((item, i) => {
+                      return (
+                        <Box key={i} sx={{ display: 'flex' }} mb={'10px'} width={'33.3%'}>
+                          <CheckIcon color="primary" sx={{ fontSize: 24 }} />
+                          <Typography>{item.title}</Typography>
+                        </Box>
+                      );
+                    })}
                   </Stack>
                 </Box>
                 <Box mb={{ sm: 5, md: 15 }}>
                   <Headline title="備品提供" />
                   <Stack
-                    bgcolor={'#ffffff'}
                     direction={'row'}
+                    bgcolor={'#ffffff'}
                     mt={3}
                     p={3}
                     border={'1px solid #ececec'}
                     borderRadius={1}
                     useFlexGap
                     flexWrap="wrap">
-                    <Box sx={{ display: 'flex' }} mr={'40px'}>
-                      <CheckIcon color="primary" sx={{ fontSize: 24 }} />
-                      <Typography>衛生紙</Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex' }} mr={'40px'}>
-                      <CheckIcon color="primary" sx={{ fontSize: 24 }} />
-                      <Typography>拖鞋</Typography>
-                    </Box>
+                    {roomDetail.amenityInfo.map((item, i) => {
+                      return (
+                        <Box key={i} sx={{ display: 'flex' }} mb={'10px'} width={'33.3%'}>
+                          <CheckIcon color="primary" sx={{ fontSize: 24 }} />
+                          <Typography>{item.title}</Typography>
+                        </Box>
+                      );
+                    })}
                   </Stack>
                 </Box>
               </Box>
@@ -199,7 +289,7 @@ const RoomBooking: NextPage = () => {
                   gap: '12px',
                 }}>
                 <img
-                  src="https://raw.githubusercontent.com/hexschool/2022-web-layout-training/main/typescript-hotel/%E6%A1%8C%E6%A9%9F%E7%89%88/room3-1.png"
+                  src={roomDetail.imageUrl}
                   alt="room image"
                   style={{ borderRadius: '8px', marginBottom: '28px' }}
                 />
@@ -207,8 +297,8 @@ const RoomBooking: NextPage = () => {
                   價格詳情
                 </Typography>
                 <Stack flexDirection={'row'} justifyContent={'space-between'} alignItems={'center'}>
-                  <Typography>NT$ 10,000 x 2 晚</Typography>
-                  <Typography>NT$ 20,000</Typography>
+                  <Typography>NT$ {roomDetail.price} x {nightCount} 晚</Typography>
+                  <Typography>NT$ {roomDetail.price * nightCount}</Typography>
                 </Stack>
                 <Stack flexDirection={'row'} justifyContent={'space-between'} alignItems={'center'} mb={'12px'}>
                   <Typography>住宿折扣</Typography>
@@ -217,7 +307,7 @@ const RoomBooking: NextPage = () => {
                 <Box borderBottom={'1px solid #ececec'} mb={'12px'}></Box>
                 <Stack flexDirection={'row'} justifyContent={'space-between'} alignItems={'center'} mb={'28px'}>
                   <Typography fontWeight={700}>總價</Typography>
-                  <Typography fontWeight={700}>NT$ 20,000</Typography>
+                  <Typography fontWeight={700}>NT$ {roomDetail.price * nightCount}</Typography>
                 </Stack>
                 <Button variant="contained" type="submit" form="my-form">
                   確認訂房

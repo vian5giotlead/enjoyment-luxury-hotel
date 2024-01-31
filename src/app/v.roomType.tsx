@@ -14,20 +14,35 @@ import Button from '@mui/material/Button';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 //component
-import LinkButton from '@/app/c.LinkButton';
+import LinkButton from '@/app/c.linkButton';
 // image
 import LineImage from '@/assets/images/line3.png';
 import Line2Image from '@/assets/images/line2.png';
 import WaveImage from '@/assets/images/bg.png';
 import RoomImage from '@/assets/images/room1.png';
 // others
-import { RoomTypeSchema } from '@/types';
-import { FakeRoomType } from './fakeData';
+import { apiGetRoomType } from '@/assets/api';
+
+const roomBase: RoomTypeSchema = {
+  _id: '',
+  name: 'None',
+  description: 'None',
+  price: 0,
+  imageUrl: '',
+  imageUrlList: [],
+  areaInfo: '',
+  bedInfo: '',
+  maxPeople: 2,
+  status: 0,
+  layoutInfo: [],
+  facilityInfo: [],
+  amenityInfo: [],
+};
 
 export default function RoomType() {
-  const [data, setData] = useState<RoomTypeSchema[]>(FakeRoomType);
+  const [data, setData] = useState<RoomTypeSchema[]>([]);
   const [roomIndex, setRoomIndex] = useState(0);
-  const [room, setRoom] = useState<RoomTypeSchema>(FakeRoomType[0]);
+  const [room, setRoom] = useState<RoomTypeSchema>(roomBase);
 
   const handleRoom = (next: number) => {
     let newIndex = roomIndex + next;
@@ -37,19 +52,25 @@ export default function RoomType() {
     else setRoomIndex(newIndex);
   };
 
-  // TODO: 交作業時開啟
-  // useEffect(() => {
-  //   fetch('https://ts-freyja-api.onrender.com/api/v1/rooms/', { method: 'GET' })
-  //     .then((response) => response.json())
-  //     .then((res) => {
-  //       const { result } = res;
-  //       setData(result);
-  //       setRoomIndex(0);
-  //     });
-  // }, []);
+  const getRoomTypeList = async () => {
+    await apiGetRoomType().then((res: RoomTypeResponseData) => {
+      if (res.status === true) {
+        const { result } = res;
+        setData(result);
+        const hasData = result.length > 0;
+        setRoom(hasData ? result[0] : roomBase);
+      }
+    });
+  };
 
   useEffect(() => {
-    setRoom(data[roomIndex]);
+    getRoomTypeList();
+  }, []);
+
+  useEffect(() => {
+    if (data.length > 0) {
+      setRoom(data[roomIndex]);
+    }
   }, [data, roomIndex]);
 
   return (

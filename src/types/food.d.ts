@@ -1,4 +1,4 @@
-export type FoodTypdSchema = {
+type FoodTypeSchema = {
   _id: string;
   title: string;
   description: string;
@@ -6,4 +6,9 @@ export type FoodTypdSchema = {
   image: string;
   createdAt?: string;
   updatedAt?: string;
+};
+
+type FoodTypeResponseData = {
+  status: boolean;
+  result: FoodTypeSchema[];
 };
