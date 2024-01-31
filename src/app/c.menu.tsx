@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Cookies from 'js-cookie';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -19,7 +20,6 @@ export default function NavMenu({ isDarwerOpen, toggleDrawer, userInfo }: menuDo
   const [menuClickDom, setMenuClickDom] = useState<null | HTMLElement>(null);
   const [openMenu, setOpenMenu] = useState(false);
   const [isLogin, setIsLogin] = useLocalStorage<boolean | null>('isLogin', false);
-  const [token, setToken] = useLocalStorage<string | null>('token', null);
 
   const atClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     if (isDarwerOpen && toggleDrawer) {
@@ -43,7 +43,7 @@ export default function NavMenu({ isDarwerOpen, toggleDrawer, userInfo }: menuDo
   const handleLogOut = () => {
     setOpenMenu(false);
     setIsLogin(false);
-    setToken(null);
+    Cookies.set('token', '');
     console.log('logout');
   };
 
