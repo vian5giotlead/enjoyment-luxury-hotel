@@ -1,5 +1,6 @@
 'use client';
-import { useRouter } from 'next/navigation';
+import React, { useState, useLayoutEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
@@ -44,16 +45,35 @@ const SnsIg = () => {
 };
 
 export default function Footer() {
+  const pathname = usePathname();
   const router = useRouter();
+  const [isShowFooter, setIsShowFooter] = useState(true);
+
+  const disableFooterRouteList = ['/login', '/signup'];
+
+  const handlePath = () => {
+    try {
+      const state = disableFooterRouteList.some((item) => item === pathname);
+      setIsShowFooter(!state);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const handleHome = () => {
     router.push('/');
   };
 
+  useLayoutEffect(() => {
+    handlePath();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Box
       component="footer"
       sx={{
+        display: `${isShowFooter ? 'block' : 'none'}`,
         padding: { sm: '80px 12px 80px 12px', md: '80px 100px 120px 100px' },
         margin: '0 auto',
       }}>

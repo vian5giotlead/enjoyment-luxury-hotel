@@ -1,4 +1,5 @@
 import { z, ZodType } from 'zod';
+import Cookies from 'js-cookie';
 
 export function formatPhoneNumber(phoneNumber: string | number) {
   // 移除所有非數字字符
