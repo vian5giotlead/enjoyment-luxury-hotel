@@ -160,11 +160,11 @@ const BookerForm = (roomBookInfo: BookerFormProps) => {
   }
 
   const onSubmit = (data: bookerData) => {
+    router.push('/roomBooking/bookingSuccess');
     try {
       const finalData = { ...data };
       //console.log(finalData);
       handleFinalData(finalData);
-      router.push('/roomBooking/bookingSuccess');
       //console.log(roomBookInfo);
     } catch {
       throw new Error('Something is wrong');

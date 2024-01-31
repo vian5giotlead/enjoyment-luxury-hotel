@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import * as React from 'react';
 import { Box, Button, Container, Grid, Stack, Typography, Link } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -122,7 +122,15 @@ const RoomBooking: NextPage = () => {
                 </Box>
                 <Box sx={{ mb: 3, width: '100%' }}>
                   <Headline title="房間格局" />
-                  <Stack bgcolor={'#ffffff'} direction={'row'} p={3} borderRadius={2}>
+                  <Stack
+                    bgcolor={'#ffffff'}
+                    direction={'row'}
+                    mt={3}
+                    p={3}
+                    border={'1px solid #ececec'}
+                    borderRadius={1}
+                    useFlexGap
+                    flexWrap="wrap">
                     <Box sx={{ display: 'flex' }} mr={'40px'}>
                       <CheckIcon color="primary" sx={{ fontSize: 24 }} />
                       <Typography>市景</Typography>
@@ -135,7 +143,15 @@ const RoomBooking: NextPage = () => {
                 </Box>
                 <Box sx={{ mb: 3 }}>
                   <Headline title="房內設備" />
-                  <Stack bgcolor={'#ffffff'} direction={'row'} p={3} borderRadius={2}>
+                  <Stack
+                    bgcolor={'#ffffff'}
+                    direction={'row'}
+                    mt={3}
+                    p={3}
+                    border={'1px solid #ececec'}
+                    borderRadius={1}
+                    useFlexGap
+                    flexWrap="wrap">
                     <Box sx={{ display: 'flex' }} mr={'40px'}>
                       <CheckIcon color="primary" sx={{ fontSize: 24 }} />
                       <Typography>平面電視</Typography>
@@ -148,7 +164,15 @@ const RoomBooking: NextPage = () => {
                 </Box>
                 <Box mb={{ sm: 5, md: 15 }}>
                   <Headline title="備品提供" />
-                  <Stack bgcolor={'#ffffff'} direction={'row'} p={3} borderRadius={2}>
+                  <Stack
+                    bgcolor={'#ffffff'}
+                    direction={'row'}
+                    mt={3}
+                    p={3}
+                    border={'1px solid #ececec'}
+                    borderRadius={1}
+                    useFlexGap
+                    flexWrap="wrap">
                     <Box sx={{ display: 'flex' }} mr={'40px'}>
                       <CheckIcon color="primary" sx={{ fontSize: 24 }} />
                       <Typography>衛生紙</Typography>
