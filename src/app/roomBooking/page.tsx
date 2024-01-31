@@ -15,12 +15,13 @@ import BookerForm from './BookerForm';
 import { useSearchParams } from 'next/navigation';
 import { getRoomDetail } from '@/assets/api';
 import { useState, useEffect } from 'react';
+import { timeFormat, calcDays } from './tool';
 
-const roomBookData = {
+let roomBookData = {
   roomId: '65a4e32683315f6587b0cb47',
   checkInDate: '2023/11/18',
   checkOutDate: '2023/11/19',
-  peopleNum: 2,
+  peopleNum: '2',
 };
 
 interface MemberData {
@@ -54,17 +55,17 @@ const initRoomData = {
   status: 1,
   facilityInfo: [
     {
-      "title": "空調",
-      "isProvide": true
+      title: '空調',
+      isProvide: true,
     },
     {
-      "title": "電視",
-      "isProvide": true
+      title: '電視',
+      isProvide: true,
     },
     {
-      "title": "咖啡機",
-      "isProvide": true
-    }
+      title: '咖啡機',
+      isProvide: true,
+    },
   ],
   amenityInfo: [
     {
@@ -82,30 +83,17 @@ const initRoomData = {
   ],
   layoutInfo: [
     {
-      "title": "市景",
-      "isProvide": false
+      title: '市景',
+      isProvide: false,
     },
     {
-      "title": "獨立衛浴",
-      "isProvide": true
-    }
+      title: '獨立衛浴',
+      isProvide: true,
+    },
   ],
   createdAt: '',
   updatedAt: '',
 };
-
-function getDay(date: string): string {
-  const days = ['星期天', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
-  const num = new Date(date).getDay();
-  return days[num];
-}
-
-function timeFormat(checkDate: string): string {
-  const month = checkDate.split('/')[1];
-  const day = checkDate.split('/')[2];
-  const date = checkDate;
-  return `${month} 月 ${day} 號${getDay(date)}`;
-}
 
 const RoomBooking: NextPage = () => {
   const widthSize = useWidth();
@@ -118,13 +106,19 @@ const RoomBooking: NextPage = () => {
   let checkInDate = 'no data';
   let checkOutDate: string | null = 'no data';
   if (searchParams.has('peopleNum')) {
-    roomId = searchParams.get('_id')!;
+    roomId = searchParams.get('roomId')!;
     peopleNum = searchParams.get('peopleNum')!;
     checkInDate = searchParams.get('checkInDate')!;
     checkOutDate = searchParams.get('checkOutDate')!;
+    roomBookData = {
+      roomId: roomId,
+      checkInDate: checkInDate,
+      checkOutDate: checkOutDate,
+      peopleNum: peopleNum,
+    };
   }
 
-  let nightCount = 2;
+  const nightCount:number = calcDays(checkInDate, checkOutDate);
 
   useEffect(() => {
     (async () => {
@@ -288,16 +282,14 @@ const RoomBooking: NextPage = () => {
                   flexDirection: 'column',
                   gap: '12px',
                 }}>
-                <img
-                  src={roomDetail.imageUrl}
-                  alt="room image"
-                  style={{ borderRadius: '8px', marginBottom: '28px' }}
-                />
+                <img src={roomDetail.imageUrl} alt="room image" style={{ borderRadius: '8px', marginBottom: '28px' }} />
                 <Typography variant={'h4'} component="h3" mb={'12px'}>
                   價格詳情
                 </Typography>
                 <Stack flexDirection={'row'} justifyContent={'space-between'} alignItems={'center'}>
-                  <Typography>NT$ {roomDetail.price} x {nightCount} 晚</Typography>
+                  <Typography>
+                    NT$ {roomDetail.price} x {nightCount} 晚
+                  </Typography>
                   <Typography>NT$ {roomDetail.price * nightCount}</Typography>
                 </Stack>
                 <Stack flexDirection={'row'} justifyContent={'space-between'} alignItems={'center'} mb={'12px'}>

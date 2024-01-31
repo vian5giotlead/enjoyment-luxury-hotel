@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { getOrderDetail } from '@/assets/api';
 import { useState, useEffect } from 'react';
+import { calcDays } from '../tool';
 
 const initOrderInfo: OrderInfo = {
   status: true,
@@ -184,7 +185,14 @@ const BookingSuccess: NextPage = () => {
                 <Box mb={{ sm: 3, md: 5 }} pb={{ sm: 3, md: 5 }} borderBottom={'1px solid #ECECEC'}>
                   <Stack direction={'row'} mb={3}>
                     <Typography fontSize={{ sm: '16px', md: '20px' }} fontWeight={700}>
-                      {orderInfo.result.roomId.name}&nbsp;&nbsp;
+                      {orderInfo.result.roomId.name}，
+                      {(() => {
+                        const checkInDate = orderInfo.result.checkInDate.split('T')[0];
+                        const checkOutDate = orderInfo.result.checkOutDate.split('T')[0];
+                        const nightCount = calcDays(checkInDate, checkOutDate);
+                        return nightCount;
+                      })()}
+                      晚&nbsp;&nbsp;
                     </Typography>
                     <Typography color={'#909090'} fontSize={{ sm: '16px', md: '20px' }} fontWeight={700}>
                       |
@@ -204,7 +212,15 @@ const BookingSuccess: NextPage = () => {
                       isGray={true}
                     />
                   </Box>
-                  <Typography fontWeight={700}>NT$ {orderInfo.result.roomId.price}</Typography>
+                  <Typography fontWeight={700}>
+                    NT${' '}
+                    {(() => {
+                      const checkInDate = orderInfo.result.checkInDate.split('T')[0];
+                      const checkOutDate = orderInfo.result.checkOutDate.split('T')[0];
+                      const nightCount = calcDays(checkInDate, checkOutDate);
+                      return orderInfo.result.roomId.price * nightCount;
+                    })()}
+                  </Typography>
                 </Box>
                 <Box sx={{ mb: 3 }}>
                   <Headline title="房內設備" />

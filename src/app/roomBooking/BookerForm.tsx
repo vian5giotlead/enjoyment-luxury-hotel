@@ -8,7 +8,7 @@ import Select from '@/components/common/Select';
 import { citys, zipcodes } from '@/assets/cityData';
 import { getUser } from '@/assets/api';
 import { postOrder } from '@/assets/api';
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 
 const Form = styled('form', { shouldForwardProp: () => true })(({ theme }) => ({
@@ -89,7 +89,7 @@ interface BookerFormProps {
     roomId: string;
     checkInDate: string;
     checkOutDate: string;
-    peopleNum: number;
+    peopleNum: string;
   };
 }
 
@@ -126,7 +126,7 @@ const BookerForm = (roomBookInfo: BookerFormProps) => {
       roomId: roomInfo.roomId,
       checkInDate: roomInfo.checkInDate,
       checkOutDate: roomInfo.checkOutDate,
-      peopleNum: roomInfo.peopleNum,
+      peopleNum: Number(roomInfo.peopleNum),
       userInfo: {
         name: finalData.name,
         phone: finalData.phone,
@@ -139,7 +139,7 @@ const BookerForm = (roomBookInfo: BookerFormProps) => {
     };
 
     const responseOrderInfo = await postOrder(orderObject);
-    router.push(`/roomBooking/bookingSuccess?id=${responseOrderInfo.result._id}`)
+    router.push(`/roomBooking/bookingSuccess?id=${responseOrderInfo.result._id}`);
   }
 
   const onSubmit = (data: bookerData) => {
