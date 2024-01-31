@@ -181,6 +181,21 @@ export async function apiGetCulinary() {
   return res.json();
 }
 
+export async function getRoomDetail(roomId: string) {
+  const res = await fetch(`${baseUrl}/api/v1/rooms/${roomId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch data');
+  }
+
+  return res.json();
+}
+
 export async function postOrder(data: OrderPostData) {
   const res = await fetch(`${baseUrl}/api/v1/orders/`, {
     method: 'POST',

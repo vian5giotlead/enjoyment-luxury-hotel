@@ -8,6 +8,7 @@ import Select from '@/components/common/Select';
 import { citys, zipcodes } from '@/assets/cityData';
 import { getUser } from '@/assets/api';
 import { postOrder } from '@/assets/api';
+import { useRouter } from 'next/navigation'
 import Cookies from 'js-cookie';
 
 const Form = styled('form', { shouldForwardProp: () => true })(({ theme }) => ({
@@ -94,6 +95,7 @@ interface BookerFormProps {
 
 const BookerForm = (roomBookInfo: BookerFormProps) => {
   const [counties, setCounties] = useState<locationInfo[] | []>([]);
+  const router = useRouter();
   const token = Cookies.get('token');
 
   const {
@@ -136,35 +138,15 @@ const BookerForm = (roomBookInfo: BookerFormProps) => {
       },
     };
 
-    console.log(orderObject);
     const responseOrderInfo = await postOrder(orderObject);
-    console.log(responseOrderInfo.result);
-    // fetch(`${baseUrl}/api/v1/orders/`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     Authorization: token,
-    //   },
-    //   body: JSON.stringify(orderObject),
-    // })
-    //   .then((response) => response.json())
-    //   .then((res) => {
-    //     // { status: 'true', result: [{...}] }
-    //     const { result } = res;
-    //     console.log(res);
-    //     console.log(result);
-    //     console.log(JSON.stringify(result));
-    //   });
+    router.push(`/roomBooking/bookingSuccess?id=${responseOrderInfo.result._id}`)
   }
 
   const onSubmit = (data: bookerData) => {
     if (token) {
       try {
         const finalData = { ...data };
-        //console.log(finalData);
-
         handleFinalData(finalData);
-        //console.log(roomBookInfo);
       } catch {
         throw new Error('Fail to submit the form!');
       }
