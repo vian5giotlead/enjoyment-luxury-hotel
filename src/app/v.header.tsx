@@ -67,7 +67,6 @@ export default function Header(props: any) {
 
   const getUserInfo = async () => {
     await getUser().then((res: MemberResponseData) => {
-      console.log('getUserInfo', res);
       if (res.status === true) setUserName(res.result.name);
     });
   };
@@ -96,13 +95,6 @@ export default function Header(props: any) {
     getUserIsLogin();
     // eslint-disable-next-line
   }, []);
-
-  useEffect(() => {
-    console.log('useEffect isLogin ->', isLogin);
-  }, [isLogin]);
-  useEffect(() => {
-    console.log('useEffect userName ->', userName);
-  }, [userName]);
 
   return (
     <>
