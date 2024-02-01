@@ -5,19 +5,22 @@ import { getCookie, setCookie } from 'cookies-next';
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
-const token = getCookie('token', { cookies }) || '';
+const token = () => {
+  const cookie = getCookie('token', { cookies });
+  return cookie || '';
+};
 
 export async function getUser() {
   const res = await fetch(`${baseUrl}/api/v1/user`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: token,
+      Authorization: token(),
     },
   });
 
   if (!res.ok) {
-    throw new Error('Failed to fetch data');
+    console.error('Failed to fetch data');
   }
   // next.js 會噴 重複呼喚 res.json() 的錯，所以又再宣告變數了一次
   const response = await res.json();
@@ -30,12 +33,12 @@ export async function updateUser(data: MemberUpdateData) {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: token,
+      Authorization: token(),
     },
     body: JSON.stringify(data),
   });
   if (!res.ok) {
-    throw new Error('Failed to fetch data');
+    console.error('Failed to fetch data');
   }
   const response = await res.json();
   if (response.token) setCookie('token', response.token, { cookies });
@@ -47,12 +50,12 @@ export async function getOrders() {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: token,
+      Authorization: token(),
     },
   });
 
   if (!res.ok) {
-    throw new Error('Failed to fetch data');
+    console.error('Failed to fetch data');
   }
 
   return res.json();
@@ -63,11 +66,11 @@ export async function deleteOrder(id: string) {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: token,
+      Authorization: token(),
     },
   });
   if (!res.ok) {
-    throw new Error('Failed to fetch data');
+    console.error('Failed to fetch data');
   }
 
   return res.json();
@@ -82,7 +85,7 @@ export async function userLogin(data: UserLoginData) {
     body: JSON.stringify(data),
   });
   if (!res.ok) {
-    throw new Error('Failed to fetch data');
+    console.error('Failed to fetch data');
   }
   const response = await res.json();
   if (response.token) setCookie('token', response.token, { cookies });
@@ -98,7 +101,7 @@ export async function userRegister(data: UserRegisterData) {
     body: JSON.stringify(data),
   });
   if (!res.ok) {
-    throw new Error('Failed to fetch data');
+    console.error('Failed to fetch data');
   }
   const response = await res.json();
   if (response.token) setCookie('token', response.token, { cookies });
@@ -114,7 +117,7 @@ export async function verifyEmail(email: string) {
     body: JSON.stringify({ email }),
   });
   if (!res.ok) {
-    throw new Error('Failed to fetch data');
+    console.error('Failed to fetch data');
   }
   return res.json();
 }
@@ -124,12 +127,12 @@ export async function apiCheckUserIsLogin() {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: token,
+      Authorization: token(),
     },
   });
 
   if (!res.ok) {
-    throw new Error('Failed to fetch data');
+    console.error('Failed to fetch data');
   }
 
   const response = await res.json();
@@ -140,14 +143,11 @@ export async function apiCheckUserIsLogin() {
 export async function apiGetNews() {
   const res = await fetch(`${baseUrl}/api/v1/home/news/`, {
     method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: token,
-    },
+    headers: { 'Content-Type': 'application/json', Authorization: token() },
   });
 
   if (!res.ok) {
-    throw new Error('Failed to fetch data');
+    console.error('Failed to fetch data');
   }
 
   return res.json();
@@ -156,14 +156,11 @@ export async function apiGetNews() {
 export async function apiGetRoomType() {
   const res = await fetch(`${baseUrl}/api/v1/rooms/`, {
     method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: token,
-    },
+    headers: { 'Content-Type': 'application/json' },
   });
 
   if (!res.ok) {
-    throw new Error('Failed to fetch data');
+    console.error('Failed to fetch data');
   }
 
   return res.json();
@@ -172,14 +169,11 @@ export async function apiGetRoomType() {
 export async function apiGetCulinary() {
   const res = await fetch(`${baseUrl}/api/v1/home/culinary/`, {
     method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: token,
-    },
+    headers: { 'Content-Type': 'application/json' },
   });
 
   if (!res.ok) {
-    throw new Error('Failed to fetch data');
+    console.error('Failed to fetch data');
   }
 
   return res.json();
@@ -188,13 +182,11 @@ export async function apiGetCulinary() {
 export async function getRoomDetail(roomId: string) {
   const res = await fetch(`${baseUrl}/api/v1/rooms/${roomId}`, {
     method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Content-Type': 'application/json' },
   });
 
   if (!res.ok) {
-    throw new Error('Failed to fetch data');
+    console.error('Failed to fetch data');
   }
 
   return res.json();
@@ -205,13 +197,13 @@ export async function postOrder(data: OrderPostData) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: token,
+      Authorization: token(),
     },
     body: JSON.stringify(data),
   });
 
   if (!res.ok) {
-    throw new Error('Failed to fetch data');
+    console.error('Failed to fetch data');
   }
 
   return res.json();
@@ -222,12 +214,12 @@ export async function getOrderDetail(orderId: string) {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: token,
+      Authorization: token(),
     },
   });
 
   if (!res.ok) {
-    throw new Error('Failed to fetch data');
+    console.error('Failed to fetch data');
   }
 
   return res.json();
